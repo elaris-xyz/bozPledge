@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Pledge</string>
+    <string name="clock_in">Clock In</string>
+    <string name="clocked_in">Clocked In!</string>
+    <string name="daily_goal">Daily Step Goal</string>
+    <string name="staked_amount">Staked $SKR</string>
+    <string name="days_remaining">Days Remaining</string>
+    <string name="create_pledge">New Commitment</string>
+    <string name="burn_notice">From your failure, no one profits. Not even us.</string>
+    <string name="demo_mode_active">DEMO MODE ACTIVE (30s Days)</string>
+</resources>

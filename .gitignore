@@ -1,0 +1,26 @@
+# OS & IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.iml
+.gradle/
+local.properties
+
+# Android Build
+android-app/app/build/
+android-app/build/
+*.apk
+*.aab
+
+# Node & Anchor
+node_modules/
+anchor-program/node_modules/
+anchor-program/target/
+dist/
+.anchor/
+
+# Keys & Secrets
+*.pem
+*.key
+id.json
