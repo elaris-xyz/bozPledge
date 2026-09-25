@@ -10,6 +10,7 @@ local.properties
 # Android Build
 android-app/app/build/
 android-app/build/
+build-output/
 *.apk
 *.aab
 
