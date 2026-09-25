@@ -60,7 +60,7 @@ fun DashboardScreen(
         ) {
             Column {
                 Text(
-                    text = "PLEDGE",
+                    text = "bozPLEDGE",
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Black,
                     color = TextPrimary,

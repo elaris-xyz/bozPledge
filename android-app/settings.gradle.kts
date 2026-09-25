@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Pledge"
+rootProject.name = "bozPledge"
 include(":app")

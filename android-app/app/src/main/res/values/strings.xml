@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Pledge</string>
+    <string name="app_name">bozPledge</string>
     <string name="clock_in">Clock In</string>
     <string name="clocked_in">Clocked In!</string>
     <string name="daily_goal">Daily Step Goal</string>

@@ -1,6 +1,7 @@
-# ⚡ Pledge (Clock In)
+# ⚡ bozPledge (Clock In)
 ### Sovereign Physical Habit & Proof-of-Action Protocol on Solana Mobile
 **Third Solana Mobile Hackathon: CLOCK IN (Fall 2026)**
+**Repository:** [https://github.com/elaris-xyz/bozPledge](https://github.com/elaris-xyz/bozPledge)
 
 ---
 
@@ -8,7 +9,7 @@
 
 > **"From your failure, NO ONE profits. Not even us."**
 
-**Pledge** is an Android-native habit commitment protocol built from the ground up for the **Solana Seeker** and the wider Solana Mobile ecosystem. 
+**bozPledge** is an Android-native habit commitment protocol built from the ground up for the **Solana Seeker** and the wider Solana Mobile ecosystem. 
 
 Users stake **$SKR** against a daily physical goal (step count verified directly by on-device sensors via Android **Health Connect**). Every day the goal is achieved, the user performs a 1-tap **"Clock In"** on Solana. 
 
