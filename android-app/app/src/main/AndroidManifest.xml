@@ -30,7 +30,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Pledge"
-        tools:targetApi="35">
+        tools:targetApi="34">
 
         <activity
             android:name=".MainActivity"
@@ -60,7 +60,7 @@
 
         <!-- Home Screen Glance Widget Receiver -->
         <receiver
-            android:name=".widget.PledgeWidgetReceiver"
+            android:name=".widget.PledgeGlanceWidgetReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
