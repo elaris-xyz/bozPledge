@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>bozPledge — Professional Solana Mobile Platform</title>
+    <title>bozPledge — Production Tier-1 Seeker Experience</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-dark: #0A0B10;
-            --surface-dark: #12141F;
-            --surface-variant: #1B1E2D;
-            --border-dark: #262A3D;
+            --bg-dark: #07080D;
+            --surface-dark: #10121B;
+            --surface-variant: #181B28;
+            --border-dark: #222638;
+            --border-active: #383E58;
             --solana-purple: #9945FF;
             --solana-green: #14F195;
             --solana-teal: #00C2FF;
@@ -20,7 +21,7 @@
             --gold-accent: #FFD60A;
             --text-primary: #F7F8FA;
             --text-secondary: #9AA0B4;
-            --text-muted: #5D6379;
+            --text-muted: #5C6278;
         }
 
         * {
@@ -32,7 +33,7 @@
         }
 
         body {
-            background: #050608;
+            background: #030406;
             font-family: 'Outfit', -apple-system, sans-serif;
             color: var(--text-primary);
             min-height: 100vh;
@@ -41,59 +42,85 @@
             justify-content: center;
             padding: 24px;
             background-image: 
-                radial-gradient(circle at 15% 15%, rgba(153, 69, 255, 0.09) 0%, transparent 45%),
-                radial-gradient(circle at 85% 85%, rgba(20, 241, 149, 0.09) 0%, transparent 45%);
+                radial-gradient(circle at 12% 15%, rgba(153, 69, 255, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 88% 85%, rgba(20, 241, 149, 0.1) 0%, transparent 40%),
+                linear-gradient(180deg, #020305 0%, #080A10 100%);
         }
 
-        /* Seeker Phone Frame */
+        /* Phone Frame */
         .phone-wrapper {
             position: relative;
             width: 100%;
             max-width: 420px;
-            height: 870px;
+            height: 880px;
             background: #000;
             border-radius: 54px;
             box-shadow: 
-                0 0 0 10px #181924,
-                0 0 0 12px #262938,
+                0 0 0 10px #151722,
+                0 0 0 12px #222534,
                 0 30px 100px rgba(0, 0, 0, 0.95),
-                0 0 70px rgba(153, 69, 255, 0.15);
+                0 0 80px rgba(153, 69, 255, 0.18);
             display: flex;
             flex-direction: column;
             overflow: hidden;
         }
 
-        /* Top Notch */
+        /* Android / Seeker Status Bar */
+        .status-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 44px;
+            padding: 10px 24px 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            z-index: 100;
+            pointer-events: none;
+        }
+        .status-bar-icons {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Top Notch / Camera */
         .phone-notch {
             position: absolute;
-            top: 14px;
+            top: 10px;
             left: 50%;
             transform: translateX(-50%);
-            width: 110px;
+            width: 96px;
             height: 24px;
             background: #000;
             border-radius: 20px;
-            z-index: 200;
+            z-index: 150;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.9);
         }
         .notch-camera {
             width: 10px;
             height: 10px;
             border-radius: 50%;
             background: #111424;
-            border: 2px solid #07080e;
+            border: 2px solid #080912;
+            box-shadow: inset 0 0 4px #00C2FF40;
         }
 
-        /* Judge Mode Floating Toggle Pill */
+        /* Floating Judge Sandbox Toggle */
         .judge-toggle-pill {
             position: absolute;
-            top: 14px;
-            right: 18px;
-            background: rgba(30, 33, 48, 0.85);
-            backdrop-filter: blur(10px);
+            top: 48px;
+            right: 20px;
+            background: rgba(24, 27, 40, 0.85);
+            backdrop-filter: blur(12px);
             border: 1px solid rgba(0, 194, 255, 0.4);
             border-radius: 20px;
             padding: 4px 10px;
@@ -105,16 +132,24 @@
             align-items: center;
             gap: 5px;
             cursor: pointer;
-            z-index: 250;
+            z-index: 90;
             transition: all 0.2s;
         }
         .judge-toggle-pill.active {
             background: var(--solana-teal);
             color: #000;
-            box-shadow: 0 0 12px rgba(0, 194, 255, 0.6);
+            box-shadow: 0 0 14px rgba(0, 194, 255, 0.6);
         }
 
-        /* Phone Screen Content */
+        /* Canvas Confetti / Particle Layer */
+        #fx-canvas {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 500;
+        }
+
+        /* Screen Content */
         .phone-screen {
             flex: 1;
             background: var(--bg-dark);
@@ -122,35 +157,49 @@
             overflow-x: hidden;
             display: flex;
             flex-direction: column;
-            padding: 50px 20px 85px 20px;
+            padding: 80px 20px 85px 20px;
             position: relative;
         }
-        .phone-screen::-webkit-scrollbar {
-            display: none;
-        }
+        .phone-screen::-webkit-scrollbar { display: none; }
 
-        /* Top Bar */
-        .top-bar {
+        /* App Header */
+        .app-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
-        .brand-title {
+        .brand-text h1 {
             font-size: 22px;
             font-weight: 900;
-            letter-spacing: -0.3px;
+            letter-spacing: -0.5px;
             background: linear-gradient(135deg, #fff 40%, var(--solana-purple));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .brand-sub {
-            font-size: 11px;
+        .brand-badge-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 2px;
+        }
+        .genesis-badge {
+            font-size: 9px;
+            font-weight: 800;
+            color: var(--gold-accent);
+            background: rgba(255, 214, 10, 0.12);
+            border: 1px solid rgba(255, 214, 10, 0.3);
+            border-radius: 6px;
+            padding: 2px 6px;
+            display: none;
+        }
+        .network-tag {
+            font-size: 10px;
             color: var(--solana-green);
             font-weight: 700;
         }
 
-        .btn-wallet {
+        .btn-wallet-connect {
             background: var(--surface-dark);
             border: 1px solid var(--border-dark);
             border-radius: 14px;
@@ -164,10 +213,10 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        .btn-wallet:hover {
+        .btn-wallet-connect:hover {
             border-color: var(--solana-purple);
         }
-        .btn-wallet.connected {
+        .btn-wallet-connect.connected {
             background: rgba(20, 241, 149, 0.08);
             border-color: rgba(20, 241, 149, 0.3);
         }
@@ -177,9 +226,38 @@
             border-radius: 50%;
             background: var(--flame-red);
         }
-        .btn-wallet.connected .wallet-dot {
+        .btn-wallet-connect.connected .wallet-dot {
             background: var(--solana-green);
             box-shadow: 0 0 8px var(--solana-green);
+        }
+
+        /* Security / Ethelsec Attestation Pill */
+        .attestation-bar {
+            background: rgba(18, 20, 30, 0.7);
+            border: 1px solid rgba(20, 241, 149, 0.2);
+            border-radius: 12px;
+            padding: 6px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+        .attestation-left {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .shield-icon {
+            color: var(--solana-green);
+            font-size: 13px;
+        }
+        .helius-latency {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: var(--solana-teal);
         }
 
         /* Bottom Navigation Bar */
@@ -189,7 +267,7 @@
             left: 0;
             right: 0;
             height: 72px;
-            background: rgba(18, 20, 31, 0.94);
+            background: rgba(16, 18, 27, 0.95);
             backdrop-filter: blur(14px);
             border-top: 1px solid var(--border-dark);
             display: flex;
@@ -224,28 +302,26 @@
             flex-direction: column;
             animation: fadeIn 0.2s ease-in-out;
         }
-        .tab-view.active {
-            display: flex;
-        }
+        .tab-view.active { display: flex; }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(6px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Dashboard Elements */
+        /* Dashboard Multi-Track Chips */
         .category-scroll {
             display: flex;
             gap: 8px;
             margin-bottom: 16px;
             overflow-x: auto;
-            padding-bottom: 4px;
+            padding-bottom: 2px;
         }
         .category-scroll::-webkit-scrollbar { display: none; }
         .cat-chip {
             background: var(--surface-dark);
             border: 1px solid var(--border-dark);
-            border-radius: 12px;
-            padding: 6px 14px;
+            border-radius: 14px;
+            padding: 8px 14px;
             font-size: 12px;
             font-weight: 700;
             color: var(--text-secondary);
@@ -260,6 +336,7 @@
             background: rgba(153, 69, 255, 0.15);
             border-color: var(--solana-purple);
             color: #fff;
+            box-shadow: 0 0 14px rgba(153, 69, 255, 0.2);
         }
 
         /* Hero Commitment Card */
@@ -269,8 +346,9 @@
             border-radius: 26px;
             padding: 22px;
             position: relative;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
             overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
         .hero-badge-row {
             display: flex;
@@ -281,7 +359,7 @@
         .tag-pill {
             font-size: 10px;
             font-weight: 800;
-            letter-spacing: 1px;
+            letter-spacing: 0.8px;
             padding: 4px 10px;
             border-radius: 8px;
             text-transform: uppercase;
@@ -301,9 +379,10 @@
             letter-spacing: -1px;
             line-height: 1;
             margin-bottom: 4px;
+            font-family: 'JetBrains Mono', sans-serif;
         }
         .metric-sub {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--text-muted);
             font-weight: 500;
             margin-bottom: 20px;
@@ -315,7 +394,8 @@
             background: var(--surface-variant);
             border-radius: 20px;
             overflow: hidden;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
         .progress-bar-fill {
             height: 100%;
@@ -331,6 +411,41 @@
             font-weight: 600;
         }
 
+        /* Screen Time App Breakdown (Detail view when screentime active) */
+        .app-breakdown-box {
+            display: none;
+            background: var(--surface-variant);
+            border-radius: 14px;
+            padding: 12px;
+            margin-top: 14px;
+            font-size: 12px;
+        }
+        .app-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            color: var(--text-secondary);
+        }
+        .app-row strong { color: var(--text-primary); }
+
+        /* Cutoff Countdown Notice */
+        .cutoff-notice {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 14px;
+            background: rgba(255, 69, 58, 0.08);
+            border: 1px solid rgba(255, 69, 58, 0.2);
+            border-radius: 12px;
+            margin-bottom: 16px;
+            font-size: 12px;
+        }
+        .cutoff-timer {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 800;
+            color: var(--flame-red);
+        }
+
         /* Timeline Dots */
         .timeline-card {
             background: var(--surface-dark);
@@ -340,7 +455,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
         .dots-row {
             display: flex;
@@ -390,16 +505,14 @@
             gap: 10px;
             cursor: pointer;
             transition: transform 0.15s, box-shadow 0.2s;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
         .btn-clock-in.active {
             background: linear-gradient(90deg, var(--solana-purple), var(--solana-green));
             box-shadow: 0 10px 30px rgba(20, 241, 149, 0.25);
             animation: pulse 2s infinite ease-in-out;
         }
-        .btn-clock-in.active:active {
-            transform: scale(0.97);
-        }
+        .btn-clock-in.active:active { transform: scale(0.97); }
         .btn-clock-in.done {
             background: var(--solana-green);
             color: var(--bg-dark);
@@ -416,12 +529,36 @@
             50% { transform: scale(1.02); }
         }
 
+        /* Share Streak Button (Solana Action / Blink) */
+        .share-streak-btn {
+            width: 100%;
+            height: 42px;
+            background: transparent;
+            border: 1px solid var(--border-dark);
+            border-radius: 14px;
+            color: var(--text-secondary);
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: all 0.2s;
+        }
+        .share-streak-btn:hover {
+            border-color: var(--solana-teal);
+            color: var(--solana-teal);
+        }
+
         /* Stats Row */
         .stats-2-col {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
         .mini-stat {
             background: var(--surface-dark);
@@ -441,7 +578,7 @@
             font-weight: 900;
         }
 
-        /* Explore / Catalog Screen */
+        /* Explore Catalog Cards */
         .catalog-title {
             font-size: 18px;
             font-weight: 800;
@@ -464,9 +601,7 @@
             cursor: pointer;
             transition: border-color 0.2s;
         }
-        .pledge-item-card:hover {
-            border-color: var(--solana-purple);
-        }
+        .pledge-item-card:hover { border-color: var(--solana-purple); }
         .pledge-icon-box {
             width: 44px;
             height: 44px;
@@ -488,7 +623,7 @@
             color: var(--text-secondary);
         }
 
-        /* Squads / Leaderboard Screen */
+        /* Leaderboard Cards */
         .leader-card {
             background: var(--surface-dark);
             border: 1px solid var(--border-dark);
@@ -534,7 +669,7 @@
             gap: 4px;
         }
 
-        /* Vault / Profile Screen */
+        /* Profile & Vault */
         .profile-header {
             text-align: center;
             margin-bottom: 24px;
@@ -580,20 +715,90 @@
             margin-top: 2px;
         }
 
-        /* Demo Mode Collapsible Drawer */
+        /* Seed Vault Biometric Modal */
+        .biometric-sheet {
+            position: absolute;
+            inset: 0;
+            background: rgba(4, 5, 8, 0.95);
+            backdrop-filter: blur(14px);
+            z-index: 600;
+            display: none;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 20px;
+        }
+        .biometric-sheet.active { display: flex; animation: slideUp 0.25s ease-out; }
+        .biometric-content {
+            background: var(--surface-dark);
+            border: 1px solid var(--border-active);
+            border-radius: 32px;
+            padding: 28px 24px;
+            text-align: center;
+        }
+        .fingerprint-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: rgba(20, 241, 149, 0.1);
+            border: 2px solid var(--solana-green);
+            margin: 0 auto 16px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            animation: pulse-ring 1.8s infinite;
+            cursor: pointer;
+        }
+        @keyframes pulse-ring {
+            0% { box-shadow: 0 0 0 0 rgba(20, 241, 149, 0.4); }
+            70% { box-shadow: 0 0 0 16px rgba(20, 241, 149, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(20, 241, 149, 0); }
+        }
+        .tx-receipt-details {
+            background: var(--surface-variant);
+            border-radius: 16px;
+            padding: 12px 16px;
+            margin: 16px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            text-align: left;
+        }
+
+        /* Tx Success Bottom Sheet */
+        .tx-success-sheet {
+            position: absolute;
+            inset: 0;
+            background: rgba(4, 5, 8, 0.95);
+            backdrop-filter: blur(14px);
+            z-index: 650;
+            display: none;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 20px;
+        }
+        .tx-success-sheet.active { display: flex; animation: slideUp 0.25s ease-out; }
+        .tx-success-content {
+            background: var(--surface-dark);
+            border: 1px solid var(--solana-green);
+            border-radius: 32px;
+            padding: 28px 24px;
+            text-align: center;
+        }
+
+        /* Judge / Demo Drawer */
         .demo-drawer {
             position: absolute;
             bottom: 72px;
             left: 0;
             right: 0;
-            background: rgba(22, 25, 38, 0.97);
+            background: rgba(20, 23, 35, 0.98);
             backdrop-filter: blur(16px);
             border-top: 1px solid var(--solana-teal);
             border-radius: 24px 24px 0 0;
             padding: 20px;
             z-index: 150;
             display: none;
-            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.9);
         }
         .demo-drawer.open {
             display: block;
@@ -603,13 +808,6 @@
             from { transform: translateY(100%); }
             to { transform: translateY(0); }
         }
-        .demo-slider-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-bottom: 6px;
-        }
         input[type="range"] {
             width: 100%;
             height: 6px;
@@ -617,7 +815,7 @@
             background: var(--border-dark);
             border-radius: 10px;
             outline: none;
-            margin-bottom: 14px;
+            margin: 10px 0 14px 0;
         }
 
         /* Wallet Modal */
@@ -632,9 +830,7 @@
             justify-content: flex-end;
             padding: 20px;
         }
-        .wallet-modal-overlay.active {
-            display: flex;
-        }
+        .wallet-modal-overlay.active { display: flex; }
         .wallet-modal-content {
             background: var(--surface-dark);
             border: 1px solid var(--border-dark);
@@ -652,9 +848,7 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        .wallet-option:hover {
-            border: 1px solid var(--solana-purple);
-        }
+        .wallet-option:hover { border: 1px solid var(--solana-purple); }
         .wallet-option-left {
             display: flex;
             align-items: center;
@@ -666,7 +860,7 @@
         /* Toast */
         .toast {
             position: absolute;
-            top: 56px;
+            top: 52px;
             left: 50%;
             transform: translateX(-50%) translateY(-100px);
             background: var(--surface-variant);
@@ -680,23 +874,34 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            z-index: 400;
+            z-index: 800;
             transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             white-space: nowrap;
         }
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-        }
+        .toast.show { transform: translateX(-50%) translateY(0); }
     </style>
 </head>
 <body>
 
     <div class="phone-wrapper">
+        <!-- Confetti / Firework canvas -->
+        <canvas id="fx-canvas"></canvas>
+
+        <!-- Android Status Bar -->
+        <div class="status-bar">
+            <span id="clock-display">09:41</span>
+            <div class="status-bar-icons">
+                <span>5G</span>
+                <span>📶</span>
+                <span>98%</span>
+            </div>
+        </div>
+
         <div class="phone-notch">
             <div class="notch-camera"></div>
         </div>
 
-        <!-- Floating Judge / Demo Switch (Subtle, doesn't ruin the real app look) -->
+        <!-- Floating Judge / Demo Sandbox Switch -->
         <div class="judge-toggle-pill" id="judge-toggle-btn" onclick="toggleDemoDrawer()">
             <span>🧪</span>
             <span id="judge-pill-text">Judge Mode</span>
@@ -709,37 +914,57 @@
         </div>
 
         <div class="phone-screen">
-            <!-- Top Bar -->
-            <div class="top-bar">
+            <!-- App Header -->
+            <div class="app-header">
                 <div>
-                    <h1 class="brand-title">bozPLEDGE</h1>
-                    <div class="brand-sub">Daily Habit Staking on Seeker</div>
+                    <div class="brand-text">
+                        <h1>bozPLEDGE</h1>
+                    </div>
+                    <div class="brand-badge-row">
+                        <span class="network-tag">Devnet • Helius RPC</span>
+                        <span class="genesis-badge" id="genesis-pill">★ SEEKER GENESIS</span>
+                    </div>
                 </div>
-                <button class="btn-wallet" id="wallet-btn" onclick="openWalletModal()">
+                <button class="btn-wallet-connect" id="wallet-btn" onclick="openWalletModal()">
                     <div class="wallet-dot"></div>
                     <span id="wallet-btn-label">Connect</span>
                 </button>
             </div>
 
+            <!-- Ethelsec Security / Hardware Attestation Bar -->
+            <div class="attestation-bar">
+                <div class="attestation-left">
+                    <span class="shield-icon">🛡️</span>
+                    <span>Hardware Seed Vault Attested</span>
+                </div>
+                <span class="helius-latency">Slot #294021 • 38ms</span>
+            </div>
+
             <!-- VIEW 1: DASHBOARD -->
             <div class="tab-view active" id="view-dashboard">
-                <!-- Multi-Pledge Filter Chips -->
+                <!-- Multi-Track Chips -->
                 <div class="category-scroll">
                     <div class="cat-chip active" onclick="switchCategory('steps', this)">
-                        <span>🏃</span> 8k Steps Goal
+                        <span>🏃</span> 8,000 Steps
                     </div>
                     <div class="cat-chip" onclick="switchCategory('screentime', this)">
                         <span>📵</span> Screen Detox (&lt;3h)
                     </div>
                     <div class="cat-chip" onclick="switchCategory('sleep', this)">
-                        <span>😴</span> 7h Sleep
+                        <span>😴</span> 7.0h Rest
                     </div>
+                </div>
+
+                <!-- Live Window Cutoff Notice -->
+                <div class="cutoff-notice">
+                    <span>⏳ Today's Clock-In Window Closes in:</span>
+                    <span class="cutoff-timer" id="cutoff-timer-text">04h 28m 14s</span>
                 </div>
 
                 <!-- Main Hero Pledge Card -->
                 <div class="hero-card">
                     <div class="hero-badge-row">
-                        <span class="tag-pill green" id="hero-sensor-tag">HEALTH CONNECT LIVE</span>
+                        <span class="tag-pill green" id="hero-sensor-tag">HEALTH CONNECT VERIFIED</span>
                         <span class="tag-pill purple" id="hero-stake-tag">500 $SKR STAKED</span>
                     </div>
 
@@ -753,6 +978,14 @@
                     <div class="progress-stats">
                         <span id="metric-status" style="color: var(--solana-green)">Goal Complete! Ready to Clock In</span>
                         <span id="metric-pct">105%</span>
+                    </div>
+
+                    <!-- Screen Time Detail Breakdown (when screen detox active) -->
+                    <div class="app-breakdown-box" id="app-breakdown-box">
+                        <div style="font-weight: 700; margin-bottom: 8px; color: var(--text-primary);">UsageStats Manager Log:</div>
+                        <div class="app-row"><span>📸 Instagram</span><strong>45 mins</strong></div>
+                        <div class="app-row"><span>🐦 X / Twitter</span><strong>1 hr 10 mins</strong></div>
+                        <div class="app-row"><span>💬 Telegram</span><strong>15 mins</strong></div>
                     </div>
                 </div>
 
@@ -773,9 +1006,15 @@
                 </div>
 
                 <!-- Hero Clock-In Button -->
-                <button class="btn-clock-in active" id="hero-clockin-btn" onclick="handleClockInAction()">
+                <button class="btn-clock-in active" id="hero-clockin-btn" onclick="openBiometricSheet()">
                     <span>🔒</span>
-                    <span id="clockin-btn-text">CLOCK IN TODAY (1-TAP)</span>
+                    <span id="clockin-btn-text">CLOCK IN (SEED VAULT)</span>
+                </button>
+
+                <!-- Share as Blink Button -->
+                <button class="share-streak-btn" onclick="shareAsBlink()">
+                    <span>🔗</span>
+                    <span>Share Streak as Solana Blink on X</span>
                 </button>
 
                 <!-- Stats 2 Col -->
@@ -791,12 +1030,12 @@
                 </div>
             </div>
 
-            <!-- VIEW 2: EXPLORE / PLEDGE CATALOG -->
+            <!-- VIEW 2: EXPLORE / CATALOG -->
             <div class="tab-view" id="view-explore">
                 <div class="catalog-title">Commitment Catalog</div>
-                <div class="catalog-sub">Select a discipline track, stake $SKR, and prove with mobile sensors.</div>
+                <div class="catalog-sub">Hardware-attested habit staking protocols on Seeker.</div>
 
-                <div class="pledge-item-card" onclick="startNewPledge('Daily 10k Steps', 10000, 500)">
+                <div class="pledge-item-card" onclick="startNewPledge('10,000 Steps Marathon', 10000, 500)">
                     <div style="display: flex; align-items: center;">
                         <div class="pledge-icon-box">🏃</div>
                         <div class="pledge-details">
@@ -807,7 +1046,7 @@
                     <span style="color: var(--solana-green); font-weight: 800; font-size: 14px;">+ JOIN</span>
                 </div>
 
-                <div class="pledge-item-card" onclick="startNewPledge('Digital Detox', 3, 300)">
+                <div class="pledge-item-card" onclick="startNewPledge('Digital Detox &lt;3h', 3, 300)">
                     <div style="display: flex; align-items: center;">
                         <div class="pledge-icon-box">📵</div>
                         <div class="pledge-details">
@@ -818,7 +1057,7 @@
                     <span style="color: var(--solana-green); font-weight: 800; font-size: 14px;">+ JOIN</span>
                 </div>
 
-                <div class="pledge-item-card" onclick="startNewPledge('Early Riser', 8, 400)">
+                <div class="pledge-item-card" onclick="startNewPledge('Early Riser 8 AM', 8, 400)">
                     <div style="display: flex; align-items: center;">
                         <div class="pledge-icon-box">🌅</div>
                         <div class="pledge-details">
@@ -829,11 +1068,11 @@
                     <span style="color: var(--solana-green); font-weight: 800; font-size: 14px;">+ JOIN</span>
                 </div>
 
-                <div class="pledge-item-card" onclick="startNewPledge('Deep Sleep 7h+', 7, 250)">
+                <div class="pledge-item-card" onclick="startNewPledge('Restorative Sleep 7h+', 7, 250)">
                     <div style="display: flex; align-items: center;">
                         <div class="pledge-icon-box">😴</div>
                         <div class="pledge-details">
-                            <h4>7h+ Restorative Sleep</h4>
+                            <h4>7h+ Sleep Session</h4>
                             <p>Health Connect • 7 Days • Stake 250 $SKR</p>
                         </div>
                     </div>
@@ -841,10 +1080,10 @@
                 </div>
             </div>
 
-            <!-- VIEW 3: SQUADS & LEADERBOARD -->
+            <!-- VIEW 3: LEADERBOARD -->
             <div class="tab-view" id="view-squads">
                 <div class="catalog-title">Seeker Community Rank</div>
-                <div class="catalog-sub">Proof-of-Discipline global leaderboard.</div>
+                <div class="catalog-sub">Sovereign proof-of-action global leaderboard.</div>
 
                 <div class="leader-card">
                     <div class="rank-num">1</div>
@@ -852,7 +1091,7 @@
                         <div class="avatar-circle">⚡</div>
                         <div>
                             <div style="font-weight: 800; font-size: 14px;">Toly.sol</div>
-                            <div style="font-size: 11px; color: var(--text-secondary);">14,200 avg steps</div>
+                            <div style="font-size: 11px; color: var(--text-secondary);">14,200 avg steps • 0 burns</div>
                         </div>
                     </div>
                     <div class="streak-pill">🔥 28d</div>
@@ -864,7 +1103,7 @@
                         <div class="avatar-circle">🛡️</div>
                         <div>
                             <div style="font-weight: 800; font-size: 14px;">Mert_Helius</div>
-                            <div style="font-size: 11px; color: var(--text-secondary);">11,800 avg steps</div>
+                            <div style="font-size: 11px; color: var(--text-secondary);">11,800 avg steps • 0 burns</div>
                         </div>
                     </div>
                     <div class="streak-pill">🔥 21d</div>
@@ -875,7 +1114,7 @@
                     <div class="user-info">
                         <div class="avatar-circle" style="background: rgba(20, 241, 149, 0.2);">👤</div>
                         <div>
-                            <div style="font-weight: 800; font-size: 14px;">You (Seeker)</div>
+                            <div style="font-weight: 800; font-size: 14px;">You (Seeker Genesis)</div>
                             <div style="font-size: 11px; color: var(--text-secondary);">8,500 avg steps</div>
                         </div>
                     </div>
@@ -883,7 +1122,7 @@
                 </div>
             </div>
 
-            <!-- VIEW 4: VAULT / PROFILE & ACHIVEMENTS -->
+            <!-- VIEW 4: VAULT / PROFILE -->
             <div class="tab-view" id="view-vault">
                 <div class="profile-header">
                     <div class="profile-avatar">💎</div>
@@ -923,7 +1162,54 @@
             </div>
         </div>
 
-        <!-- Collapsible Judge / Demo Drawer -->
+        <!-- Biometric Bottom Sheet (Simulating Seed Vault Hardware Approval) -->
+        <div class="biometric-sheet" id="biometric-sheet">
+            <div class="biometric-content">
+                <div style="font-size: 11px; font-weight: 800; color: var(--solana-green); letter-spacing: 1px; margin-bottom: 6px;">
+                    SOLANA SEEKER SEED VAULT
+                </div>
+                <h3 style="font-size: 18px; font-weight: 900; margin-bottom: 4px;">Confirm Daily Clock-In</h3>
+                <p style="font-size: 12px; color: var(--text-secondary);">Touch biometric sensor to sign transaction</p>
+
+                <div class="tx-receipt-details">
+                    <div>Program: PLEDGE1111...11111</div>
+                    <div>Instruction: clock_in(day_index: <span id="bio-day-index">2</span>)</div>
+                    <div>Network Fee: 0.000005 SOL (~$0.0007)</div>
+                    <div>Signer: Local Session Key (Authorized)</div>
+                </div>
+
+                <div class="fingerprint-icon" onclick="confirmBiometricClockIn()">
+                    <span>👆</span>
+                </div>
+                <div style="font-size: 11px; color: var(--text-muted);">Tap fingerprint to authorize on-chain</div>
+            </div>
+        </div>
+
+        <!-- Tx Success Bottom Sheet -->
+        <div class="tx-success-sheet" id="tx-success-sheet">
+            <div class="tx-success-content">
+                <div style="font-size: 48px; margin-bottom: 12px;">✅</div>
+                <div style="font-size: 12px; font-weight: 800; color: var(--solana-green); letter-spacing: 1px;">
+                    TRANSACTION CONFIRMED
+                </div>
+                <h3 style="font-size: 20px; font-weight: 900; margin: 6px 0;">Day 2 Verified On-Chain!</h3>
+                <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">
+                    Your physical proof was attested and saved to the Solana ledger.
+                </p>
+
+                <div class="tx-receipt-details">
+                    <div>Tx Hash: <span id="tx-hash-display" style="color: var(--solana-teal);">5Kz...y9P</span></div>
+                    <div>Slot: #294022 • Confirmed in 410ms</div>
+                    <div>Devnet Explorer: Verified ✓</div>
+                </div>
+
+                <button onclick="closeSuccessSheet()" style="width: 100%; height: 50px; background: var(--solana-green); border: none; border-radius: 16px; font-size: 14px; font-weight: 800; color: var(--bg-dark); cursor: pointer; font-family: inherit;">
+                    DONE
+                </button>
+            </div>
+        </div>
+
+        <!-- Collapsible Judge Sandbox Drawer -->
         <div class="demo-drawer" id="demo-drawer">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                 <div style="font-size: 12px; font-weight: 900; color: var(--solana-teal); letter-spacing: 0.5px;">
@@ -934,7 +1220,7 @@
                 </div>
             </div>
 
-            <div class="demo-slider-row">
+            <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px;">
                 <span>Simulate Sensor Value:</span>
                 <strong id="drawer-slider-val" style="color: #fff;">8,420 steps</strong>
             </div>
@@ -961,7 +1247,7 @@
                         <span style="font-size: 20px;">📱</span>
                         <div>
                             <div>Seeker Seed Vault</div>
-                            <div style="font-size: 11px; color: var(--solana-green);">Hardware Security Layer</div>
+                            <div style="font-size: 11px; color: var(--solana-green);">Hardware Security Layer • Genesis Token</div>
                         </div>
                     </div>
                     <span>➔</span>
@@ -1009,7 +1295,7 @@
             </div>
             <div class="nav-item" onclick="switchNavTab('squads', this)">
                 <span class="nav-icon">🏆</span>
-                <span>Leaderboard</span>
+                <span>Ranks</span>
             </div>
             <div class="nav-item" onclick="switchNavTab('vault', this)">
                 <span class="nav-icon">🛡️</span>
@@ -1019,6 +1305,83 @@
     </div>
 
     <script>
+        // Web Audio Synthesizer for Native Haptics & Sound FX
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playMechanicalClick() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(140, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 0.05);
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.05);
+        }
+
+        function playSuccessChime() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const now = audioCtx.currentTime;
+            [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.2, now + idx * 0.08);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.3);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now + idx * 0.08);
+                osc.stop(now + idx * 0.08 + 0.3);
+            });
+        }
+
+        // Particle Canvas Effect
+        const canvas = document.getElementById('fx-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        setTimeout(resizeCanvas, 100);
+
+        function triggerConfetti() {
+            particles = [];
+            for (let i = 0; i < 60; i++) {
+                particles.push({
+                    x: canvas.width / 2,
+                    y: canvas.height / 2 + 100,
+                    vx: (Math.random() - 0.5) * 12,
+                    vy: (Math.random() - 1.2) * 14,
+                    size: Math.random() * 6 + 3,
+                    color: ['#14F195', '#9945FF', '#00C2FF', '#FFD60A'][Math.floor(Math.random() * 4)],
+                    life: 80
+                });
+            }
+            animateParticles();
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((p, idx) => {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.35; // Gravity
+                p.life--;
+                ctx.fillStyle = p.color;
+                ctx.fillRect(p.x, p.y, p.size, p.size);
+            });
+            particles = particles.filter(p => p.life > 0);
+            if (particles.length > 0) requestAnimationFrame(animateParticles);
+        }
+
         // State
         let isConnected = false;
         let connectedAddress = null;
@@ -1035,6 +1398,7 @@
 
         // Navigation Switcher
         function switchNavTab(tabName, el) {
+            playMechanicalClick();
             document.querySelectorAll('.tab-view').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
 
@@ -1044,14 +1408,18 @@
 
         // Category Switcher
         function switchCategory(cat, el) {
+            playMechanicalClick();
             document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
             el.classList.add('active');
             activeCategory = cat;
 
+            const breakdown = document.getElementById('app-breakdown-box');
+
             if (cat === 'steps') {
                 currentTarget = 8000;
                 currentValue = 8420;
-                document.getElementById('hero-sensor-tag').innerText = 'HEALTH CONNECT LIVE';
+                breakdown.style.display = 'none';
+                document.getElementById('hero-sensor-tag').innerText = 'HEALTH CONNECT VERIFIED';
                 document.getElementById('metric-main').innerText = currentValue.toLocaleString();
                 document.getElementById('metric-sub').innerText = 'of 8,000 daily steps required';
                 document.getElementById('demo-slider').min = 1000;
@@ -1060,6 +1428,7 @@
             } else if (cat === 'screentime') {
                 currentTarget = 3.0;
                 currentValue = 2.1;
+                breakdown.style.display = 'block';
                 document.getElementById('hero-sensor-tag').innerText = 'USAGESTATS DETOX';
                 document.getElementById('metric-main').innerText = currentValue + 'h';
                 document.getElementById('metric-sub').innerText = 'under 3.0h phone limit today';
@@ -1069,6 +1438,7 @@
             } else if (cat === 'sleep') {
                 currentTarget = 7.0;
                 currentValue = 7.5;
+                breakdown.style.display = 'none';
                 document.getElementById('hero-sensor-tag').innerText = 'SLEEP SESSION API';
                 document.getElementById('metric-main').innerText = currentValue + 'h';
                 document.getElementById('metric-sub').innerText = 'of 7.0h rest goal achieved';
@@ -1095,7 +1465,7 @@
                 status.style.color = 'var(--solana-green)';
             } else if (currentValue >= currentTarget) {
                 btn.className = 'btn-clock-in active';
-                btn.innerHTML = '<span>🔒</span><span>CLOCK IN TODAY (1-TAP)</span>';
+                btn.innerHTML = '<span>🔒</span><span>CLOCK IN (SEED VAULT)</span>';
                 status.innerText = 'Goal Complete! Ready to Clock In';
                 status.style.color = 'var(--solana-green)';
             } else {
@@ -1128,18 +1498,48 @@
             }
         }
 
-        // Clock In Action
-        function handleClockInAction() {
+        // Biometric Sheet Controls
+        function openBiometricSheet() {
             if (isTodayClockedIn || currentValue < currentTarget) return;
+            playMechanicalClick();
+            document.getElementById('bio-day-index').innerText = currentDay;
+            document.getElementById('biometric-sheet').classList.add('active');
+        }
 
-            if (navigator.vibrate) navigator.vibrate([40, 60, 40]);
+        function confirmBiometricClockIn() {
+            playMechanicalClick();
+            if (navigator.vibrate) navigator.vibrate([60, 80, 60]);
+
+            document.getElementById('biometric-sheet').classList.remove('active');
+
+            // Generate realistic Solana tx hash
+            const mockTxHash = "5Kz" + Math.random().toString(36).substring(2, 8) + "..." + Math.random().toString(36).substring(2, 6);
+            document.getElementById('tx-hash-display').innerText = mockTxHash;
+
             isTodayClockedIn = true;
-            showToast("Day " + currentDay + " Clocked In with Seed Vault!");
+            playSuccessChime();
+            triggerConfetti();
+
+            document.getElementById('tx-success-sheet').classList.add('active');
             updateProgress();
         }
 
-        // Fast Forward for Judge Testing
+        function closeSuccessSheet() {
+            playMechanicalClick();
+            document.getElementById('tx-success-sheet').classList.remove('active');
+        }
+
+        // Share as Solana Blink
+        function shareAsBlink() {
+            playMechanicalClick();
+            const dummyBlinkUrl = `https://actions.solana.com/pledge?user=${connectedAddress || 'SeekerUser'}&streak=4`;
+            navigator.clipboard.writeText(`🔥 I just Clocked In Day ${currentDay}/7 on bozPledge with my Solana Seeker! Join my accountability squad: ${dummyBlinkUrl}`);
+            showToast("Blink copied to clipboard! Ready to share on X.");
+        }
+
+        // Judge Fast Forward
         function handleFastForwardDay() {
+            playMechanicalClick();
             if (currentDay >= totalDays) {
                 showToast("Challenge ended! Forfeited tokens burned.");
                 currentDay = 1;
@@ -1155,7 +1555,6 @@
             updateProgress();
         }
 
-        // Drawer Slider Handler
         function handleDrawerSlider(val) {
             currentValue = parseFloat(val);
             if (activeCategory === 'steps') {
@@ -1168,8 +1567,8 @@
             updateProgress();
         }
 
-        // Drawer Toggle
         function toggleDemoDrawer() {
+            playMechanicalClick();
             demoDrawerOpen = !demoDrawerOpen;
             const drawer = document.getElementById('demo-drawer');
             const pill = document.getElementById('judge-toggle-btn');
@@ -1186,27 +1585,39 @@
 
         // Wallet Handlers
         function openWalletModal() {
+            playMechanicalClick();
             document.getElementById('wallet-modal').classList.add('active');
         }
         function closeWalletModal() {
+            playMechanicalClick();
             document.getElementById('wallet-modal').classList.remove('active');
         }
+
         function selectWallet(name) {
+            playMechanicalClick();
             isConnected = true;
-            connectedAddress = "Seeker" + Math.random().toString(36).substring(2, 7) + "sol";
+            connectedAddress = "Seeker" + Math.random().toString(36).substring(2, 6) + "sol";
             document.getElementById('wallet-btn-label').innerText = connectedAddress.substring(0, 8) + '...';
             document.getElementById('wallet-btn').classList.add('connected');
             document.getElementById('profile-address-text').innerText = connectedAddress;
             document.getElementById('profile-skr-text').innerText = userBalanceSKR + " $SKR in Vault";
             document.getElementById('disconnect-btn-wrap').style.display = 'block';
+
+            if (name.includes('Seeker')) {
+                document.getElementById('genesis-pill').style.display = 'inline-block';
+            }
+
             closeWalletModal();
             showToast("Connected to " + name + " via MWA 2.0!");
         }
+
         function disconnectWallet() {
+            playMechanicalClick();
             isConnected = false;
             connectedAddress = null;
             document.getElementById('wallet-btn-label').innerText = 'Connect';
             document.getElementById('wallet-btn').classList.remove('connected');
+            document.getElementById('genesis-pill').style.display = 'none';
             document.getElementById('profile-address-text').innerText = 'Not Connected';
             document.getElementById('profile-skr-text').innerText = '0 $SKR in Vault';
             document.getElementById('disconnect-btn-wrap').style.display = 'none';
@@ -1215,6 +1626,7 @@
         }
 
         function startNewPledge(name, target, stake) {
+            playMechanicalClick();
             showToast("Staked " + stake + " $SKR for " + name);
             switchNavTab('dashboard', document.querySelectorAll('.nav-item')[0]);
         }
@@ -1228,7 +1640,15 @@
             }, 2500);
         }
 
-        // 30s Day Timer for Judge Mode
+        // Real-time Clock Update (Status bar)
+        setInterval(() => {
+            const d = new Date();
+            const h = String(d.getHours()).padStart(2, '0');
+            const m = String(d.getMinutes()).padStart(2, '0');
+            document.getElementById('clock-display').innerText = `${h}:${m}`;
+        }, 1000);
+
+        // Demo Drawer countdown timer
         setInterval(() => {
             secondsLeftInDay--;
             if (secondsLeftInDay <= 0) {
@@ -1241,7 +1661,7 @@
             document.getElementById('drawer-timer').innerText = `30s Day: ${secondsLeftInDay}s`;
         }, 1000);
 
-        // Initial setup
+        // Initial Progress
         updateProgress();
     </script>
 </body>
