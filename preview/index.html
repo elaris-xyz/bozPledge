@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>bozPledge — Production Tier-1 Seeker Experience</title>
+    <title>bozPledge — Professional Custom Habit Staking Platform</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -56,7 +56,7 @@
             position: relative;
             width: 100%;
             max-width: 420px;
-            height: 890px;
+            height: 900px;
             background: #000;
             border-radius: 54px;
             box-shadow: 
@@ -93,7 +93,7 @@
             gap: 6px;
         }
 
-        /* Top Notch / Camera */
+        /* Notch */
         .phone-notch {
             position: absolute;
             top: 10px;
@@ -118,7 +118,7 @@
             box-shadow: inset 0 0 4px #00C2FF40;
         }
 
-        /* FX Canvas */
+        /* Canvas */
         #fx-canvas {
             position: absolute;
             inset: 0;
@@ -139,7 +139,7 @@
         }
         .phone-screen::-webkit-scrollbar { display: none; }
 
-        /* Clean Two-Tier App Header (Zero Overlap!) */
+        /* Two-Tier App Header */
         .app-header-tier1 {
             display: flex;
             align-items: center;
@@ -223,7 +223,7 @@
             box-shadow: 0 0 6px var(--solana-green);
         }
 
-        /* Live Sensor & Attestation Bar */
+        /* Hardware Attestation Bar */
         .sensor-sync-bar {
             background: var(--surface-dark);
             border: 1px solid var(--border-subtle);
@@ -235,7 +235,7 @@
             font-size: 11px;
             font-weight: 600;
             color: var(--text-secondary);
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
         .sync-indicator {
             display: flex;
@@ -255,17 +255,44 @@
             100% { transform: scale(1); opacity: 1; }
         }
 
-        /* Drag-to-Scroll Horizontal Carousel Wrap */
+        /* Custom Pledge Studio Callout Banner */
+        .custom-builder-banner {
+            background: linear-gradient(135deg, rgba(153, 69, 255, 0.16) 0%, rgba(20, 241, 149, 0.12) 100%);
+            border: 1px solid rgba(153, 69, 255, 0.4);
+            border-radius: 18px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .custom-builder-banner:hover {
+            border-color: var(--solana-green);
+            transform: translateY(-1px);
+        }
+        .builder-btn-pill {
+            background: var(--solana-purple);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 6px 12px;
+            border-radius: 10px;
+            box-shadow: 0 4px 14px rgba(153, 69, 255, 0.4);
+        }
+
+        /* Carousel of Active Commitments */
         .carousel-outer-wrap {
             position: relative;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
         .carousel-edge-fade-right {
             position: absolute;
             right: 0;
             top: 0;
             bottom: 0;
-            width: 28px;
+            width: 30px;
             background: linear-gradient(90deg, transparent, var(--bg-dark));
             pointer-events: none;
             z-index: 10;
@@ -278,9 +305,7 @@
             padding-bottom: 4px;
             cursor: grab;
         }
-        .category-scroll-container:active {
-            cursor: grabbing;
-        }
+        .category-scroll-container:active { cursor: grabbing; }
         .category-scroll-container::-webkit-scrollbar { display: none; }
         .cat-chip {
             background: var(--surface-dark);
@@ -297,10 +322,6 @@
             gap: 6px;
             flex-shrink: 0;
             transition: all 0.2s;
-        }
-        .cat-chip:hover {
-            border-color: var(--border-active);
-            color: var(--text-primary);
         }
         .cat-chip.active {
             background: rgba(153, 69, 255, 0.15);
@@ -320,6 +341,12 @@
             color: #fff;
             box-shadow: 0 0 14px rgba(0, 194, 255, 0.2);
         }
+        .cat-chip.active.gold {
+            background: rgba(255, 214, 10, 0.12);
+            border-color: var(--gold-accent);
+            color: #fff;
+            box-shadow: 0 0 14px rgba(255, 214, 10, 0.2);
+        }
 
         /* Hero Commitment Card */
         .hero-card {
@@ -328,7 +355,7 @@
             border-radius: 26px;
             padding: 22px;
             position: relative;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             overflow: hidden;
             box-shadow: 0 12px 35px rgba(0,0,0,0.5);
             transition: border-color 0.3s;
@@ -347,20 +374,11 @@
             border-radius: 8px;
             text-transform: uppercase;
         }
-        .tag-pill.green {
-            background: rgba(20, 241, 149, 0.12);
-            color: var(--solana-green);
-        }
-        .tag-pill.purple {
-            background: rgba(153, 69, 255, 0.15);
-            color: var(--solana-purple);
-        }
-        .tag-pill.blue {
-            background: rgba(0, 194, 255, 0.15);
-            color: var(--solana-teal);
-        }
+        .tag-pill.green { background: rgba(20, 241, 149, 0.12); color: var(--solana-green); }
+        .tag-pill.purple { background: rgba(153, 69, 255, 0.15); color: var(--solana-purple); }
+        .tag-pill.blue { background: rgba(0, 194, 255, 0.15); color: var(--solana-teal); }
+        .tag-pill.gold { background: rgba(255, 214, 10, 0.15); color: var(--gold-accent); }
 
-        /* Razor Sharp Typography (No Glitch Spacing!) */
         .metric-row {
             display: flex;
             align-items: baseline;
@@ -370,7 +388,7 @@
         .metric-integer {
             font-size: 48px;
             font-weight: 900;
-            letter-spacing: -1.5px;
+            letter-spacing: -1px;
             line-height: 1;
             font-family: 'JetBrains Mono', monospace;
             color: var(--text-primary);
@@ -441,7 +459,7 @@
             align-items: center;
             justify-content: space-between;
             font-size: 12px;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
         .risk-text {
             color: var(--text-secondary);
@@ -468,12 +486,9 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
-        .dots-row {
-            display: flex;
-            gap: 6px;
-        }
+        .dots-row { display: flex; gap: 6px; }
         .day-dot {
             width: 26px;
             height: 26px;
@@ -487,14 +502,8 @@
             color: var(--text-muted);
             transition: all 0.3s;
         }
-        .day-dot.completed {
-            background: var(--solana-green);
-            color: var(--bg-dark);
-        }
-        .day-dot.missed {
-            background: var(--flame-red);
-            color: #fff;
-        }
+        .day-dot.completed { background: var(--solana-green); color: var(--bg-dark); }
+        .day-dot.missed { background: var(--flame-red); color: #fff; }
         .day-dot.current {
             background: var(--solana-purple);
             color: #fff;
@@ -518,7 +527,7 @@
             gap: 10px;
             cursor: pointer;
             transition: transform 0.15s, box-shadow 0.2s;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
         }
         .btn-clock-in.active {
             background: linear-gradient(90deg, var(--solana-purple), var(--solana-green));
@@ -545,20 +554,20 @@
         /* Share Blink Button */
         .share-streak-btn {
             width: 100%;
-            height: 40px;
+            height: 38px;
             background: transparent;
             border: 1px solid var(--border-subtle);
             border-radius: 14px;
             color: var(--text-secondary);
             font-family: inherit;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
             cursor: pointer;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             transition: all 0.2s;
         }
         .share-streak-btn:hover {
@@ -571,7 +580,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
         .mini-stat {
             background: var(--surface-card);
@@ -621,9 +630,7 @@
             padding: 8px 12px;
             border-radius: 12px;
         }
-        .nav-item.active {
-            color: var(--solana-green);
-        }
+        .nav-item.active { color: var(--solana-green); }
         .nav-icon { font-size: 20px; }
 
         /* Views */
@@ -638,7 +645,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Explore Catalog Cards */
+        /* Explore Catalog 8-Items Grid */
         .catalog-title {
             font-size: 18px;
             font-weight: 800;
@@ -647,21 +654,24 @@
         .catalog-sub {
             font-size: 13px;
             color: var(--text-secondary);
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
         .pledge-item-card {
             background: var(--surface-card);
             border: 1px solid var(--border-subtle);
             border-radius: 20px;
-            padding: 18px;
-            margin-bottom: 12px;
+            padding: 16px;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             cursor: pointer;
-            transition: border-color 0.2s;
+            transition: all 0.2s;
         }
-        .pledge-item-card:hover { border-color: var(--solana-purple); }
+        .pledge-item-card:hover {
+            border-color: var(--solana-purple);
+            transform: translateX(2px);
+        }
         .pledge-icon-box {
             width: 44px;
             height: 44px;
@@ -671,113 +681,111 @@
             justify-content: center;
             font-size: 22px;
             background: var(--surface-dark);
-            margin-right: 14px;
+            margin-right: 12px;
+            flex-shrink: 0;
         }
         .pledge-details h4 {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 800;
             margin-bottom: 3px;
         }
         .pledge-details p {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-secondary);
         }
 
-        /* Leaderboard */
-        .leader-card {
-            background: var(--surface-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: 18px;
-            padding: 14px 16px;
-            margin-bottom: 10px;
+        /* CUSTOM PLEDGE STUDIO MODAL (Full Power!) */
+        .studio-modal-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(3, 4, 7, 0.96);
+            backdrop-filter: blur(14px);
+            z-index: 700;
+            display: none;
+            flex-direction: column;
+            overflow-y: auto;
+            padding: 50px 20px 24px 20px;
+        }
+        .studio-modal-overlay.active { display: flex; animation: slideUp 0.25s ease-out; }
+        .studio-header {
             display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
         }
-        .rank-num {
-            font-size: 16px;
+        .studio-title {
+            font-size: 20px;
             font-weight: 900;
-            color: var(--gold-accent);
-            width: 24px;
-            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: -0.5px;
         }
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex: 1;
-        }
-        .avatar-circle {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: var(--surface-dark);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .studio-field-label {
+            font-size: 11px;
             font-weight: 800;
-            font-size: 13px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 8px;
+            display: block;
         }
-        .streak-pill {
-            background: rgba(255, 69, 58, 0.15);
-            color: var(--flame-red);
-            font-size: 12px;
-            font-weight: 800;
-            padding: 4px 10px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        /* Vault / Profile */
-        .profile-header {
-            text-align: center;
-            margin-bottom: 24px;
-        }
-        .profile-avatar {
-            width: 72px;
-            height: 72px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--solana-purple), var(--solana-green));
-            margin: 0 auto 12px auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            box-shadow: 0 0 20px rgba(153, 69, 255, 0.4);
-        }
-        .badge-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 14px;
-        }
-        .badge-item {
+        .studio-input {
+            width: 100%;
+            height: 52px;
             background: var(--surface-card);
             border: 1px solid var(--border-subtle);
             border-radius: 16px;
-            padding: 14px 8px;
-            text-align: center;
-        }
-        .badge-icon {
-            font-size: 28px;
-            margin-bottom: 6px;
-        }
-        .badge-name {
-            font-size: 11px;
+            padding: 0 16px;
+            color: #fff;
+            font-family: inherit;
+            font-size: 16px;
             font-weight: 700;
-            color: var(--text-primary);
+            margin-bottom: 18px;
+            outline: none;
+            transition: border-color 0.2s;
         }
-        .badge-type {
-            font-size: 9px;
-            color: var(--solana-teal);
-            font-weight: 600;
-            margin-top: 2px;
+        .studio-input:focus { border-color: var(--solana-green); }
+        .studio-options-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 18px;
         }
+        .studio-opt-btn {
+            height: 44px;
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            color: var(--text-secondary);
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .studio-opt-btn.active {
+            background: rgba(20, 241, 149, 0.15);
+            border-color: var(--solana-green);
+            color: #fff;
+        }
+        .math-breakdown-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 18px;
+            padding: 16px;
+            margin-bottom: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+        }
+        .math-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        .math-row:last-child { margin-bottom: 0; padding-top: 8px; border-top: 1px solid var(--border-subtle); }
 
-        /* Realistic Seed Vault Hold-to-Authorize Sheet */
+        /* Biometric Sheet */
         .biometric-sheet {
             position: absolute;
             inset: 0;
@@ -883,10 +891,7 @@
             display: none;
             box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.9);
         }
-        .demo-drawer.open {
-            display: block;
-            animation: slideUp 0.25s ease-out;
-        }
+        .demo-drawer.open { display: block; animation: slideUp 0.25s ease-out; }
         input[type="range"] {
             width: 100%;
             height: 6px;
@@ -966,7 +971,7 @@
     <div class="phone-wrapper">
         <canvas id="fx-canvas"></canvas>
 
-        <!-- Android Status Bar -->
+        <!-- Status Bar -->
         <div class="status-bar">
             <span id="clock-display">09:41</span>
             <div class="status-bar-icons">
@@ -986,7 +991,7 @@
         </div>
 
         <div class="phone-screen">
-            <!-- Two-Tier Clean Header (No Overlap) -->
+            <!-- Two-Tier Header -->
             <div class="app-header-tier1">
                 <div class="brand-logo-wrap">
                     <h1 class="brand-title">bozPLEDGE</h1>
@@ -1016,12 +1021,24 @@
             <!-- VIEW 1: DASHBOARD -->
             <div class="tab-view active" id="view-dashboard">
                 
-                <!-- Drag-to-Scroll Horizontal Carousel Wrap -->
+                <!-- Quick Launch Custom Studio Banner -->
+                <div class="custom-builder-banner" onclick="openStudioModal()">
+                    <div>
+                        <div style="font-weight: 800; font-size: 13px; color: #fff;">✨ Create Custom Pledge</div>
+                        <div style="font-size: 11px; color: var(--text-secondary);">Set any goal, any time (e.g. 6 AM) & custom $SKR</div>
+                    </div>
+                    <div class="builder-btn-pill">+ BUILD</div>
+                </div>
+
+                <!-- Drag-to-Scroll Horizontal Carousel -->
                 <div class="carousel-outer-wrap">
                     <div class="carousel-edge-fade-right"></div>
                     <div class="category-scroll-container" id="category-scroll-container">
                         <div class="cat-chip active green" onclick="switchCategory('steps', this)">
                             <span>🏃</span> 8,000 Steps
+                        </div>
+                        <div class="cat-chip" onclick="switchCategory('early6am', this)">
+                            <span>🌅</span> 6:00 AM Club (5k $SKR)
                         </div>
                         <div class="cat-chip" onclick="switchCategory('screentime', this)">
                             <span>📵</span> Screen Detox (&lt;3h)
@@ -1029,8 +1046,8 @@
                         <div class="cat-chip" onclick="switchCategory('sleep', this)">
                             <span>😴</span> 7.0h Deep Sleep
                         </div>
-                        <div class="cat-chip" onclick="switchCategory('early', this)">
-                            <span>🌅</span> Early Rise 8:00 AM
+                        <div class="cat-chip" onclick="switchCategory('gym', this)">
+                            <span>🏋️</span> 45m Gym Workout
                         </div>
                     </div>
                 </div>
@@ -1040,7 +1057,7 @@
                     <div class="risk-text">
                         <div>Daily Window Deadline</div>
                         <div style="font-size: 11px; color: var(--text-muted);">
-                            If missed: <span class="risk-burn-amount">71.4 $SKR burned</span>
+                            If missed: <span class="risk-burn-amount" id="risk-burn-text">71.4 $SKR burned</span>
                         </div>
                     </div>
                     <div class="cutoff-timer" id="cutoff-timer-text">04h 28m 14s</div>
@@ -1053,7 +1070,7 @@
                         <span class="tag-pill purple" id="hero-stake-tag">500 $SKR STAKED</span>
                     </div>
 
-                    <!-- Razor Sharp Metric (No spacing bugs!) -->
+                    <!-- Razor Sharp Metric -->
                     <div class="metric-row">
                         <span class="metric-integer" id="metric-integer">8,420</span>
                         <span class="metric-unit" id="metric-unit"></span>
@@ -1110,21 +1127,39 @@
                 <div class="stats-2-col">
                     <div class="mini-stat">
                         <div class="mini-stat-label">Active Streak</div>
-                        <div class="mini-stat-value" style="color: var(--flame-red)">🔥 4 Days</div>
+                        <div class="mini-stat-value" style="color: var(--flame-red)" id="streak-stat-text">🔥 4 Days</div>
                     </div>
                     <div class="mini-stat">
                         <div class="mini-stat-label">Forfeited / Burned</div>
-                        <div class="mini-stat-value" style="color: var(--solana-teal)">0 $SKR</div>
+                        <div class="mini-stat-value" style="color: var(--solana-teal)" id="burn-stat-text">0 $SKR</div>
                     </div>
                 </div>
             </div>
 
-            <!-- VIEW 2: EXPLORE / CATALOG -->
+            <!-- VIEW 2: EXPLORE / CATALOG (8 Diverse Habits) -->
             <div class="tab-view" id="view-explore">
-                <div class="catalog-title">Commitment Catalog</div>
-                <div class="catalog-sub">Hardware-attested habit staking protocols on Seeker.</div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <div>
+                        <div class="catalog-title">Commitment Catalog</div>
+                        <div class="catalog-sub" style="margin-bottom: 0;">Hardware-attested habit staking protocols.</div>
+                    </div>
+                    <button onclick="openStudioModal()" style="background: var(--solana-green); color: var(--bg-dark); border: none; padding: 6px 12px; border-radius: 10px; font-weight: 800; font-size: 11px; cursor: pointer;">
+                        + CUSTOM
+                    </button>
+                </div>
 
-                <div class="pledge-item-card" onclick="startNewPledge('10,000 Steps Marathon', 10000, 500)">
+                <div class="pledge-item-card" onclick="launchCustomPreset('6:00 AM Club', 'time', '06:00 AM', 5000, 7)">
+                    <div style="display: flex; align-items: center;">
+                        <div class="pledge-icon-box">🌅</div>
+                        <div class="pledge-details">
+                            <h4>The 6:00 AM Club (High Roller)</h4>
+                            <p>System Clock NTP • 7 Days • Stake 5,000 $SKR</p>
+                        </div>
+                    </div>
+                    <span style="color: var(--gold-accent); font-weight: 800; font-size: 13px;">JOIN</span>
+                </div>
+
+                <div class="pledge-item-card" onclick="launchCustomPreset('10,000 Steps Marathon', 'steps', '10,000', 500, 7)">
                     <div style="display: flex; align-items: center;">
                         <div class="pledge-icon-box">🏃</div>
                         <div class="pledge-details">
@@ -1132,40 +1167,73 @@
                             <p>Health Connect • 7 Days • Stake 500 $SKR</p>
                         </div>
                     </div>
-                    <span style="color: var(--solana-green); font-weight: 800; font-size: 14px;">+ JOIN</span>
+                    <span style="color: var(--solana-green); font-weight: 800; font-size: 13px;">JOIN</span>
                 </div>
 
-                <div class="pledge-item-card" onclick="startNewPledge('Digital Detox <3h', 3, 300)">
+                <div class="pledge-item-card" onclick="launchCustomPreset('Social Media Detox <1h', 'screentime', '1.0h', 1000, 14)">
                     <div style="display: flex; align-items: center;">
                         <div class="pledge-icon-box">📵</div>
                         <div class="pledge-details">
-                            <h4>Screen Time &lt; 3 Hours</h4>
-                            <p>Android UsageStats • 5 Days • Stake 300 $SKR</p>
+                            <h4>Extreme Social Media Detox (&lt;1h)</h4>
+                            <p>Android UsageStats • 14 Days • Stake 1,000 $SKR</p>
                         </div>
                     </div>
-                    <span style="color: var(--solana-green); font-weight: 800; font-size: 14px;">+ JOIN</span>
+                    <span style="color: var(--solana-purple); font-weight: 800; font-size: 13px;">JOIN</span>
                 </div>
 
-                <div class="pledge-item-card" onclick="startNewPledge('Early Riser 8 AM', 8, 400)">
+                <div class="pledge-item-card" onclick="launchCustomPreset('45m Gym & Heart Rate Zone', 'gym', '45 mins', 750, 7)">
                     <div style="display: flex; align-items: center;">
-                        <div class="pledge-icon-box">🌅</div>
+                        <div class="pledge-icon-box">🏋️</div>
                         <div class="pledge-details">
-                            <h4>Clock In Before 8:00 AM</h4>
-                            <p>System Clock • 14 Days • Stake 400 $SKR</p>
+                            <h4>Daily 45m Gym Workout</h4>
+                            <p>HeartRateRecord • 7 Days • Stake 750 $SKR</p>
                         </div>
                     </div>
-                    <span style="color: var(--solana-green); font-weight: 800; font-size: 14px;">+ JOIN</span>
+                    <span style="color: var(--solana-teal); font-weight: 800; font-size: 13px;">JOIN</span>
                 </div>
 
-                <div class="pledge-item-card" onclick="startNewPledge('Restorative Sleep 7h+', 7, 250)">
+                <div class="pledge-item-card" onclick="launchCustomPreset('Restorative Sleep 8h', 'sleep', '8.0h', 600, 7)">
                     <div style="display: flex; align-items: center;">
                         <div class="pledge-icon-box">😴</div>
                         <div class="pledge-details">
-                            <h4>7h+ Sleep Session</h4>
-                            <p>Health Connect • 7 Days • Stake 250 $SKR</p>
+                            <h4>8h+ Circadian Sleep Routine</h4>
+                            <p>SleepSession API • 7 Days • Stake 600 $SKR</p>
                         </div>
                     </div>
-                    <span style="color: var(--solana-green); font-weight: 800; font-size: 14px;">+ JOIN</span>
+                    <span style="color: var(--solana-green); font-weight: 800; font-size: 13px;">JOIN</span>
+                </div>
+
+                <div class="pledge-item-card" onclick="launchCustomPreset('Hydration Discipline 3L', 'water', '3.0 L', 300, 7)">
+                    <div style="display: flex; align-items: center;">
+                        <div class="pledge-icon-box">💧</div>
+                        <div class="pledge-details">
+                            <h4>Daily 3 Liters Hydration</h4>
+                            <p>NFC Smart Bottle • 7 Days • Stake 300 $SKR</p>
+                        </div>
+                    </div>
+                    <span style="color: var(--solana-teal); font-weight: 800; font-size: 13px;">JOIN</span>
+                </div>
+
+                <div class="pledge-item-card" onclick="launchCustomPreset('2 Hours Deep Work / Code', 'focus', '2.0h', 1500, 21)">
+                    <div style="display: flex; align-items: center;">
+                        <div class="pledge-icon-box">💻</div>
+                        <div class="pledge-details">
+                            <h4>2h Deep Focus & Zero Distractions</h4>
+                            <p>App Blacklist Monitor • 21 Days • Stake 1,500 $SKR</p>
+                        </div>
+                    </div>
+                    <span style="color: var(--gold-accent); font-weight: 800; font-size: 13px;">JOIN</span>
+                </div>
+
+                <div class="pledge-item-card" onclick="launchCustomPreset('20m Daily Meditation', 'mind', '20 mins', 400, 14)">
+                    <div style="display: flex; align-items: center;">
+                        <div class="pledge-icon-box">🧘</div>
+                        <div class="pledge-details">
+                            <h4>20m Mindfulness & Breathwork</h4>
+                            <p>Mindfulness API • 14 Days • Stake 400 $SKR</p>
+                        </div>
+                    </div>
+                    <span style="color: var(--solana-green); font-weight: 800; font-size: 13px;">JOIN</span>
                 </div>
             </div>
 
@@ -1204,7 +1272,7 @@
                         <div class="avatar-circle" style="background: rgba(20, 241, 149, 0.2);">👤</div>
                         <div>
                             <div style="font-weight: 800; font-size: 14px;">You (Seeker Genesis)</div>
-                            <div style="font-size: 11px; color: var(--text-secondary);">8,500 avg steps</div>
+                            <div style="font-size: 11px; color: var(--text-secondary);">5,000 $SKR Staked • 6 AM Club</div>
                         </div>
                     </div>
                     <div class="streak-pill">🔥 4d</div>
@@ -1238,8 +1306,8 @@
                         <div class="badge-type">cNFT Verified</div>
                     </div>
                     <div class="badge-item">
-                        <div class="badge-icon">📵</div>
-                        <div class="badge-name">Detox Master</div>
+                        <div class="badge-icon">🌅</div>
+                        <div class="badge-name">6 AM Club</div>
                         <div class="badge-type">cNFT Verified</div>
                     </div>
                     <div class="badge-item" style="opacity: 0.4;">
@@ -1249,6 +1317,84 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- FULL POWER CUSTOM PLEDGE STUDIO MODAL -->
+        <div class="studio-modal-overlay" id="studio-modal">
+            <div class="studio-header">
+                <div class="studio-title">✨ Custom Pledge Studio</div>
+                <span onclick="closeStudioModal()" style="font-size: 20px; cursor: pointer; color: var(--text-muted);">✕</span>
+            </div>
+
+            <label class="studio-field-label">1. Commitment Category</label>
+            <div class="studio-options-grid" style="grid-template-columns: repeat(2, 1fr); margin-bottom: 14px;">
+                <div class="studio-opt-btn active" id="btn-cat-wake" onclick="selectStudioCategory('wake', this)">🌅 Wake-Up Time</div>
+                <div class="studio-opt-btn" id="btn-cat-steps" onclick="selectStudioCategory('steps', this)">🏃 Daily Steps</div>
+                <div class="studio-opt-btn" id="btn-cat-screen" onclick="selectStudioCategory('screen', this)">📵 Screen Detox</div>
+                <div class="studio-opt-btn" id="btn-cat-gym" onclick="selectStudioCategory('gym', this)">🏋️ Gym Workout</div>
+            </div>
+
+            <!-- Dynamic Target Field -->
+            <div id="field-wake-wrap">
+                <label class="studio-field-label">Target Wake-Up Time</label>
+                <input type="text" class="studio-input" id="studio-wake-time" value="06:00 AM" placeholder="e.g. 06:00 AM">
+            </div>
+
+            <div id="field-steps-wrap" style="display: none;">
+                <label class="studio-field-label">Target Steps Goal</label>
+                <input type="number" class="studio-input" id="studio-steps-val" value="10000" placeholder="e.g. 10000">
+            </div>
+
+            <div id="field-screen-wrap" style="display: none;">
+                <label class="studio-field-label">Max Screen Time (Hours)</label>
+                <input type="number" step="0.5" class="studio-input" id="studio-screen-val" value="2.0" placeholder="e.g. 2.0">
+            </div>
+
+            <div id="field-gym-wrap" style="display: none;">
+                <label class="studio-field-label">Workout Duration (Minutes)</label>
+                <input type="number" class="studio-input" id="studio-gym-val" value="45" placeholder="e.g. 45">
+            </div>
+
+            <label class="studio-field-label">2. Stake Amount in $SKR (Free Input)</label>
+            <input type="number" class="studio-input" id="studio-stake-amount" value="5000" oninput="updateStudioMath()">
+
+            <label class="studio-field-label">3. Challenge Duration</label>
+            <div class="studio-options-grid">
+                <div class="studio-opt-btn" onclick="selectStudioDays(3, this)">3 Days</div>
+                <div class="studio-opt-btn active" onclick="selectStudioDays(7, this)">7 Days</div>
+                <div class="studio-opt-btn" onclick="selectStudioDays(14, this)">14 Days</div>
+                <div class="studio-opt-btn" onclick="selectStudioDays(30, this)">30 Days</div>
+            </div>
+
+            <label class="studio-field-label">4. Penalty Consequence Rule</label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 18px;">
+                <div class="studio-opt-btn active" style="font-size: 11px;" id="rule-burn-btn" onclick="selectRule('burn', this)">🔥 100% SPL Burn</div>
+                <div class="studio-opt-btn" style="font-size: 11px;" id="rule-dao-btn" onclick="selectRule('dao', this)">🏛️ 50% Burn / 50% DAO</div>
+            </div>
+
+            <!-- Mathematical Breakdown -->
+            <div class="math-breakdown-card">
+                <div class="math-row">
+                    <span style="color: var(--text-secondary);">Total Collateral:</span>
+                    <strong style="color: var(--solana-green);" id="math-total-stake">5,000 $SKR</strong>
+                </div>
+                <div class="math-row">
+                    <span style="color: var(--text-secondary);">Daily Loss on Failure:</span>
+                    <strong style="color: var(--flame-red);" id="math-daily-loss">714.28 $SKR / day</strong>
+                </div>
+                <div class="math-row">
+                    <span style="color: var(--text-secondary);">Seeker Treasury APY:</span>
+                    <strong style="color: var(--gold-accent);">+12.5% Bonus on 7/7</strong>
+                </div>
+                <div class="math-row">
+                    <span style="color: var(--text-secondary);">On-Chain Contract:</span>
+                    <strong style="color: var(--solana-teal);">Dedicated PDA Escrow</strong>
+                </div>
+            </div>
+
+            <button onclick="deployCustomPledge()" style="width: 100%; height: 56px; background: linear-gradient(90deg, var(--solana-purple), var(--solana-green)); border: none; border-radius: 18px; font-size: 15px; font-weight: 900; color: #fff; cursor: pointer; font-family: inherit; box-shadow: 0 10px 30px rgba(20, 241, 149, 0.25);">
+                DEPLOY PLEDGE TO SOLANA (5,000 $SKR)
+            </button>
         </div>
 
         <!-- Biometric Bottom Sheet with Hold-to-Authorize -->
@@ -1287,7 +1433,7 @@
                 <div style="font-size: 12px; font-weight: 800; color: var(--solana-green); letter-spacing: 1px;">
                     TRANSACTION CONFIRMED
                 </div>
-                <h3 style="font-size: 20px; font-weight: 900; margin: 6px 0;">Day 2 Verified On-Chain!</h3>
+                <h3 style="font-size: 20px; font-weight: 900; margin: 6px 0;" id="success-day-title">Day 2 Verified On-Chain!</h3>
                 <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">
                     Your physical proof was attested and saved to the Solana ledger.
                 </p>
@@ -1477,21 +1623,27 @@
             if (particles.length > 0) requestAnimationFrame(animateParticles);
         }
 
-        // State
+        // Active State Data
         let isConnected = false;
         let connectedAddress = null;
-        let userBalanceSKR = 1250;
+        let userBalanceSKR = 12500;
 
         let activeCategory = 'steps';
         let currentTarget = 8000;
         let currentValue = 8420;
+        let currentStakeSKR = 500;
         let currentDay = 2;
         let totalDays = 7;
         let isTodayClockedIn = false;
         let demoDrawerOpen = false;
         let secondsLeftInDay = 30;
 
-        // Mouse Drag-To-Scroll & Mousewheel for Category Container
+        // Custom Studio State
+        let studioCategory = 'wake';
+        let studioDays = 7;
+        let studioRule = 'burn';
+
+        // Mouse Drag-To-Scroll & Mousewheel for Carousel
         const scrollContainer = document.getElementById('category-scroll-container');
         let isDown = false;
         let startX;
@@ -1512,7 +1664,6 @@
             scrollContainer.scrollLeft = scrollLeft - walk;
         });
 
-        // Convert vertical mousewheel to horizontal scroll!
         scrollContainer.addEventListener('wheel', (e) => {
             if (e.deltaY !== 0) {
                 e.preventDefault();
@@ -1539,33 +1690,59 @@
 
             activeCategory = cat;
             const breakdown = document.getElementById('app-breakdown-box');
-            const card = document.getElementById('hero-card-elem');
 
             if (cat === 'steps') {
                 el.className = 'cat-chip active green';
                 currentTarget = 8000;
                 currentValue = 8420;
+                currentStakeSKR = 500;
+                totalDays = 7;
                 breakdown.style.display = 'none';
                 document.getElementById('hero-sensor-tag').className = 'tag-pill green';
                 document.getElementById('hero-sensor-tag').innerText = 'HEALTH CONNECT VERIFIED';
+                document.getElementById('hero-stake-tag').innerText = '500 $SKR STAKED';
                 document.getElementById('metric-integer').innerText = '8,420';
                 document.getElementById('metric-unit').innerText = '';
                 document.getElementById('metric-sub').innerText = 'of 8,000 daily steps required';
                 document.getElementById('sync-status-text').innerText = 'Health Connect Verified • Synced 4s ago';
+                document.getElementById('risk-burn-text').innerText = '71.4 $SKR burned';
                 document.getElementById('demo-slider').min = 1000;
                 document.getElementById('demo-slider').max = 14000;
+                document.getElementById('demo-slider').value = currentValue;
+            } else if (cat === 'early6am') {
+                // THE 6:00 AM CLUB!
+                el.className = 'cat-chip active gold';
+                currentTarget = 6.0;
+                currentValue = 5.8; // 05:48 AM
+                currentStakeSKR = 5000; // 5,000 $SKR High Roller!
+                totalDays = 7;
+                breakdown.style.display = 'none';
+                document.getElementById('hero-sensor-tag').className = 'tag-pill gold';
+                document.getElementById('hero-sensor-tag').innerText = 'SYSTEM CLOCK NTP ATTESTED';
+                document.getElementById('hero-stake-tag').innerText = '5,000 $SKR STAKED';
+                document.getElementById('metric-integer').innerText = '05:48';
+                document.getElementById('metric-unit').innerText = ' AM';
+                document.getElementById('metric-sub').innerText = 'Target: Clock In before 06:00 AM sharp';
+                document.getElementById('sync-status-text').innerText = 'NTP Time Verified • Hardware Clock Safe';
+                document.getElementById('risk-burn-text').innerText = '714.28 $SKR burned';
+                document.getElementById('demo-slider').min = 4;
+                document.getElementById('demo-slider').max = 9;
                 document.getElementById('demo-slider').value = currentValue;
             } else if (cat === 'screentime') {
                 el.className = 'cat-chip active purple';
                 currentTarget = 3.0;
                 currentValue = 2.1;
+                currentStakeSKR = 1000;
+                totalDays = 14;
                 breakdown.style.display = 'block';
                 document.getElementById('hero-sensor-tag').className = 'tag-pill purple';
                 document.getElementById('hero-sensor-tag').innerText = 'USAGESTATS DETOX';
+                document.getElementById('hero-stake-tag').innerText = '1,000 $SKR STAKED';
                 document.getElementById('metric-integer').innerText = '2.1';
                 document.getElementById('metric-unit').innerText = 'h';
                 document.getElementById('metric-sub').innerText = 'under 3.0h phone limit today';
                 document.getElementById('sync-status-text').innerText = 'UsageStats Attested • App Limits OK';
+                document.getElementById('risk-burn-text').innerText = '71.4 $SKR burned';
                 document.getElementById('demo-slider').min = 0;
                 document.getElementById('demo-slider').max = 6;
                 document.getElementById('demo-slider').value = currentValue;
@@ -1573,29 +1750,37 @@
                 el.className = 'cat-chip active blue';
                 currentTarget = 7.0;
                 currentValue = 7.5;
+                currentStakeSKR = 600;
+                totalDays = 7;
                 breakdown.style.display = 'none';
                 document.getElementById('hero-sensor-tag').className = 'tag-pill blue';
                 document.getElementById('hero-sensor-tag').innerText = 'SLEEP SESSION API';
+                document.getElementById('hero-stake-tag').innerText = '600 $SKR STAKED';
                 document.getElementById('metric-integer').innerText = '7.5';
                 document.getElementById('metric-unit').innerText = 'h';
                 document.getElementById('metric-sub').innerText = 'of 7.0h rest goal achieved';
                 document.getElementById('sync-status-text').innerText = 'SleepSessionRecord Validated';
+                document.getElementById('risk-burn-text').innerText = '85.7 $SKR burned';
                 document.getElementById('demo-slider').min = 4;
                 document.getElementById('demo-slider').max = 10;
                 document.getElementById('demo-slider').value = currentValue;
-            } else if (cat === 'early') {
+            } else if (cat === 'gym') {
                 el.className = 'cat-chip active';
-                currentTarget = 8.0;
-                currentValue = 7.8;
+                currentTarget = 45;
+                currentValue = 50;
+                currentStakeSKR = 750;
+                totalDays = 7;
                 breakdown.style.display = 'none';
                 document.getElementById('hero-sensor-tag').className = 'tag-pill';
-                document.getElementById('hero-sensor-tag').innerText = 'SYSTEM CLOCK TIMED';
-                document.getElementById('metric-integer').innerText = '07:48';
-                document.getElementById('metric-unit').innerText = ' AM';
-                document.getElementById('metric-sub').innerText = 'clocked before 8:00 AM target';
-                document.getElementById('sync-status-text').innerText = 'Network Time Protocol Attested';
-                document.getElementById('demo-slider').min = 6;
-                document.getElementById('demo-slider').max = 10;
+                document.getElementById('hero-sensor-tag').innerText = 'HEART RATE ZONE API';
+                document.getElementById('hero-stake-tag').innerText = '750 $SKR STAKED';
+                document.getElementById('metric-integer').innerText = '50';
+                document.getElementById('metric-unit').innerText = 'm';
+                document.getElementById('metric-sub').innerText = 'of 45 mins workout achieved';
+                document.getElementById('sync-status-text').innerText = 'WorkoutRecord Validated';
+                document.getElementById('risk-burn-text').innerText = '107.1 $SKR burned';
+                document.getElementById('demo-slider').min = 10;
+                document.getElementById('demo-slider').max = 90;
                 document.getElementById('demo-slider').value = currentValue;
             }
 
@@ -1615,7 +1800,7 @@
                 btn.innerHTML = '<span>✓</span><span>CLOCKED IN ON-CHAIN</span>';
                 status.innerText = 'Verified On-Chain! See you tomorrow.';
                 status.style.color = 'var(--solana-green)';
-            } else if (currentValue >= currentTarget) {
+            } else if (currentValue >= currentTarget || (activeCategory === 'early6am' && currentValue <= currentTarget)) {
                 btn.className = 'btn-clock-in active';
                 btn.innerHTML = '<span>🔒</span><span>CLOCK IN (SEED VAULT)</span>';
                 status.innerText = 'Goal Complete! Ready to Clock In';
@@ -1650,12 +1835,86 @@
             }
         }
 
-        // Biometric Sheet Controls with Hold-To-Scan
+        // Custom Studio Functions
+        function openStudioModal() {
+            playMechanicalClick();
+            document.getElementById('studio-modal').classList.add('active');
+            updateStudioMath();
+        }
+        function closeStudioModal() {
+            playMechanicalClick();
+            document.getElementById('studio-modal').classList.remove('active');
+        }
+
+        function selectStudioCategory(cat, el) {
+            playMechanicalClick();
+            document.querySelectorAll('#studio-modal .studio-opt-btn').forEach(b => {
+                if (b.id && b.id.startsWith('btn-cat-')) b.classList.remove('active');
+            });
+            el.classList.add('active');
+            studioCategory = cat;
+
+            document.getElementById('field-wake-wrap').style.display = (cat === 'wake') ? 'block' : 'none';
+            document.getElementById('field-steps-wrap').style.display = (cat === 'steps') ? 'block' : 'none';
+            document.getElementById('field-screen-wrap').style.display = (cat === 'screen') ? 'block' : 'none';
+            document.getElementById('field-gym-wrap').style.display = (cat === 'gym') ? 'block' : 'none';
+        }
+
+        function selectStudioDays(days, el) {
+            playMechanicalClick();
+            el.parentElement.querySelectorAll('.studio-opt-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+            studioDays = days;
+            updateStudioMath();
+        }
+
+        function selectRule(rule, el) {
+            playMechanicalClick();
+            document.getElementById('rule-burn-btn').classList.remove('active');
+            document.getElementById('rule-dao-btn').classList.remove('active');
+            el.classList.add('active');
+            studioRule = rule;
+        }
+
+        function updateStudioMath() {
+            const stake = parseFloat(document.getElementById('studio-stake-amount').value) || 0;
+            const daily = (stake / studioDays).toFixed(2);
+            document.getElementById('math-total-stake').innerText = stake.toLocaleString() + ' $SKR';
+            document.getElementById('math-daily-loss').innerText = daily + ' $SKR / day';
+        }
+
+        function deployCustomPledge() {
+            playMechanicalClick();
+            const stake = parseFloat(document.getElementById('studio-stake-amount').value) || 5000;
+            closeStudioModal();
+
+            if (studioCategory === 'wake') {
+                const time = document.getElementById('studio-wake-time').value || '06:00 AM';
+                showToast(`Deployed ${stake.toLocaleString()} $SKR for ${time} Wake-Up Club!`);
+                switchCategory('early6am', document.querySelectorAll('.cat-chip')[1]);
+            } else {
+                showToast(`Custom Pledge Created: ${stake.toLocaleString()} $SKR Staked in PDA Vault!`);
+                switchCategory('steps', document.querySelectorAll('.cat-chip')[0]);
+            }
+        }
+
+        function launchCustomPreset(name, type, target, stake, days) {
+            playMechanicalClick();
+            showToast(`Enrolled in ${name}: ${stake.toLocaleString()} $SKR Staked!`);
+            switchNavTab('dashboard', document.querySelectorAll('.nav-item')[0]);
+            if (type === 'time') {
+                switchCategory('early6am', document.querySelectorAll('.cat-chip')[1]);
+            } else {
+                switchCategory('steps', document.querySelectorAll('.cat-chip')[0]);
+            }
+        }
+
+        // Biometric Sheet Controls
         let holdTimer = null;
         let holdProgress = 0;
 
         function openBiometricSheet() {
-            if (isTodayClockedIn || currentValue < currentTarget) return;
+            if (isTodayClockedIn) return;
             playMechanicalClick();
             document.getElementById('bio-day-index').innerText = currentDay;
             document.getElementById('biometric-sheet').classList.add('active');
@@ -1700,6 +1959,7 @@
 
             const mockTxHash = "5Kz" + Math.random().toString(36).substring(2, 8) + "..." + Math.random().toString(36).substring(2, 6);
             document.getElementById('tx-hash-display').innerText = mockTxHash;
+            document.getElementById('success-day-title').innerText = `Day ${currentDay} Verified On-Chain!`;
 
             isTodayClockedIn = true;
             playSuccessChime();
@@ -1714,7 +1974,6 @@
             document.getElementById('tx-success-sheet').classList.remove('active');
         }
 
-        // Share as Solana Blink
         function shareAsBlink() {
             playMechanicalClick();
             const dummyBlinkUrl = `https://actions.solana.com/pledge?user=${connectedAddress || 'SeekerUser'}&streak=4`;
@@ -1722,7 +1981,6 @@
             showToast("Blink copied to clipboard! Ready to share on X.");
         }
 
-        // Judge Fast Forward
         function handleFastForwardDay() {
             playMechanicalClick();
             if (currentDay >= totalDays) {
@@ -1785,7 +2043,7 @@
             document.getElementById('wallet-btn-label').innerText = connectedAddress.substring(0, 8) + '...';
             document.getElementById('wallet-btn').classList.add('connected');
             document.getElementById('profile-address-text').innerText = connectedAddress;
-            document.getElementById('profile-skr-text').innerText = userBalanceSKR + " $SKR in Vault";
+            document.getElementById('profile-skr-text').innerText = userBalanceSKR.toLocaleString() + " $SKR in Vault";
             document.getElementById('disconnect-btn-wrap').style.display = 'block';
 
             if (name.includes('Seeker')) {
@@ -1810,12 +2068,6 @@
             showToast("Wallet Disconnected");
         }
 
-        function startNewPledge(name, target, stake) {
-            playMechanicalClick();
-            showToast("Staked " + stake + " $SKR for " + name);
-            switchNavTab('dashboard', document.querySelectorAll('.nav-item')[0]);
-        }
-
         function showToast(msg) {
             const toast = document.getElementById('toast');
             document.getElementById('toast-text').innerText = msg;
@@ -1825,7 +2077,6 @@
             }, 2500);
         }
 
-        // Status bar clock
         setInterval(() => {
             const d = new Date();
             const h = String(d.getHours()).padStart(2, '0');
@@ -1833,7 +2084,6 @@
             document.getElementById('clock-display').innerText = `${h}:${m}`;
         }, 1000);
 
-        // Demo Drawer countdown timer
         setInterval(() => {
             secondsLeftInDay--;
             if (secondsLeftInDay <= 0) {
@@ -1846,7 +2096,7 @@
             document.getElementById('drawer-timer').innerText = `30s Day: ${secondsLeftInDay}s`;
         }, 1000);
 
-        // Initial Progress
+        // Initial render
         updateProgress();
     </script>
 </body>
