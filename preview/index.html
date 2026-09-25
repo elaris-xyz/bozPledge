@@ -1294,6 +1294,23 @@
             <!-- VIEW 1: ACTIVE DASHBOARD -->
             <div class="tab-panel active" id="view-dashboard">
                 
+                <!-- EMPTY STATE (Day 0 / Fresh User) -->
+                <div id="empty-state-container" style="display: none; background: var(--surface-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-card); padding: 32px 20px; text-align: center; margin-bottom: 14px;">
+                    <div style="width: 58px; height: 58px; border-radius: 18px; background: rgba(0, 229, 255, 0.1); border: 1px solid rgba(0, 229, 255, 0.3); display: inline-flex; align-items: center; justify-content: center; color: var(--solana-teal); margin-bottom: 14px;">
+                        <svg class="icon lg" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    </div>
+                    <h3 style="font-size: 17px; font-weight: 800; margin-bottom: 6px;">No Active Escrow Pledge</h3>
+                    <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 20px;">
+                        You have not locked any $SKR in escrow yet. Build a custom multi-sensor rule or select a verified blueprint below to start Day 1.
+                    </p>
+                    <button onclick="openComposerModal()" style="width: 100%; height: 52px; background: linear-gradient(135deg, var(--solana-mint) 0%, var(--solana-teal) 100%); border: none; border-radius: var(--radius-inner); font-size: 14px; font-weight: 800; color: #030407; cursor: pointer; font-family: var(--font-sans); box-shadow: 0 10px 24px rgba(20, 241, 149, 0.25);">
+                        + CREATE FIRST COMMITMENT
+                    </button>
+                </div>
+
+                <!-- ACTIVE DASHBOARD CONTENT WRAPPER -->
+                <div id="active-dashboard-content">
+
                 <!-- Action Row: Rule Composer & Custom Studio -->
                 <div class="studio-action-grid">
                     <div class="studio-card-btn highlight" onclick="openComposerModal()">
@@ -1433,6 +1450,7 @@
                         </div>
                     </div>
                 </div>
+                </div> <!-- /active-dashboard-content -->
             </div>
 
             <!-- VIEW 2: EXPLORE / CATALOG -->
@@ -1809,11 +1827,21 @@
             </div>
             <input type="range" id="demo-slider" min="10" max="90" step="5" value="38" oninput="handleDrawerSlider(this.value)" style="width: 100%; margin-bottom: 14px; accent-color: var(--solana-teal);">
 
-            <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                 <span style="font-size: 11px; color: var(--text-muted);">Advance timestamp by 24h:</span>
                 <button onclick="handleFastForwardDay()" style="background: rgba(0, 229, 255, 0.15); border: 1px solid var(--solana-teal); color: var(--solana-teal); font-family: var(--font-sans); font-size: 12px; font-weight: 800; padding: 6px 14px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 5px;">
                     <span>Next Day</span>
                     <svg class="icon sm" viewBox="0 0 24 24"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" x2="19" y1="5" y2="19"/></svg>
+                </button>
+            </div>
+
+            <!-- State Toggle for Judges / Test From Scratch -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding-top: 10px; border-top: 1px solid var(--border-subtle);">
+                <button onclick="simulateFreshUser()" style="background: var(--surface-card); border: 1px solid var(--border-subtle); color: var(--text-secondary); font-family: var(--font-sans); font-size: 11px; font-weight: 700; padding: 7px 10px; border-radius: 10px; cursor: pointer;">
+                    Reset: Day 0 (Fresh)
+                </button>
+                <button onclick="simulateActiveUser()" style="background: rgba(20, 241, 149, 0.1); border: 1px solid var(--solana-mint); color: var(--solana-mint); font-family: var(--font-sans); font-size: 11px; font-weight: 700; padding: 7px 10px; border-radius: 10px; cursor: pointer;">
+                    Resume: Day 2 (Active)
                 </button>
             </div>
         </div>
@@ -2284,6 +2312,11 @@
         function deployStudioGoal() {
             playMechanicalClick();
             closeStudioModal();
+            document.getElementById('empty-state-container').style.display = 'none';
+            document.getElementById('active-dashboard-content').style.display = 'block';
+            if (!connectedAddress) selectWallet('Seeker Seed Vault');
+            currentDay = 1;
+            isTodayClockedIn = false;
             showToast(`6:00 AM Club Deployed: 5,000 $SKR Staked!`);
             switchCategory('early6am', document.querySelectorAll('.habit-chip')[1]);
         }
@@ -2432,6 +2465,38 @@
             document.getElementById('disconnect-btn-wrap').style.display = 'none';
             closeWalletModal();
             showToast("Wallet Disconnected");
+        }
+
+        function simulateFreshUser() {
+            playMechanicalClick();
+            disconnectWallet();
+            document.getElementById('empty-state-container').style.display = 'block';
+            document.getElementById('active-dashboard-content').style.display = 'none';
+            showToast("Reset to Day 0 (No Active Pledge)");
+        }
+
+        function simulateActiveUser() {
+            playMechanicalClick();
+            selectWallet('Seeker Seed Vault');
+            document.getElementById('empty-state-container').style.display = 'none';
+            document.getElementById('active-dashboard-content').style.display = 'block';
+            currentDay = 2;
+            isTodayClockedIn = false;
+            updateProgress();
+            showToast("Loaded In-Progress State (Day 2 of 7)");
+        }
+
+        function deployComposerRule() {
+            playMechanicalClick();
+            closeComposerModal();
+            document.getElementById('empty-state-container').style.display = 'none';
+            document.getElementById('active-dashboard-content').style.display = 'block';
+            if (!connectedAddress) selectWallet('Seeker Seed Vault');
+            currentDay = 1;
+            isTodayClockedIn = false;
+            showToast(`Custom Rule Deployed: 2,500 $SKR Staked on Odd-Days Internet Limit!`);
+            switchCategory('oddInternet', document.querySelectorAll('.habit-chip')[0]);
+            switchNavTab('dashboard', document.querySelectorAll('.nav-dock-item')[0]);
         }
 
         // Horizontal Drag Scroll Setup
