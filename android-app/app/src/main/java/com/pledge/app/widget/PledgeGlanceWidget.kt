@@ -24,7 +24,7 @@ class PledgeGlanceWidget : GlanceAppWidget() {
             Column(
                 modifier = GlanceModifier
                     .fillMaxSize()
-                    .background(ColorProvider(Color(0xFF13151F)))
+                    .background(ColorProvider(day = Color(0xFF13151F), night = Color(0xFF13151F)))
                     .cornerRadius(20.dp)
                     .padding(14.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -33,7 +33,7 @@ class PledgeGlanceWidget : GlanceAppWidget() {
                 Text(
                     text = "bozPLEDGE : CLOCK IN",
                     style = TextStyle(
-                        color = ColorProvider(Color(0xFF14F195)),
+                        color = ColorProvider(day = Color(0xFF14F195), night = Color(0xFF14F195)),
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -44,7 +44,7 @@ class PledgeGlanceWidget : GlanceAppWidget() {
                 Text(
                     text = "8,420",
                     style = TextStyle(
-                        color = ColorProvider(Color.White),
+                        color = ColorProvider(day = Color.White, night = Color.White),
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -53,7 +53,7 @@ class PledgeGlanceWidget : GlanceAppWidget() {
                 Text(
                     text = "of 8,000 steps",
                     style = TextStyle(
-                        color = ColorProvider(Color(0xFF9AA0B4)),
+                        color = ColorProvider(day = Color(0xFF9AA0B4), night = Color(0xFF9AA0B4)),
                         fontSize = 11.sp
                     )
                 )
@@ -63,7 +63,7 @@ class PledgeGlanceWidget : GlanceAppWidget() {
                 Text(
                     text = "Verified Today",
                     style = TextStyle(
-                        color = ColorProvider(Color(0xFF14F195)),
+                        color = ColorProvider(day = Color(0xFF14F195), night = Color(0xFF14F195)),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold
                     )

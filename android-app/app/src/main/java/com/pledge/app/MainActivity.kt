@@ -18,7 +18,7 @@ import com.pledge.app.ui.screens.DashboardScreen
 import com.pledge.app.ui.screens.SettleScreen
 import com.pledge.app.ui.theme.DarkBackground
 import com.pledge.app.ui.theme.PledgeTheme
-import com.solanamobile.mobilewalletadapter.clientlib.ActivityResultSender
+import com.solana.mobilewalletadapter.clientlib.ActivityResultSender
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

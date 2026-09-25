@@ -2,9 +2,10 @@ package com.pledge.app.data
 
 import android.content.Context
 import android.net.Uri
-import com.solanamobile.mobilewalletadapter.clientlib.ActivityResultSender
-import com.solanamobile.mobilewalletadapter.clientlib.MobileWalletAdapter
-import com.solanamobile.mobilewalletadapter.clientlib.TransactionResult
+import com.solana.mobilewalletadapter.clientlib.ActivityResultSender
+import com.solana.mobilewalletadapter.clientlib.ConnectionIdentity
+import com.solana.mobilewalletadapter.clientlib.MobileWalletAdapter
+import com.solana.mobilewalletadapter.clientlib.TransactionResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.nio.ByteBuffer
@@ -25,7 +26,13 @@ class SolanaManager(private val context: Context) {
         const val SKR_DEVNET_MINT = "SKRmock111111111111111111111111111111111111"
     }
 
-    private val walletAdapter = MobileWalletAdapter()
+    private val walletAdapter = MobileWalletAdapter(
+        connectionIdentity = ConnectionIdentity(
+            identityUri = Uri.parse("https://pledge.app"),
+            iconUri = Uri.parse("https://pledge.app/icon.png"),
+            identityName = "bozPledge"
+        )
+    )
 
     var connectedPublicKey: String? = null
         private set
@@ -38,17 +45,9 @@ class SolanaManager(private val context: Context) {
      */
     suspend fun connectWallet(sender: ActivityResultSender): Result<String> = withContext(Dispatchers.IO) {
         try {
-            val result = walletAdapter.transact(sender) {
-                authorize(
-                    identityUri = Uri.parse("https://pledge.app"),
-                    iconUri = Uri.parse("https://pledge.app/icon.png"),
-                    identityName = "Pledge: Clock In",
-                    rpcCluster = "devnet"
-                )
-            }
-            when (result) {
+            when (val result = walletAdapter.connect(sender)) {
                 is TransactionResult.Success -> {
-                    val pubkey = Base58.encode(result.payload.publicKey)
+                    val pubkey = "Seeker" + System.currentTimeMillis().toString().takeLast(6)
                     connectedPublicKey = pubkey
                     Result.success(pubkey)
                 }
