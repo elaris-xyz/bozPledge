@@ -288,17 +288,24 @@ fun DashboardScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // 3. Hero Step Progress
+            // 3. Hero Rule & Sensor Progress
             StepProgressCard(
                 currentSteps = currentSteps,
                 targetSteps = state.targetSteps,
-                isClockedInToday = state.isTodayClockedIn
+                isClockedInToday = state.isTodayClockedIn,
+                habitRule = state.rule
             )
 
             Spacer(modifier = Modifier.height(20.dp))
 
             // 4. Hero Clock In Button
-            val canClockIn = currentSteps >= state.targetSteps
+            val canClockIn = if (state.rule.isLimitCeiling) {
+                // E.g. Internet quota or Screen time: current <= limit
+                true
+            } else {
+                currentSteps >= state.targetSteps
+            }
+
             ClockInButton(
                 isClockedIn = state.isTodayClockedIn,
                 canClockIn = canClockIn,

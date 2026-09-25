@@ -142,7 +142,7 @@ class MainActivity : ComponentActivity() {
                 CreateCommitmentScreen(
                     userSkrBalance = solanaManager.userSkrBalance,
                     onBack = { currentScreen = Screen.DASHBOARD },
-                    onSubmitCommitment = { totalDays, targetSteps, stakeAmount, demoActive ->
+                    onSubmitCommitment = { totalDays, targetSteps, stakeAmount, demoActive, habitRule ->
                         lifecycleScope.launch {
                             // Connect wallet if needed
                             solanaManager.connectWallet(activityResultSender)
@@ -159,13 +159,14 @@ class MainActivity : ComponentActivity() {
                                 startTimestamp = System.currentTimeMillis() / 1000L,
                                 totalAmountSKR = stakeAmount,
                                 settled = false,
-                                clockedInBitmap = 0L
+                                clockedInBitmap = 0L,
+                                rule = habitRule
                             )
                             isDemoMode = demoActive
                             currentScreen = Screen.DASHBOARD
                             Toast.makeText(
                                 this@MainActivity,
-                                "Commitment Created: $stakeAmount \$SKR Staked in PDA Vault!",
+                                "Rule Deployed: $stakeAmount \$SKR Staked for ${habitRule.title}!",
                                 Toast.LENGTH_LONG
                             ).show()
                         }

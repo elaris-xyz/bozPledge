@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>bozPledge — Professional Custom Habit Staking Platform</title>
+    <title>bozPledge — Smart Habit Engine & Custom Rule Composer</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -255,31 +255,44 @@
             100% { transform: scale(1); opacity: 1; }
         }
 
-        /* Custom Pledge Studio Callout Banner */
-        .custom-builder-banner {
-            background: linear-gradient(135deg, rgba(153, 69, 255, 0.16) 0%, rgba(20, 241, 149, 0.12) 100%);
-            border: 1px solid rgba(153, 69, 255, 0.4);
-            border-radius: 18px;
-            padding: 12px 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+        /* Two Creator Action Buttons */
+        .creator-action-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
             margin-bottom: 16px;
+        }
+        .creator-btn-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 12px 14px;
             cursor: pointer;
             transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
         }
-        .custom-builder-banner:hover {
-            border-color: var(--solana-green);
-            transform: translateY(-1px);
+        .creator-btn-card:hover {
+            border-color: var(--solana-teal);
+            transform: translateY(-2px);
         }
-        .builder-btn-pill {
-            background: var(--solana-purple);
-            color: #fff;
-            font-size: 11px;
+        .creator-btn-card.highlight {
+            background: linear-gradient(135deg, rgba(0, 194, 255, 0.12) 0%, rgba(153, 69, 255, 0.12) 100%);
+            border-color: rgba(0, 194, 255, 0.4);
+        }
+        .creator-btn-title {
+            font-size: 13px;
             font-weight: 800;
-            padding: 6px 12px;
-            border-radius: 10px;
-            box-shadow: 0 4px 14px rgba(153, 69, 255, 0.4);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .creator-btn-sub {
+            font-size: 10px;
+            color: var(--text-secondary);
+            line-height: 1.3;
         }
 
         /* Carousel of Active Commitments */
@@ -386,7 +399,7 @@
             margin-bottom: 4px;
         }
         .metric-integer {
-            font-size: 48px;
+            font-size: 46px;
             font-weight: 900;
             letter-spacing: -1px;
             line-height: 1;
@@ -394,7 +407,7 @@
             color: var(--text-primary);
         }
         .metric-unit {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 800;
             color: var(--text-muted);
             font-family: 'JetBrains Mono', monospace;
@@ -430,26 +443,20 @@
             font-weight: 600;
         }
 
-        /* Screen Time App Logs */
-        .app-breakdown-box {
-            display: none;
+        /* Live Rule Details Card (for Custom Composer plans) */
+        .rule-specification-card {
             background: var(--surface-dark);
             border: 1px solid var(--border-subtle);
             border-radius: 14px;
-            padding: 12px;
+            padding: 12px 14px;
             margin-top: 14px;
-            font-size: 12px;
-        }
-        .app-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 6px;
+            font-size: 11px;
+            font-family: 'JetBrains Mono', monospace;
+            line-height: 1.5;
             color: var(--text-secondary);
         }
-        .app-row:last-child { margin-bottom: 0; }
-        .app-row strong { color: var(--text-primary); }
 
-        /* Urgency & Loss Aversion Risk Bar */
+        /* Urgency Risk Box */
         .urgency-risk-box {
             background: rgba(255, 69, 58, 0.08);
             border: 1px solid rgba(255, 69, 58, 0.25);
@@ -460,10 +467,6 @@
             justify-content: space-between;
             font-size: 12px;
             margin-bottom: 14px;
-        }
-        .risk-text {
-            color: var(--text-secondary);
-            line-height: 1.3;
         }
         .risk-burn-amount {
             font-family: 'JetBrains Mono', monospace;
@@ -645,7 +648,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Explore Catalog 8-Items Grid */
+        /* Catalog Cards */
         .catalog-title {
             font-size: 18px;
             font-weight: 800;
@@ -694,40 +697,90 @@
             color: var(--text-secondary);
         }
 
-        /* CUSTOM PLEDGE STUDIO MODAL (Full Power!) */
-        .studio-modal-overlay {
+        /* SMART RULE COMPOSER MODAL (The IFTTT of On-Chain Habits!) */
+        .composer-modal-overlay {
             position: absolute;
             inset: 0;
-            background: rgba(3, 4, 7, 0.96);
-            backdrop-filter: blur(14px);
+            background: rgba(3, 4, 7, 0.97);
+            backdrop-filter: blur(16px);
             z-index: 700;
             display: none;
             flex-direction: column;
             overflow-y: auto;
-            padding: 50px 20px 24px 20px;
+            padding: 50px 20px 30px 20px;
         }
-        .studio-modal-overlay.active { display: flex; animation: slideUp 0.25s ease-out; }
-        .studio-header {
+        .composer-modal-overlay.active { display: flex; animation: slideUp 0.25s ease-out; }
+        .composer-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 16px;
         }
-        .studio-title {
+        .composer-title {
             font-size: 20px;
             font-weight: 900;
             letter-spacing: -0.5px;
         }
-        .studio-field-label {
+        .composer-section-title {
             font-size: 11px;
             font-weight: 800;
-            color: var(--text-secondary);
+            color: var(--solana-teal);
             text-transform: uppercase;
             letter-spacing: 0.8px;
             margin-bottom: 8px;
-            display: block;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
-        .studio-input {
+
+        /* Days of the Week Selector (M, T, W, T, F, S, S) */
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+        .day-select-btn {
+            height: 42px;
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .day-select-btn.active {
+            background: rgba(20, 241, 149, 0.15);
+            border-color: var(--solana-green);
+            color: var(--solana-green);
+        }
+        .preset-schedule-row {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 18px;
+        }
+        .schedule-chip {
+            background: var(--surface-dark);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            padding: 5px 10px;
+            font-size: 10px;
+            font-weight: 800;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+        .schedule-chip.active {
+            background: rgba(0, 194, 255, 0.15);
+            border-color: var(--solana-teal);
+            color: var(--solana-teal);
+        }
+
+        .composer-input {
             width: 100%;
             height: 52px;
             background: var(--surface-card);
@@ -736,40 +789,41 @@
             padding: 0 16px;
             color: #fff;
             font-family: inherit;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 700;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
             outline: none;
             transition: border-color 0.2s;
         }
-        .studio-input:focus { border-color: var(--solana-green); }
-        .studio-options-grid {
+        .composer-input:focus { border-color: var(--solana-teal); }
+
+        .sensor-select-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: 1fr 1fr;
             gap: 8px;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
         }
-        .studio-opt-btn {
-            height: 44px;
+        .sensor-opt {
             background: var(--surface-card);
             border: 1px solid var(--border-subtle);
-            border-radius: 12px;
-            color: var(--text-secondary);
-            font-family: inherit;
+            border-radius: 14px;
+            padding: 10px;
             font-size: 12px;
-            font-weight: 800;
+            font-weight: 700;
+            color: var(--text-secondary);
             cursor: pointer;
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 8px;
             transition: all 0.2s;
         }
-        .studio-opt-btn.active {
-            background: rgba(20, 241, 149, 0.15);
-            border-color: var(--solana-green);
+        .sensor-opt.active {
+            background: rgba(153, 69, 255, 0.15);
+            border-color: var(--solana-purple);
             color: #fff;
         }
-        .math-breakdown-card {
+
+        .rule-logic-preview {
             background: var(--surface-card);
             border: 1px solid var(--border-subtle);
             border-radius: 18px;
@@ -777,13 +831,8 @@
             margin-bottom: 20px;
             font-family: 'JetBrains Mono', monospace;
             font-size: 12px;
+            line-height: 1.6;
         }
-        .math-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-        }
-        .math-row:last-child { margin-bottom: 0; padding-top: 8px; border-top: 1px solid var(--border-subtle); }
 
         /* Biometric Sheet */
         .biometric-sheet {
@@ -991,7 +1040,7 @@
         </div>
 
         <div class="phone-screen">
-            <!-- Two-Tier Header -->
+            <!-- Header -->
             <div class="app-header-tier1">
                 <div class="brand-logo-wrap">
                     <h1 class="brand-title">bozPLEDGE</h1>
@@ -1013,38 +1062,41 @@
             <div class="sensor-sync-bar">
                 <div class="sync-indicator">
                     <div class="pulse-dot"></div>
-                    <span id="sync-status-text">Health Connect Verified • Synced 4s ago</span>
+                    <span id="sync-status-text">NetworkStats Active • Synced 2s ago</span>
                 </div>
-                <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--solana-teal);">Slot #294022 • 38ms</span>
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--solana-teal);">Slot #294025 • 32ms</span>
             </div>
 
             <!-- VIEW 1: DASHBOARD -->
             <div class="tab-view active" id="view-dashboard">
                 
-                <!-- Quick Launch Custom Studio Banner -->
-                <div class="custom-builder-banner" onclick="openStudioModal()">
-                    <div>
-                        <div style="font-weight: 800; font-size: 13px; color: #fff;">✨ Create Custom Pledge</div>
-                        <div style="font-size: 11px; color: var(--text-secondary);">Set any goal, any time (e.g. 6 AM) & custom $SKR</div>
+                <!-- Action Row: Custom Studio & Smart Rule Composer -->
+                <div class="creator-action-row">
+                    <div class="creator-btn-card highlight" onclick="openComposerModal()">
+                        <div class="creator-btn-title">🧠 Rule Composer</div>
+                        <div class="creator-btn-sub">Build custom rules (e.g. &lt;1h internet on Odd Days)</div>
                     </div>
-                    <div class="builder-btn-pill">+ BUILD</div>
+                    <div class="creator-btn-card" onclick="openStudioModal()">
+                        <div class="creator-btn-title">✨ Custom Pledge</div>
+                        <div class="creator-btn-sub">Set 6 AM wake-up & stake 5,000 $SKR</div>
+                    </div>
                 </div>
 
-                <!-- Drag-to-Scroll Horizontal Carousel -->
+                <!-- Horizontal Carousel of Active Trackers -->
                 <div class="carousel-outer-wrap">
                     <div class="carousel-edge-fade-right"></div>
                     <div class="category-scroll-container" id="category-scroll-container">
-                        <div class="cat-chip active green" onclick="switchCategory('steps', this)">
-                            <span>🏃</span> 8,000 Steps
+                        <div class="cat-chip active blue" onclick="switchCategory('oddInternet', this)">
+                            <span>🌐</span> &lt;1h Net (Odd Days)
                         </div>
                         <div class="cat-chip" onclick="switchCategory('early6am', this)">
-                            <span>🌅</span> 6:00 AM Club (5k $SKR)
+                            <span>🌅</span> 6:00 AM Club (5k)
+                        </div>
+                        <div class="cat-chip" onclick="switchCategory('steps', this)">
+                            <span>🏃</span> 10,000 Steps
                         </div>
                         <div class="cat-chip" onclick="switchCategory('screentime', this)">
-                            <span>📵</span> Screen Detox (&lt;3h)
-                        </div>
-                        <div class="cat-chip" onclick="switchCategory('sleep', this)">
-                            <span>😴</span> 7.0h Deep Sleep
+                            <span>📵</span> App Detox (&lt;2h)
                         </div>
                         <div class="cat-chip" onclick="switchCategory('gym', this)">
                             <span>🏋️</span> 45m Gym Workout
@@ -1052,12 +1104,12 @@
                     </div>
                 </div>
 
-                <!-- Loss Aversion Urgency Card -->
+                <!-- Urgency Loss Aversion Box -->
                 <div class="urgency-risk-box">
                     <div class="risk-text">
                         <div>Daily Window Deadline</div>
                         <div style="font-size: 11px; color: var(--text-muted);">
-                            If missed: <span class="risk-burn-amount" id="risk-burn-text">71.4 $SKR burned</span>
+                            If missed: <span class="risk-burn-amount" id="risk-burn-text">357.14 $SKR burned</span>
                         </div>
                     </div>
                     <div class="cutoff-timer" id="cutoff-timer-text">04h 28m 14s</div>
@@ -1066,32 +1118,31 @@
                 <!-- Hero Commitment Card -->
                 <div class="hero-card" id="hero-card-elem">
                     <div class="hero-badge-row">
-                        <span class="tag-pill green" id="hero-sensor-tag">HEALTH CONNECT VERIFIED</span>
-                        <span class="tag-pill purple" id="hero-stake-tag">500 $SKR STAKED</span>
+                        <span class="tag-pill blue" id="hero-sensor-tag">NETWORKSTATS ODD DAYS</span>
+                        <span class="tag-pill purple" id="hero-stake-tag">2,500 $SKR STAKED</span>
                     </div>
 
-                    <!-- Razor Sharp Metric -->
+                    <!-- Metric -->
                     <div class="metric-row">
-                        <span class="metric-integer" id="metric-integer">8,420</span>
-                        <span class="metric-unit" id="metric-unit"></span>
+                        <span class="metric-integer" id="metric-integer">38</span>
+                        <span class="metric-unit" id="metric-unit"> mins</span>
                     </div>
-                    <div class="metric-sub" id="metric-sub">of 8,000 daily steps required</div>
+                    <div class="metric-sub" id="metric-sub">used of 60 mins max allowed today</div>
 
                     <div class="progress-bar-wrap">
-                        <div class="progress-bar-fill" id="metric-progress-fill" style="width: 100%;"></div>
+                        <div class="progress-bar-fill" id="metric-progress-fill" style="width: 63%;"></div>
                     </div>
 
                     <div class="progress-stats">
-                        <span id="metric-status" style="color: var(--solana-green)">Goal Complete! Ready to Clock In</span>
-                        <span id="metric-pct">105%</span>
+                        <span id="metric-status" style="color: var(--solana-green)">Within Limit (22m remaining)</span>
+                        <span id="metric-pct">63%</span>
                     </div>
 
-                    <!-- UsageStats App Breakdown for Detox -->
-                    <div class="app-breakdown-box" id="app-breakdown-box">
-                        <div style="font-weight: 700; margin-bottom: 8px; color: var(--text-primary);">UsageStats Manager Log:</div>
-                        <div class="app-row"><span>📸 Instagram</span><strong>45 mins</strong></div>
-                        <div class="app-row"><span>🐦 X / Twitter</span><strong>1 hr 10 mins</strong></div>
-                        <div class="app-row"><span>💬 Telegram</span><strong>15 mins</strong></div>
+                    <!-- Live Rule Details Box -->
+                    <div class="rule-specification-card" id="rule-spec-card">
+                        <div>Schedule: Mon, Wed, Fri, Sun (Odd Days)</div>
+                        <div>Target: Max 1.0 hr Internet / Mobile Data</div>
+                        <div>Status: Active Window • Nonce #84201</div>
                     </div>
                 </div>
 
@@ -1120,18 +1171,18 @@
                 <!-- Share as Blink Button -->
                 <button class="share-streak-btn" onclick="shareAsBlink()">
                     <span>🔗</span>
-                    <span>Share Streak as Solana Blink on X</span>
+                    <span>Share Custom Plan as Solana Blink on X</span>
                 </button>
 
                 <!-- Stats 2 Col -->
                 <div class="stats-2-col">
                     <div class="mini-stat">
                         <div class="mini-stat-label">Active Streak</div>
-                        <div class="mini-stat-value" style="color: var(--flame-red)" id="streak-stat-text">🔥 4 Days</div>
+                        <div class="mini-stat-value" style="color: var(--flame-red)">🔥 4 Days</div>
                     </div>
                     <div class="mini-stat">
                         <div class="mini-stat-label">Forfeited / Burned</div>
-                        <div class="mini-stat-value" style="color: var(--solana-teal)" id="burn-stat-text">0 $SKR</div>
+                        <div class="mini-stat-value" style="color: var(--solana-teal)">0 $SKR</div>
                     </div>
                 </div>
             </div>
@@ -1141,14 +1192,25 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                     <div>
                         <div class="catalog-title">Commitment Catalog</div>
-                        <div class="catalog-sub" style="margin-bottom: 0;">Hardware-attested habit staking protocols.</div>
+                        <div class="catalog-sub" style="margin-bottom: 0;">Verified habits & programmable rules.</div>
                     </div>
-                    <button onclick="openStudioModal()" style="background: var(--solana-green); color: var(--bg-dark); border: none; padding: 6px 12px; border-radius: 10px; font-weight: 800; font-size: 11px; cursor: pointer;">
-                        + CUSTOM
+                    <button onclick="openComposerModal()" style="background: var(--solana-teal); color: var(--bg-dark); border: none; padding: 6px 12px; border-radius: 10px; font-weight: 800; font-size: 11px; cursor: pointer;">
+                        🧠 COMPOSER
                     </button>
                 </div>
 
-                <div class="pledge-item-card" onclick="launchCustomPreset('6:00 AM Club', 'time', '06:00 AM', 5000, 7)">
+                <div class="pledge-item-card" onclick="switchCategory('oddInternet', document.querySelectorAll('.cat-chip')[0]); switchNavTab('dashboard', document.querySelectorAll('.nav-item')[0]);">
+                    <div style="display: flex; align-items: center;">
+                        <div class="pledge-icon-box">🌐</div>
+                        <div class="pledge-details">
+                            <h4>Odd-Days Internet Limit (&lt;1h)</h4>
+                            <p>NetworkStats • Mon/Wed/Fri/Sun • 2,500 $SKR</p>
+                        </div>
+                    </div>
+                    <span style="color: var(--solana-teal); font-weight: 800; font-size: 13px;">ACTIVE</span>
+                </div>
+
+                <div class="pledge-item-card" onclick="switchCategory('early6am', document.querySelectorAll('.cat-chip')[1]); switchNavTab('dashboard', document.querySelectorAll('.nav-item')[0]);">
                     <div style="display: flex; align-items: center;">
                         <div class="pledge-icon-box">🌅</div>
                         <div class="pledge-details">
@@ -1159,7 +1221,7 @@
                     <span style="color: var(--gold-accent); font-weight: 800; font-size: 13px;">JOIN</span>
                 </div>
 
-                <div class="pledge-item-card" onclick="launchCustomPreset('10,000 Steps Marathon', 'steps', '10,000', 500, 7)">
+                <div class="pledge-item-card" onclick="switchCategory('steps', document.querySelectorAll('.cat-chip')[2]); switchNavTab('dashboard', document.querySelectorAll('.nav-item')[0]);">
                     <div style="display: flex; align-items: center;">
                         <div class="pledge-icon-box">🏃</div>
                         <div class="pledge-details">
@@ -1170,7 +1232,7 @@
                     <span style="color: var(--solana-green); font-weight: 800; font-size: 13px;">JOIN</span>
                 </div>
 
-                <div class="pledge-item-card" onclick="launchCustomPreset('Social Media Detox <1h', 'screentime', '1.0h', 1000, 14)">
+                <div class="pledge-item-card">
                     <div style="display: flex; align-items: center;">
                         <div class="pledge-icon-box">📵</div>
                         <div class="pledge-details">
@@ -1181,7 +1243,7 @@
                     <span style="color: var(--solana-purple); font-weight: 800; font-size: 13px;">JOIN</span>
                 </div>
 
-                <div class="pledge-item-card" onclick="launchCustomPreset('45m Gym & Heart Rate Zone', 'gym', '45 mins', 750, 7)">
+                <div class="pledge-item-card">
                     <div style="display: flex; align-items: center;">
                         <div class="pledge-icon-box">🏋️</div>
                         <div class="pledge-details">
@@ -1192,45 +1254,12 @@
                     <span style="color: var(--solana-teal); font-weight: 800; font-size: 13px;">JOIN</span>
                 </div>
 
-                <div class="pledge-item-card" onclick="launchCustomPreset('Restorative Sleep 8h', 'sleep', '8.0h', 600, 7)">
+                <div class="pledge-item-card">
                     <div style="display: flex; align-items: center;">
                         <div class="pledge-icon-box">😴</div>
                         <div class="pledge-details">
                             <h4>8h+ Circadian Sleep Routine</h4>
                             <p>SleepSession API • 7 Days • Stake 600 $SKR</p>
-                        </div>
-                    </div>
-                    <span style="color: var(--solana-green); font-weight: 800; font-size: 13px;">JOIN</span>
-                </div>
-
-                <div class="pledge-item-card" onclick="launchCustomPreset('Hydration Discipline 3L', 'water', '3.0 L', 300, 7)">
-                    <div style="display: flex; align-items: center;">
-                        <div class="pledge-icon-box">💧</div>
-                        <div class="pledge-details">
-                            <h4>Daily 3 Liters Hydration</h4>
-                            <p>NFC Smart Bottle • 7 Days • Stake 300 $SKR</p>
-                        </div>
-                    </div>
-                    <span style="color: var(--solana-teal); font-weight: 800; font-size: 13px;">JOIN</span>
-                </div>
-
-                <div class="pledge-item-card" onclick="launchCustomPreset('2 Hours Deep Work / Code', 'focus', '2.0h', 1500, 21)">
-                    <div style="display: flex; align-items: center;">
-                        <div class="pledge-icon-box">💻</div>
-                        <div class="pledge-details">
-                            <h4>2h Deep Focus & Zero Distractions</h4>
-                            <p>App Blacklist Monitor • 21 Days • Stake 1,500 $SKR</p>
-                        </div>
-                    </div>
-                    <span style="color: var(--gold-accent); font-weight: 800; font-size: 13px;">JOIN</span>
-                </div>
-
-                <div class="pledge-item-card" onclick="launchCustomPreset('20m Daily Meditation', 'mind', '20 mins', 400, 14)">
-                    <div style="display: flex; align-items: center;">
-                        <div class="pledge-icon-box">🧘</div>
-                        <div class="pledge-details">
-                            <h4>20m Mindfulness & Breathwork</h4>
-                            <p>Mindfulness API • 14 Days • Stake 400 $SKR</p>
                         </div>
                     </div>
                     <span style="color: var(--solana-green); font-weight: 800; font-size: 13px;">JOIN</span>
@@ -1272,7 +1301,7 @@
                         <div class="avatar-circle" style="background: rgba(20, 241, 149, 0.2);">👤</div>
                         <div>
                             <div style="font-weight: 800; font-size: 14px;">You (Seeker Genesis)</div>
-                            <div style="font-size: 11px; color: var(--text-secondary);">5,000 $SKR Staked • 6 AM Club</div>
+                            <div style="font-size: 11px; color: var(--text-secondary);">2,500 $SKR Staked • Net Detox</div>
                         </div>
                     </div>
                     <div class="streak-pill">🔥 4d</div>
@@ -1301,8 +1330,8 @@
                 <div style="font-weight: 800; font-size: 14px; margin-top: 10px;">Soulbound cNFT Badges</div>
                 <div class="badge-grid">
                     <div class="badge-item">
-                        <div class="badge-icon">🥉</div>
-                        <div class="badge-name">7-Day Walker</div>
+                        <div class="badge-icon">🌐</div>
+                        <div class="badge-name">Data Master</div>
                         <div class="badge-type">cNFT Verified</div>
                     </div>
                     <div class="badge-item">
@@ -1319,85 +1348,122 @@
             </div>
         </div>
 
-        <!-- FULL POWER CUSTOM PLEDGE STUDIO MODAL -->
-        <div class="studio-modal-overlay" id="studio-modal">
-            <div class="studio-header">
-                <div class="studio-title">✨ Custom Pledge Studio</div>
-                <span onclick="closeStudioModal()" style="font-size: 20px; cursor: pointer; color: var(--text-muted);">✕</span>
+        <!-- 🧠 ADVANCED RULE COMPOSER MODAL (The IFTTT of Habits!) -->
+        <div class="composer-modal-overlay" id="composer-modal">
+            <div class="composer-header">
+                <div class="composer-title">🧠 Smart Rule Composer</div>
+                <span onclick="closeComposerModal()" style="font-size: 20px; cursor: pointer; color: var(--text-muted);">✕</span>
             </div>
 
-            <label class="studio-field-label">1. Commitment Category</label>
-            <div class="studio-options-grid" style="grid-template-columns: repeat(2, 1fr); margin-bottom: 14px;">
-                <div class="studio-opt-btn active" id="btn-cat-wake" onclick="selectStudioCategory('wake', this)">🌅 Wake-Up Time</div>
-                <div class="studio-opt-btn" id="btn-cat-steps" onclick="selectStudioCategory('steps', this)">🏃 Daily Steps</div>
-                <div class="studio-opt-btn" id="btn-cat-screen" onclick="selectStudioCategory('screen', this)">📵 Screen Detox</div>
-                <div class="studio-opt-btn" id="btn-cat-gym" onclick="selectStudioCategory('gym', this)">🏋️ Gym Workout</div>
-            </div>
-
-            <!-- Dynamic Target Field -->
-            <div id="field-wake-wrap">
-                <label class="studio-field-label">Target Wake-Up Time</label>
-                <input type="text" class="studio-input" id="studio-wake-time" value="06:00 AM" placeholder="e.g. 06:00 AM">
-            </div>
-
-            <div id="field-steps-wrap" style="display: none;">
-                <label class="studio-field-label">Target Steps Goal</label>
-                <input type="number" class="studio-input" id="studio-steps-val" value="10000" placeholder="e.g. 10000">
-            </div>
-
-            <div id="field-screen-wrap" style="display: none;">
-                <label class="studio-field-label">Max Screen Time (Hours)</label>
-                <input type="number" step="0.5" class="studio-input" id="studio-screen-val" value="2.0" placeholder="e.g. 2.0">
-            </div>
-
-            <div id="field-gym-wrap" style="display: none;">
-                <label class="studio-field-label">Workout Duration (Minutes)</label>
-                <input type="number" class="studio-input" id="studio-gym-val" value="45" placeholder="e.g. 45">
-            </div>
-
-            <label class="studio-field-label">2. Stake Amount in $SKR (Free Input)</label>
-            <input type="number" class="studio-input" id="studio-stake-amount" value="5000" oninput="updateStudioMath()">
-
-            <label class="studio-field-label">3. Challenge Duration</label>
-            <div class="studio-options-grid">
-                <div class="studio-opt-btn" onclick="selectStudioDays(3, this)">3 Days</div>
-                <div class="studio-opt-btn active" onclick="selectStudioDays(7, this)">7 Days</div>
-                <div class="studio-opt-btn" onclick="selectStudioDays(14, this)">14 Days</div>
-                <div class="studio-opt-btn" onclick="selectStudioDays(30, this)">30 Days</div>
-            </div>
-
-            <label class="studio-field-label">4. Penalty Consequence Rule</label>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 18px;">
-                <div class="studio-opt-btn active" style="font-size: 11px;" id="rule-burn-btn" onclick="selectRule('burn', this)">🔥 100% SPL Burn</div>
-                <div class="studio-opt-btn" style="font-size: 11px;" id="rule-dao-btn" onclick="selectRule('dao', this)">🏛️ 50% Burn / 50% DAO</div>
-            </div>
-
-            <!-- Mathematical Breakdown -->
-            <div class="math-breakdown-card">
-                <div class="math-row">
-                    <span style="color: var(--text-secondary);">Total Collateral:</span>
-                    <strong style="color: var(--solana-green);" id="math-total-stake">5,000 $SKR</strong>
+            <!-- Step 1: Sensor Trigger -->
+            <div class="composer-section-title">1. Select Hardware Sensor / Telemetry</div>
+            <div class="sensor-select-grid">
+                <div class="sensor-opt active" id="sensor-opt-net" onclick="selectComposerSensor('net', this)">
+                    <span>🌐</span>
+                    <div>
+                        <div>Internet & Data</div>
+                        <div style="font-size: 10px; color: var(--text-muted);">NetworkStatsManager</div>
+                    </div>
                 </div>
-                <div class="math-row">
-                    <span style="color: var(--text-secondary);">Daily Loss on Failure:</span>
-                    <strong style="color: var(--flame-red);" id="math-daily-loss">714.28 $SKR / day</strong>
+                <div class="sensor-opt" id="sensor-opt-screen" onclick="selectComposerSensor('screen', this)">
+                    <span>📵</span>
+                    <div>
+                        <div>Screen Detox</div>
+                        <div style="font-size: 10px; color: var(--text-muted);">UsageStatsManager</div>
+                    </div>
                 </div>
-                <div class="math-row">
-                    <span style="color: var(--text-secondary);">Seeker Treasury APY:</span>
-                    <strong style="color: var(--gold-accent);">+12.5% Bonus on 7/7</strong>
+                <div class="sensor-opt" id="sensor-opt-steps" onclick="selectComposerSensor('steps', this)">
+                    <span>🏃</span>
+                    <div>
+                        <div>Physical Walk</div>
+                        <div style="font-size: 10px; color: var(--text-muted);">Health Connect</div>
+                    </div>
                 </div>
-                <div class="math-row">
-                    <span style="color: var(--text-secondary);">On-Chain Contract:</span>
-                    <strong style="color: var(--solana-teal);">Dedicated PDA Escrow</strong>
+                <div class="sensor-opt" id="sensor-opt-gym" onclick="selectComposerSensor('gym', this)">
+                    <span>🏋️</span>
+                    <div>
+                        <div>Gym & Workout</div>
+                        <div style="font-size: 10px; color: var(--text-muted);">HeartRate / GPS</div>
+                    </div>
                 </div>
             </div>
 
-            <button onclick="deployCustomPledge()" style="width: 100%; height: 56px; background: linear-gradient(90deg, var(--solana-purple), var(--solana-green)); border: none; border-radius: 18px; font-size: 15px; font-weight: 900; color: #fff; cursor: pointer; font-family: inherit; box-shadow: 0 10px 30px rgba(20, 241, 149, 0.25);">
-                DEPLOY PLEDGE TO SOLANA (5,000 $SKR)
+            <!-- Step 2: Threshold Limit -->
+            <div class="composer-section-title">2. Define Limit / Condition</div>
+            <div style="display: flex; gap: 8px; margin-bottom: 14px;">
+                <input type="text" class="composer-input" id="composer-limit-val" value="1.0" style="margin-bottom: 0; width: 120px;" oninput="updateComposerPreview()">
+                <select class="composer-input" id="composer-unit-select" style="margin-bottom: 0; flex: 1;" onchange="updateComposerPreview()">
+                    <option value="Hours">Hours Max per Day</option>
+                    <option value="Minutes">Minutes Max per Day</option>
+                    <option value="Megabytes">MB Data Max per Day</option>
+                </select>
+            </div>
+
+            <!-- Step 3: Days of the Week Schedule -->
+            <div class="composer-section-title">3. Days of Week Schedule</div>
+            <div class="preset-schedule-row">
+                <div class="schedule-chip active" id="sched-odd-btn" onclick="applySchedulePreset('odd')">📅 Odd Days (M/W/F/Su)</div>
+                <div class="schedule-chip" id="sched-even-btn" onclick="applySchedulePreset('even')">📅 Even Days (Tu/Th/Sa)</div>
+                <div class="schedule-chip" id="sched-all-btn" onclick="applySchedulePreset('all')">Daily</div>
+            </div>
+
+            <!-- M T W T F S S pills -->
+            <div class="days-grid">
+                <div class="day-select-btn active" id="day-mon" onclick="toggleDayPill(this)">Mon</div>
+                <div class="day-select-btn" id="day-tue" onclick="toggleDayPill(this)">Tue</div>
+                <div class="day-select-btn active" id="day-wed" onclick="toggleDayPill(this)">Wed</div>
+                <div class="day-select-btn" id="day-thu" onclick="toggleDayPill(this)">Thu</div>
+                <div class="day-select-btn active" id="day-fri" onclick="toggleDayPill(this)">Fri</div>
+                <div class="day-select-btn" id="day-sat" onclick="toggleDayPill(this)">Sat</div>
+                <div class="day-select-btn active" id="day-sun" onclick="toggleDayPill(this)">Sun</div>
+            </div>
+
+            <!-- Step 4: Staking Amount -->
+            <div class="composer-section-title">4. Collateral in $SKR (Free Input)</div>
+            <input type="number" class="composer-input" id="composer-stake-val" value="2500" oninput="updateComposerPreview()">
+
+            <!-- Live Rule Specification -->
+            <div class="rule-logic-preview" id="rule-logic-preview-box">
+                <div style="color: var(--solana-teal); font-weight: 800; margin-bottom: 4px;">// GENERATED ON-CHAIN SPECIFICATION</div>
+                <div style="color: var(--text-primary);" id="preview-rule-text">
+                    IF (Internet Usage &lt;= 1.0 hr) ON (Odd Days: Mon, Wed, Fri, Sun)<br>
+                    THEN Unlock Daily Clock-In<br>
+                    ELSE Burn 357.14 $SKR from PDA Escrow
+                </div>
+            </div>
+
+            <button onclick="deployComposerRule()" style="width: 100%; height: 56px; background: linear-gradient(90deg, var(--solana-teal), var(--solana-green)); border: none; border-radius: 18px; font-size: 15px; font-weight: 900; color: #000; cursor: pointer; font-family: inherit; box-shadow: 0 10px 30px rgba(0, 194, 255, 0.25);">
+                DEPLOY SMART RULE TO SOLANA (2,500 $SKR)
             </button>
         </div>
 
-        <!-- Biometric Bottom Sheet with Hold-to-Authorize -->
+        <!-- Custom Studio Modal -->
+        <div class="composer-modal-overlay" id="studio-modal">
+            <div class="composer-header">
+                <div class="composer-title">✨ Custom Goal Builder</div>
+                <span onclick="closeStudioModal()" style="font-size: 20px; cursor: pointer; color: var(--text-muted);">✕</span>
+            </div>
+
+            <div class="composer-section-title">Target Habit</div>
+            <div class="sensor-select-grid">
+                <div class="sensor-opt active" onclick="selectStudioCategory('wake', this)">🌅 Wake-Up Time</div>
+                <div class="sensor-opt" onclick="selectStudioCategory('steps', this)">🏃 Daily Steps</div>
+            </div>
+
+            <div id="field-wake-wrap">
+                <div class="composer-section-title">Wake-Up Time (e.g. 06:00 AM)</div>
+                <input type="text" class="composer-input" id="studio-wake-time" value="06:00 AM">
+            </div>
+
+            <div class="composer-section-title">Collateral $SKR</div>
+            <input type="number" class="composer-input" id="studio-stake-amount" value="5000">
+
+            <button onclick="deployStudioGoal()" style="width: 100%; height: 56px; background: linear-gradient(90deg, var(--solana-purple), var(--solana-green)); border: none; border-radius: 18px; font-size: 15px; font-weight: 900; color: #fff; cursor: pointer; font-family: inherit;">
+                DEPLOY 6:00 AM CLUB (5,000 $SKR)
+            </button>
+        </div>
+
+        <!-- Biometric Sheet -->
         <div class="biometric-sheet" id="biometric-sheet">
             <div class="biometric-content">
                 <div style="font-size: 11px; font-weight: 800; color: var(--solana-green); letter-spacing: 1px; margin-bottom: 6px;">
@@ -1440,7 +1506,7 @@
 
                 <div class="tx-receipt-details">
                     <div>Tx Hash: <span id="tx-hash-display" style="color: var(--solana-teal);">5Kz...y9P</span></div>
-                    <div>Slot: #294022 • Confirmed in 410ms</div>
+                    <div>Slot: #294025 • Confirmed in 320ms</div>
                     <div>Devnet Explorer: Verified ✓</div>
                 </div>
 
@@ -1463,9 +1529,9 @@
 
             <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px;">
                 <span>Simulate Sensor Value:</span>
-                <strong id="drawer-slider-val" style="color: #fff;">8,420 steps</strong>
+                <strong id="drawer-slider-val" style="color: #fff;">38 mins</strong>
             </div>
-            <input type="range" id="demo-slider" min="1000" max="14000" step="500" value="8420" oninput="handleDrawerSlider(this.value)">
+            <input type="range" id="demo-slider" min="10" max="90" step="5" value="38" oninput="handleDrawerSlider(this.value)">
 
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <span style="font-size: 11px; color: var(--text-muted);">Advance to test settlement:</span>
@@ -1623,27 +1689,29 @@
             if (particles.length > 0) requestAnimationFrame(animateParticles);
         }
 
-        // Active State Data
+        // State
         let isConnected = false;
         let connectedAddress = null;
         let userBalanceSKR = 12500;
 
-        let activeCategory = 'steps';
-        let currentTarget = 8000;
-        let currentValue = 8420;
-        let currentStakeSKR = 500;
+        let activeCategory = 'oddInternet';
+        let currentTarget = 60; // 60 mins (1 hour)
+        let currentValue = 38; // 38 mins used
+        let currentStakeSKR = 2500;
         let currentDay = 2;
         let totalDays = 7;
         let isTodayClockedIn = false;
         let demoDrawerOpen = false;
         let secondsLeftInDay = 30;
 
-        // Custom Studio State
-        let studioCategory = 'wake';
-        let studioDays = 7;
-        let studioRule = 'burn';
+        // Composer State
+        let composerSensor = 'net';
+        let composerLimit = 1.0;
+        let composerUnit = 'Hours';
+        let composerStake = 2500;
+        let selectedDaysList = ['Mon', 'Wed', 'Fri', 'Sun'];
 
-        // Mouse Drag-To-Scroll & Mousewheel for Carousel
+        // Carousel Drag & Mousewheel
         const scrollContainer = document.getElementById('category-scroll-container');
         let isDown = false;
         let startX;
@@ -1663,7 +1731,6 @@
             const walk = (x - startX) * 1.5;
             scrollContainer.scrollLeft = scrollLeft - walk;
         });
-
         scrollContainer.addEventListener('wheel', (e) => {
             if (e.deltaY !== 0) {
                 e.preventDefault();
@@ -1689,34 +1756,35 @@
             });
 
             activeCategory = cat;
-            const breakdown = document.getElementById('app-breakdown-box');
+            const specCard = document.getElementById('rule-spec-card');
 
-            if (cat === 'steps') {
-                el.className = 'cat-chip active green';
-                currentTarget = 8000;
-                currentValue = 8420;
-                currentStakeSKR = 500;
+            if (cat === 'oddInternet') {
+                el.className = 'cat-chip active blue';
+                currentTarget = 60;
+                currentValue = 38;
+                currentStakeSKR = 2500;
                 totalDays = 7;
-                breakdown.style.display = 'none';
-                document.getElementById('hero-sensor-tag').className = 'tag-pill green';
-                document.getElementById('hero-sensor-tag').innerText = 'HEALTH CONNECT VERIFIED';
-                document.getElementById('hero-stake-tag').innerText = '500 $SKR STAKED';
-                document.getElementById('metric-integer').innerText = '8,420';
-                document.getElementById('metric-unit').innerText = '';
-                document.getElementById('metric-sub').innerText = 'of 8,000 daily steps required';
-                document.getElementById('sync-status-text').innerText = 'Health Connect Verified • Synced 4s ago';
-                document.getElementById('risk-burn-text').innerText = '71.4 $SKR burned';
-                document.getElementById('demo-slider').min = 1000;
-                document.getElementById('demo-slider').max = 14000;
+                specCard.style.display = 'block';
+                specCard.innerHTML = '<div>Schedule: Mon, Wed, Fri, Sun (Odd Days)</div><div>Target: Max 1.0 hr Internet / Mobile Data</div><div>Status: Active Window • Nonce #84201</div>';
+                document.getElementById('hero-sensor-tag').className = 'tag-pill blue';
+                document.getElementById('hero-sensor-tag').innerText = 'NETWORKSTATS ODD DAYS';
+                document.getElementById('hero-stake-tag').innerText = '2,500 $SKR STAKED';
+                document.getElementById('metric-integer').innerText = '38';
+                document.getElementById('metric-unit').innerText = ' mins';
+                document.getElementById('metric-sub').innerText = 'used of 60 mins max allowed today';
+                document.getElementById('sync-status-text').innerText = 'NetworkStats Active • Synced 2s ago';
+                document.getElementById('risk-burn-text').innerText = '357.14 $SKR burned';
+                document.getElementById('demo-slider').min = 10;
+                document.getElementById('demo-slider').max = 90;
                 document.getElementById('demo-slider').value = currentValue;
             } else if (cat === 'early6am') {
-                // THE 6:00 AM CLUB!
                 el.className = 'cat-chip active gold';
                 currentTarget = 6.0;
-                currentValue = 5.8; // 05:48 AM
-                currentStakeSKR = 5000; // 5,000 $SKR High Roller!
+                currentValue = 5.8;
+                currentStakeSKR = 5000;
                 totalDays = 7;
-                breakdown.style.display = 'none';
+                specCard.style.display = 'block';
+                specCard.innerHTML = '<div>Schedule: Daily Monday through Sunday</div><div>Target: Clock In before 06:00 AM sharp</div><div>Status: System Clock Hardware Attested</div>';
                 document.getElementById('hero-sensor-tag').className = 'tag-pill gold';
                 document.getElementById('hero-sensor-tag').innerText = 'SYSTEM CLOCK NTP ATTESTED';
                 document.getElementById('hero-stake-tag').innerText = '5,000 $SKR STAKED';
@@ -1728,41 +1796,41 @@
                 document.getElementById('demo-slider').min = 4;
                 document.getElementById('demo-slider').max = 9;
                 document.getElementById('demo-slider').value = currentValue;
+            } else if (cat === 'steps') {
+                el.className = 'cat-chip active green';
+                currentTarget = 10000;
+                currentValue = 10420;
+                currentStakeSKR = 500;
+                totalDays = 7;
+                specCard.style.display = 'none';
+                document.getElementById('hero-sensor-tag').className = 'tag-pill green';
+                document.getElementById('hero-sensor-tag').innerText = 'HEALTH CONNECT VERIFIED';
+                document.getElementById('hero-stake-tag').innerText = '500 $SKR STAKED';
+                document.getElementById('metric-integer').innerText = '10,420';
+                document.getElementById('metric-unit').innerText = '';
+                document.getElementById('metric-sub').innerText = 'of 10,000 daily steps required';
+                document.getElementById('sync-status-text').innerText = 'Health Connect Verified • Synced 4s ago';
+                document.getElementById('risk-burn-text').innerText = '71.4 $SKR burned';
+                document.getElementById('demo-slider').min = 1000;
+                document.getElementById('demo-slider').max = 15000;
+                document.getElementById('demo-slider').value = currentValue;
             } else if (cat === 'screentime') {
-                el.className = 'cat-chip active purple';
-                currentTarget = 3.0;
-                currentValue = 2.1;
+                el.className = 'cat-chip active';
+                currentTarget = 2.0;
+                currentValue = 1.4;
                 currentStakeSKR = 1000;
                 totalDays = 14;
-                breakdown.style.display = 'block';
+                specCard.style.display = 'none';
                 document.getElementById('hero-sensor-tag').className = 'tag-pill purple';
                 document.getElementById('hero-sensor-tag').innerText = 'USAGESTATS DETOX';
                 document.getElementById('hero-stake-tag').innerText = '1,000 $SKR STAKED';
-                document.getElementById('metric-integer').innerText = '2.1';
+                document.getElementById('metric-integer').innerText = '1.4';
                 document.getElementById('metric-unit').innerText = 'h';
-                document.getElementById('metric-sub').innerText = 'under 3.0h phone limit today';
+                document.getElementById('metric-sub').innerText = 'under 2.0h phone limit today';
                 document.getElementById('sync-status-text').innerText = 'UsageStats Attested • App Limits OK';
                 document.getElementById('risk-burn-text').innerText = '71.4 $SKR burned';
                 document.getElementById('demo-slider').min = 0;
-                document.getElementById('demo-slider').max = 6;
-                document.getElementById('demo-slider').value = currentValue;
-            } else if (cat === 'sleep') {
-                el.className = 'cat-chip active blue';
-                currentTarget = 7.0;
-                currentValue = 7.5;
-                currentStakeSKR = 600;
-                totalDays = 7;
-                breakdown.style.display = 'none';
-                document.getElementById('hero-sensor-tag').className = 'tag-pill blue';
-                document.getElementById('hero-sensor-tag').innerText = 'SLEEP SESSION API';
-                document.getElementById('hero-stake-tag').innerText = '600 $SKR STAKED';
-                document.getElementById('metric-integer').innerText = '7.5';
-                document.getElementById('metric-unit').innerText = 'h';
-                document.getElementById('metric-sub').innerText = 'of 7.0h rest goal achieved';
-                document.getElementById('sync-status-text').innerText = 'SleepSessionRecord Validated';
-                document.getElementById('risk-burn-text').innerText = '85.7 $SKR burned';
-                document.getElementById('demo-slider').min = 4;
-                document.getElementById('demo-slider').max = 10;
+                document.getElementById('demo-slider').max = 4;
                 document.getElementById('demo-slider').value = currentValue;
             } else if (cat === 'gym') {
                 el.className = 'cat-chip active';
@@ -1770,7 +1838,7 @@
                 currentValue = 50;
                 currentStakeSKR = 750;
                 totalDays = 7;
-                breakdown.style.display = 'none';
+                specCard.style.display = 'none';
                 document.getElementById('hero-sensor-tag').className = 'tag-pill';
                 document.getElementById('hero-sensor-tag').innerText = 'HEART RATE ZONE API';
                 document.getElementById('hero-stake-tag').innerText = '750 $SKR STAKED';
@@ -1788,7 +1856,21 @@
         }
 
         function updateProgress() {
-            let pct = Math.min(Math.round((currentValue / currentTarget) * 100), 100);
+            let isPassing = false;
+            let pct = 0;
+
+            if (activeCategory === 'oddInternet') {
+                // For internet/screen limits, LESS is passing!
+                isPassing = currentValue <= currentTarget;
+                pct = Math.min(Math.round((currentValue / currentTarget) * 100), 100);
+            } else if (activeCategory === 'early6am') {
+                isPassing = currentValue <= currentTarget;
+                pct = 100;
+            } else {
+                isPassing = currentValue >= currentTarget;
+                pct = Math.min(Math.round((currentValue / currentTarget) * 100), 100);
+            }
+
             document.getElementById('metric-progress-fill').style.width = pct + '%';
             document.getElementById('metric-pct').innerText = pct + '%';
 
@@ -1800,16 +1882,16 @@
                 btn.innerHTML = '<span>✓</span><span>CLOCKED IN ON-CHAIN</span>';
                 status.innerText = 'Verified On-Chain! See you tomorrow.';
                 status.style.color = 'var(--solana-green)';
-            } else if (currentValue >= currentTarget || (activeCategory === 'early6am' && currentValue <= currentTarget)) {
+            } else if (isPassing) {
                 btn.className = 'btn-clock-in active';
                 btn.innerHTML = '<span>🔒</span><span>CLOCK IN (SEED VAULT)</span>';
-                status.innerText = 'Goal Complete! Ready to Clock In';
+                status.innerText = (activeCategory === 'oddInternet') ? 'Within Limit! Ready to Clock In' : 'Goal Complete! Ready to Clock In';
                 status.style.color = 'var(--solana-green)';
             } else {
                 btn.className = 'btn-clock-in disabled';
-                btn.innerHTML = '<span>⏳</span><span>TARGET NOT MET YET</span>';
-                status.innerText = 'Keep going to unlock daily Clock-In';
-                status.style.color = 'var(--text-secondary)';
+                btn.innerHTML = '<span>⏳</span><span>CONDITION BREACHED</span>';
+                status.innerText = (activeCategory === 'oddInternet') ? 'Exceeded 60 mins internet quota!' : 'Target not met yet';
+                status.style.color = 'var(--flame-red)';
             }
 
             document.getElementById('current-day-label').innerText = currentDay;
@@ -1835,78 +1917,116 @@
             }
         }
 
-        // Custom Studio Functions
+        // COMPOSER LOGIC
+        function openComposerModal() {
+            playMechanicalClick();
+            document.getElementById('composer-modal').classList.add('active');
+            updateComposerPreview();
+        }
+        function closeComposerModal() {
+            playMechanicalClick();
+            document.getElementById('composer-modal').classList.remove('active');
+        }
+
+        function selectComposerSensor(sensor, el) {
+            playMechanicalClick();
+            document.querySelectorAll('.sensor-opt').forEach(s => s.classList.remove('active'));
+            el.classList.add('active');
+            composerSensor = sensor;
+            updateComposerPreview();
+        }
+
+        function toggleDayPill(el) {
+            playMechanicalClick();
+            el.classList.toggle('active');
+            // Uncheck presets
+            document.querySelectorAll('.schedule-chip').forEach(c => c.classList.remove('active'));
+            updateComposerPreview();
+        }
+
+        function applySchedulePreset(preset) {
+            playMechanicalClick();
+            document.querySelectorAll('.schedule-chip').forEach(c => c.classList.remove('active'));
+            const dayPills = {
+                'mon': document.getElementById('day-mon'),
+                'tue': document.getElementById('day-tue'),
+                'wed': document.getElementById('day-wed'),
+                'thu': document.getElementById('day-thu'),
+                'fri': document.getElementById('day-fri'),
+                'sat': document.getElementById('day-sat'),
+                'sun': document.getElementById('day-sun'),
+            };
+
+            // Reset all
+            Object.values(dayPills).forEach(p => p.classList.remove('active'));
+
+            if (preset === 'odd') {
+                document.getElementById('sched-odd-btn').classList.add('active');
+                dayPills['mon'].classList.add('active');
+                dayPills['wed'].classList.add('active');
+                dayPills['fri'].classList.add('active');
+                dayPills['sun'].classList.add('active');
+            } else if (preset === 'even') {
+                document.getElementById('sched-even-btn').classList.add('active');
+                dayPills['tue'].classList.add('active');
+                dayPills['thu'].classList.add('active');
+                dayPills['sat'].classList.add('active');
+            } else if (preset === 'all') {
+                document.getElementById('sched-all-btn').classList.add('active');
+                Object.values(dayPills).forEach(p => p.classList.add('active'));
+            }
+            updateComposerPreview();
+        }
+
+        function updateComposerPreview() {
+            composerLimit = document.getElementById('composer-limit-val').value || '1.0';
+            composerUnit = document.getElementById('composer-unit-select').value;
+            composerStake = parseFloat(document.getElementById('composer-stake-val').value) || 2500;
+
+            const activePills = [];
+            ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].forEach(d => {
+                const el = document.getElementById(`day-${d}`);
+                if (el && el.classList.contains('active')) activePills.push(el.innerText);
+            });
+
+            const scheduleStr = (activePills.length === 4 && activePills.includes('Mon') && activePills.includes('Wed')) ? 
+                'Odd Days (Mon, Wed, Fri, Sun)' : activePills.join(', ');
+
+            const dailyLoss = (composerStake / 7).toFixed(2);
+
+            let sensorName = "Internet & Data Usage";
+            if (composerSensor === 'screen') sensorName = "Screen Time Usage";
+            if (composerSensor === 'steps') sensorName = "Physical Steps Count";
+            if (composerSensor === 'gym') sensorName = "Gym & Workout Duration";
+
+            document.getElementById('preview-rule-text').innerHTML = 
+                `IF (${sensorName} &lt;= ${composerLimit} ${composerUnit}) ON (${scheduleStr})<br>` +
+                `THEN Unlock Daily Clock-In<br>` +
+                `ELSE Burn ${dailyLoss} $SKR from PDA Escrow`;
+        }
+
+        function deployComposerRule() {
+            playMechanicalClick();
+            closeComposerModal();
+            showToast(`Custom Rule Deployed: 2,500 $SKR staked on Odd-Days Internet Limit!`);
+            switchCategory('oddInternet', document.querySelectorAll('.cat-chip')[0]);
+            switchNavTab('dashboard', document.querySelectorAll('.nav-item')[0]);
+        }
+
+        // Custom Studio Modal functions
         function openStudioModal() {
             playMechanicalClick();
             document.getElementById('studio-modal').classList.add('active');
-            updateStudioMath();
         }
         function closeStudioModal() {
             playMechanicalClick();
             document.getElementById('studio-modal').classList.remove('active');
         }
-
-        function selectStudioCategory(cat, el) {
+        function deployStudioGoal() {
             playMechanicalClick();
-            document.querySelectorAll('#studio-modal .studio-opt-btn').forEach(b => {
-                if (b.id && b.id.startsWith('btn-cat-')) b.classList.remove('active');
-            });
-            el.classList.add('active');
-            studioCategory = cat;
-
-            document.getElementById('field-wake-wrap').style.display = (cat === 'wake') ? 'block' : 'none';
-            document.getElementById('field-steps-wrap').style.display = (cat === 'steps') ? 'block' : 'none';
-            document.getElementById('field-screen-wrap').style.display = (cat === 'screen') ? 'block' : 'none';
-            document.getElementById('field-gym-wrap').style.display = (cat === 'gym') ? 'block' : 'none';
-        }
-
-        function selectStudioDays(days, el) {
-            playMechanicalClick();
-            el.parentElement.querySelectorAll('.studio-opt-btn').forEach(b => b.classList.remove('active'));
-            el.classList.add('active');
-            studioDays = days;
-            updateStudioMath();
-        }
-
-        function selectRule(rule, el) {
-            playMechanicalClick();
-            document.getElementById('rule-burn-btn').classList.remove('active');
-            document.getElementById('rule-dao-btn').classList.remove('active');
-            el.classList.add('active');
-            studioRule = rule;
-        }
-
-        function updateStudioMath() {
-            const stake = parseFloat(document.getElementById('studio-stake-amount').value) || 0;
-            const daily = (stake / studioDays).toFixed(2);
-            document.getElementById('math-total-stake').innerText = stake.toLocaleString() + ' $SKR';
-            document.getElementById('math-daily-loss').innerText = daily + ' $SKR / day';
-        }
-
-        function deployCustomPledge() {
-            playMechanicalClick();
-            const stake = parseFloat(document.getElementById('studio-stake-amount').value) || 5000;
             closeStudioModal();
-
-            if (studioCategory === 'wake') {
-                const time = document.getElementById('studio-wake-time').value || '06:00 AM';
-                showToast(`Deployed ${stake.toLocaleString()} $SKR for ${time} Wake-Up Club!`);
-                switchCategory('early6am', document.querySelectorAll('.cat-chip')[1]);
-            } else {
-                showToast(`Custom Pledge Created: ${stake.toLocaleString()} $SKR Staked in PDA Vault!`);
-                switchCategory('steps', document.querySelectorAll('.cat-chip')[0]);
-            }
-        }
-
-        function launchCustomPreset(name, type, target, stake, days) {
-            playMechanicalClick();
-            showToast(`Enrolled in ${name}: ${stake.toLocaleString()} $SKR Staked!`);
-            switchNavTab('dashboard', document.querySelectorAll('.nav-item')[0]);
-            if (type === 'time') {
-                switchCategory('early6am', document.querySelectorAll('.cat-chip')[1]);
-            } else {
-                switchCategory('steps', document.querySelectorAll('.cat-chip')[0]);
-            }
+            showToast(`6:00 AM Club Deployed: 5,000 $SKR Staked!`);
+            switchCategory('early6am', document.querySelectorAll('.cat-chip')[1]);
         }
 
         // Biometric Sheet Controls
@@ -1976,8 +2096,8 @@
 
         function shareAsBlink() {
             playMechanicalClick();
-            const dummyBlinkUrl = `https://actions.solana.com/pledge?user=${connectedAddress || 'SeekerUser'}&streak=4`;
-            navigator.clipboard.writeText(`🔥 I just Clocked In Day ${currentDay}/7 on bozPledge with my Solana Seeker! Join my accountability squad: ${dummyBlinkUrl}`);
+            const dummyBlinkUrl = `https://actions.solana.com/pledge?user=${connectedAddress || 'SeekerUser'}&rule=oddInternet`;
+            navigator.clipboard.writeText(`🔥 I just Clocked In Day ${currentDay}/7 on bozPledge with my Solana Seeker! Join my custom plan: ${dummyBlinkUrl}`);
             showToast("Blink copied to clipboard! Ready to share on X.");
         }
 
@@ -2000,12 +2120,15 @@
 
         function handleDrawerSlider(val) {
             currentValue = parseFloat(val);
-            if (activeCategory === 'steps') {
+            if (activeCategory === 'oddInternet') {
+                document.getElementById('metric-integer').innerText = parseInt(val);
+                document.getElementById('drawer-slider-val').innerText = parseInt(val) + ' mins';
+            } else if (activeCategory === 'steps') {
                 document.getElementById('metric-integer').innerText = parseInt(val).toLocaleString();
                 document.getElementById('drawer-slider-val').innerText = parseInt(val).toLocaleString() + ' steps';
             } else {
                 document.getElementById('metric-integer').innerText = val;
-                document.getElementById('drawer-slider-val').innerText = val + 'h';
+                document.getElementById('drawer-slider-val').innerText = val;
             }
             updateProgress();
         }
