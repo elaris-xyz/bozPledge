@@ -6,22 +6,26 @@
     <title>bozPledge — Production Tier-1 Seeker Experience</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-dark: #07080D;
-            --surface-dark: #10121B;
-            --surface-variant: #181B28;
-            --border-dark: #222638;
-            --border-active: #383E58;
+            --bg-dark: #06070B;
+            --surface-dark: #0F111A;
+            --surface-card: #151824;
+            --surface-elevated: #1D2132;
+            --border-subtle: #23273A;
+            --border-active: #3C425F;
+            
             --solana-purple: #9945FF;
             --solana-green: #14F195;
             --solana-teal: #00C2FF;
             --flame-red: #FF453A;
+            --amber-warn: #FF9F0A;
             --gold-accent: #FFD60A;
+            
             --text-primary: #F7F8FA;
             --text-secondary: #9AA0B4;
-            --text-muted: #5C6278;
+            --text-muted: #5E657D;
         }
 
         * {
@@ -34,17 +38,17 @@
 
         body {
             background: #030406;
-            font-family: 'Outfit', -apple-system, sans-serif;
+            font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
             color: var(--text-primary);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 24px;
+            padding: 20px;
             background-image: 
-                radial-gradient(circle at 12% 15%, rgba(153, 69, 255, 0.12) 0%, transparent 40%),
-                radial-gradient(circle at 88% 85%, rgba(20, 241, 149, 0.1) 0%, transparent 40%),
-                linear-gradient(180deg, #020305 0%, #080A10 100%);
+                radial-gradient(circle at 10% 10%, rgba(153, 69, 255, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at 90% 90%, rgba(20, 241, 149, 0.1) 0%, transparent 45%),
+                linear-gradient(180deg, #020305 0%, #07090F 100%);
         }
 
         /* Phone Frame */
@@ -52,27 +56,27 @@
             position: relative;
             width: 100%;
             max-width: 420px;
-            height: 880px;
+            height: 890px;
             background: #000;
             border-radius: 54px;
             box-shadow: 
-                0 0 0 10px #151722,
-                0 0 0 12px #222534,
+                0 0 0 10px #141620,
+                0 0 0 12px #202434,
                 0 30px 100px rgba(0, 0, 0, 0.95),
-                0 0 80px rgba(153, 69, 255, 0.18);
+                0 0 80px rgba(153, 69, 255, 0.16);
             display: flex;
             flex-direction: column;
             overflow: hidden;
         }
 
-        /* Android / Seeker Status Bar */
+        /* Status Bar */
         .status-bar {
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             height: 44px;
-            padding: 10px 24px 0 24px;
+            padding: 12px 24px 0 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -114,34 +118,7 @@
             box-shadow: inset 0 0 4px #00C2FF40;
         }
 
-        /* Floating Judge Sandbox Toggle */
-        .judge-toggle-pill {
-            position: absolute;
-            top: 48px;
-            right: 20px;
-            background: rgba(24, 27, 40, 0.85);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(0, 194, 255, 0.4);
-            border-radius: 20px;
-            padding: 4px 10px;
-            font-size: 10px;
-            font-weight: 800;
-            color: var(--solana-teal);
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            cursor: pointer;
-            z-index: 90;
-            transition: all 0.2s;
-        }
-        .judge-toggle-pill.active {
-            background: var(--solana-teal);
-            color: #000;
-            box-shadow: 0 0 14px rgba(0, 194, 255, 0.6);
-        }
-
-        /* Canvas Confetti / Particle Layer */
+        /* FX Canvas */
         #fx-canvas {
             position: absolute;
             inset: 0;
@@ -157,33 +134,32 @@
             overflow-x: hidden;
             display: flex;
             flex-direction: column;
-            padding: 80px 20px 85px 20px;
+            padding: 56px 20px 85px 20px;
             position: relative;
         }
         .phone-screen::-webkit-scrollbar { display: none; }
 
-        /* App Header */
-        .app-header {
+        /* Clean Two-Tier App Header (Zero Overlap!) */
+        .app-header-tier1 {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 18px;
+            margin-bottom: 8px;
         }
-        .brand-text h1 {
+        .brand-logo-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .brand-title {
             font-size: 22px;
             font-weight: 900;
             letter-spacing: -0.5px;
-            background: linear-gradient(135deg, #fff 40%, var(--solana-purple));
+            background: linear-gradient(135deg, #FFFFFF 40%, var(--solana-purple));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .brand-badge-row {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            margin-top: 2px;
-        }
-        .genesis-badge {
+        .genesis-tag {
             font-size: 9px;
             font-weight: 800;
             color: var(--gold-accent);
@@ -193,28 +169,44 @@
             padding: 2px 6px;
             display: none;
         }
-        .network-tag {
-            font-size: 10px;
-            color: var(--solana-green);
-            font-weight: 700;
-        }
 
-        .btn-wallet-connect {
-            background: var(--surface-dark);
-            border: 1px solid var(--border-dark);
-            border-radius: 14px;
-            padding: 7px 12px;
+        .header-actions {
             display: flex;
             align-items: center;
             gap: 8px;
+        }
+        .judge-toggle-btn {
+            background: rgba(24, 27, 40, 0.9);
+            border: 1px solid rgba(0, 194, 255, 0.35);
+            border-radius: 12px;
+            padding: 6px 10px;
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--solana-teal);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s;
+        }
+        .judge-toggle-btn.active {
+            background: var(--solana-teal);
+            color: #000;
+            box-shadow: 0 0 12px rgba(0, 194, 255, 0.5);
+        }
+        .btn-wallet-connect {
+            background: var(--surface-dark);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 6px 12px;
             font-size: 12px;
             font-weight: 700;
             color: var(--text-primary);
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
             transition: all 0.2s;
-        }
-        .btn-wallet-connect:hover {
-            border-color: var(--solana-purple);
         }
         .btn-wallet-connect.connected {
             background: rgba(20, 241, 149, 0.08);
@@ -228,15 +220,15 @@
         }
         .btn-wallet-connect.connected .wallet-dot {
             background: var(--solana-green);
-            box-shadow: 0 0 8px var(--solana-green);
+            box-shadow: 0 0 6px var(--solana-green);
         }
 
-        /* Security / Ethelsec Attestation Pill */
-        .attestation-bar {
-            background: rgba(18, 20, 30, 0.7);
-            border: 1px solid rgba(20, 241, 149, 0.2);
+        /* Live Sensor & Attestation Bar */
+        .sensor-sync-bar {
+            background: var(--surface-dark);
+            border: 1px solid var(--border-subtle);
             border-radius: 12px;
-            padding: 6px 12px;
+            padding: 7px 12px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -245,81 +237,54 @@
             color: var(--text-secondary);
             margin-bottom: 16px;
         }
-        .attestation-left {
+        .sync-indicator {
             display: flex;
             align-items: center;
             gap: 6px;
         }
-        .shield-icon {
-            color: var(--solana-green);
-            font-size: 13px;
+        .pulse-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--solana-green);
+            animation: pulse-dot-anim 1.5s infinite;
         }
-        .helius-latency {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 10px;
-            color: var(--solana-teal);
+        @keyframes pulse-dot-anim {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.6); opacity: 0.4; }
+            100% { transform: scale(1); opacity: 1; }
         }
 
-        /* Bottom Navigation Bar */
-        .bottom-nav {
+        /* Drag-to-Scroll Horizontal Carousel Wrap */
+        .carousel-outer-wrap {
+            position: relative;
+            margin-bottom: 16px;
+        }
+        .carousel-edge-fade-right {
             position: absolute;
-            bottom: 0;
-            left: 0;
             right: 0;
-            height: 72px;
-            background: rgba(16, 18, 27, 0.95);
-            backdrop-filter: blur(14px);
-            border-top: 1px solid var(--border-dark);
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            padding: 0 10px;
-            z-index: 100;
+            top: 0;
+            bottom: 0;
+            width: 28px;
+            background: linear-gradient(90deg, transparent, var(--bg-dark));
+            pointer-events: none;
+            z-index: 10;
         }
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            color: var(--text-muted);
-            cursor: pointer;
-            transition: color 0.2s;
-            font-size: 11px;
-            font-weight: 700;
-            padding: 8px 12px;
-            border-radius: 12px;
-        }
-        .nav-item.active {
-            color: var(--solana-green);
-        }
-        .nav-icon {
-            font-size: 20px;
-        }
-
-        /* Views */
-        .tab-view {
-            display: none;
-            flex-direction: column;
-            animation: fadeIn 0.2s ease-in-out;
-        }
-        .tab-view.active { display: flex; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Dashboard Multi-Track Chips */
-        .category-scroll {
+        .category-scroll-container {
             display: flex;
             gap: 8px;
-            margin-bottom: 16px;
             overflow-x: auto;
-            padding-bottom: 2px;
+            scroll-behavior: smooth;
+            padding-bottom: 4px;
+            cursor: grab;
         }
-        .category-scroll::-webkit-scrollbar { display: none; }
+        .category-scroll-container:active {
+            cursor: grabbing;
+        }
+        .category-scroll-container::-webkit-scrollbar { display: none; }
         .cat-chip {
             background: var(--surface-dark);
-            border: 1px solid var(--border-dark);
+            border: 1px solid var(--border-subtle);
             border-radius: 14px;
             padding: 8px 14px;
             font-size: 12px;
@@ -330,31 +295,49 @@
             display: flex;
             align-items: center;
             gap: 6px;
+            flex-shrink: 0;
             transition: all 0.2s;
+        }
+        .cat-chip:hover {
+            border-color: var(--border-active);
+            color: var(--text-primary);
         }
         .cat-chip.active {
             background: rgba(153, 69, 255, 0.15);
             border-color: var(--solana-purple);
             color: #fff;
-            box-shadow: 0 0 14px rgba(153, 69, 255, 0.2);
+            box-shadow: 0 0 14px rgba(153, 69, 255, 0.25);
+        }
+        .cat-chip.active.green {
+            background: rgba(20, 241, 149, 0.12);
+            border-color: var(--solana-green);
+            color: #fff;
+            box-shadow: 0 0 14px rgba(20, 241, 149, 0.2);
+        }
+        .cat-chip.active.blue {
+            background: rgba(0, 194, 255, 0.12);
+            border-color: var(--solana-teal);
+            color: #fff;
+            box-shadow: 0 0 14px rgba(0, 194, 255, 0.2);
         }
 
         /* Hero Commitment Card */
         .hero-card {
-            background: var(--surface-dark);
-            border: 1px solid var(--border-dark);
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
             border-radius: 26px;
             padding: 22px;
             position: relative;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.5);
+            transition: border-color 0.3s;
         }
         .hero-badge-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
         .tag-pill {
             font-size: 10px;
@@ -372,30 +355,48 @@
             background: rgba(153, 69, 255, 0.15);
             color: var(--solana-purple);
         }
+        .tag-pill.blue {
+            background: rgba(0, 194, 255, 0.15);
+            color: var(--solana-teal);
+        }
 
-        .metric-main {
-            font-size: 46px;
-            font-weight: 900;
-            letter-spacing: -1px;
-            line-height: 1;
+        /* Razor Sharp Typography (No Glitch Spacing!) */
+        .metric-row {
+            display: flex;
+            align-items: baseline;
+            gap: 2px;
             margin-bottom: 4px;
-            font-family: 'JetBrains Mono', sans-serif;
+        }
+        .metric-integer {
+            font-size: 48px;
+            font-weight: 900;
+            letter-spacing: -1.5px;
+            line-height: 1;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-primary);
+        }
+        .metric-unit {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+            margin-left: 2px;
         }
         .metric-sub {
             font-size: 13px;
             color: var(--text-muted);
             font-weight: 500;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
 
         .progress-bar-wrap {
             width: 100%;
             height: 14px;
-            background: var(--surface-variant);
+            background: var(--surface-dark);
             border-radius: 20px;
             overflow: hidden;
-            margin-bottom: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
         }
         .progress-bar-fill {
             height: 100%;
@@ -411,10 +412,11 @@
             font-weight: 600;
         }
 
-        /* Screen Time App Breakdown (Detail view when screentime active) */
+        /* Screen Time App Logs */
         .app-breakdown-box {
             display: none;
-            background: var(--surface-variant);
+            background: var(--surface-dark);
+            border: 1px solid var(--border-subtle);
             border-radius: 14px;
             padding: 12px;
             margin-top: 14px;
@@ -426,36 +428,47 @@
             margin-bottom: 6px;
             color: var(--text-secondary);
         }
+        .app-row:last-child { margin-bottom: 0; }
         .app-row strong { color: var(--text-primary); }
 
-        /* Cutoff Countdown Notice */
-        .cutoff-notice {
+        /* Urgency & Loss Aversion Risk Bar */
+        .urgency-risk-box {
+            background: rgba(255, 69, 58, 0.08);
+            border: 1px solid rgba(255, 69, 58, 0.25);
+            border-radius: 14px;
+            padding: 10px 14px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 8px 14px;
-            background: rgba(255, 69, 58, 0.08);
-            border: 1px solid rgba(255, 69, 58, 0.2);
-            border-radius: 12px;
-            margin-bottom: 16px;
             font-size: 12px;
+            margin-bottom: 16px;
+        }
+        .risk-text {
+            color: var(--text-secondary);
+            line-height: 1.3;
+        }
+        .risk-burn-amount {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 800;
+            color: var(--flame-red);
         }
         .cutoff-timer {
             font-family: 'JetBrains Mono', monospace;
             font-weight: 800;
             color: var(--flame-red);
+            font-size: 13px;
         }
 
-        /* Timeline Dots */
+        /* Timeline Card */
         .timeline-card {
-            background: var(--surface-dark);
-            border: 1px solid var(--border-dark);
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
             border-radius: 18px;
             padding: 14px 18px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
         }
         .dots-row {
             display: flex;
@@ -470,7 +483,7 @@
             justify-content: center;
             font-size: 11px;
             font-weight: 800;
-            background: var(--surface-variant);
+            background: var(--surface-dark);
             color: var(--text-muted);
             transition: all 0.3s;
         }
@@ -505,21 +518,21 @@
             gap: 10px;
             cursor: pointer;
             transition: transform 0.15s, box-shadow 0.2s;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
         .btn-clock-in.active {
             background: linear-gradient(90deg, var(--solana-purple), var(--solana-green));
             box-shadow: 0 10px 30px rgba(20, 241, 149, 0.25);
             animation: pulse 2s infinite ease-in-out;
         }
-        .btn-clock-in.active:active { transform: scale(0.97); }
+        .btn-clock-in.active:active { transform: scale(0.98); }
         .btn-clock-in.done {
             background: var(--solana-green);
             color: var(--bg-dark);
             cursor: default;
         }
         .btn-clock-in.disabled {
-            background: var(--border-dark);
+            background: var(--border-subtle);
             color: var(--text-muted);
             cursor: not-allowed;
         }
@@ -529,12 +542,12 @@
             50% { transform: scale(1.02); }
         }
 
-        /* Share Streak Button (Solana Action / Blink) */
+        /* Share Blink Button */
         .share-streak-btn {
             width: 100%;
-            height: 42px;
+            height: 40px;
             background: transparent;
-            border: 1px solid var(--border-dark);
+            border: 1px solid var(--border-subtle);
             border-radius: 14px;
             color: var(--text-secondary);
             font-family: inherit;
@@ -545,7 +558,7 @@
             justify-content: center;
             gap: 8px;
             cursor: pointer;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             transition: all 0.2s;
         }
         .share-streak-btn:hover {
@@ -553,7 +566,7 @@
             color: var(--solana-teal);
         }
 
-        /* Stats Row */
+        /* Stats 2-Col */
         .stats-2-col {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -561,8 +574,8 @@
             margin-bottom: 16px;
         }
         .mini-stat {
-            background: var(--surface-dark);
-            border: 1px solid var(--border-dark);
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
             border-radius: 18px;
             padding: 14px 16px;
         }
@@ -576,25 +589,72 @@
         .mini-stat-value {
             font-size: 20px;
             font-weight: 900;
+            font-family: 'JetBrains Mono', sans-serif;
+        }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 72px;
+            background: rgba(15, 17, 26, 0.96);
+            backdrop-filter: blur(16px);
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 0 10px;
+            z-index: 100;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color 0.2s;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 8px 12px;
+            border-radius: 12px;
+        }
+        .nav-item.active {
+            color: var(--solana-green);
+        }
+        .nav-icon { font-size: 20px; }
+
+        /* Views */
+        .tab-view {
+            display: none;
+            flex-direction: column;
+            animation: fadeIn 0.2s ease-in-out;
+        }
+        .tab-view.active { display: flex; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* Explore Catalog Cards */
         .catalog-title {
             font-size: 18px;
             font-weight: 800;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
         .catalog-sub {
             font-size: 13px;
             color: var(--text-secondary);
-            margin-bottom: 18px;
+            margin-bottom: 16px;
         }
         .pledge-item-card {
-            background: var(--surface-dark);
-            border: 1px solid var(--border-dark);
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
             border-radius: 20px;
             padding: 18px;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -610,7 +670,7 @@
             align-items: center;
             justify-content: center;
             font-size: 22px;
-            background: var(--surface-variant);
+            background: var(--surface-dark);
             margin-right: 14px;
         }
         .pledge-details h4 {
@@ -623,10 +683,10 @@
             color: var(--text-secondary);
         }
 
-        /* Leaderboard Cards */
+        /* Leaderboard */
         .leader-card {
-            background: var(--surface-dark);
-            border: 1px solid var(--border-dark);
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
             border-radius: 18px;
             padding: 14px 16px;
             margin-bottom: 10px;
@@ -639,6 +699,7 @@
             font-weight: 900;
             color: var(--gold-accent);
             width: 24px;
+            font-family: 'JetBrains Mono', monospace;
         }
         .user-info {
             display: flex;
@@ -650,7 +711,7 @@
             width: 36px;
             height: 36px;
             border-radius: 50%;
-            background: var(--surface-variant);
+            background: var(--surface-dark);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -667,9 +728,10 @@
             display: flex;
             align-items: center;
             gap: 4px;
+            font-family: 'JetBrains Mono', monospace;
         }
 
-        /* Profile & Vault */
+        /* Vault / Profile */
         .profile-header {
             text-align: center;
             margin-bottom: 24px;
@@ -693,8 +755,8 @@
             margin-top: 14px;
         }
         .badge-item {
-            background: var(--surface-dark);
-            border: 1px solid var(--border-dark);
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
             border-radius: 16px;
             padding: 14px 8px;
             text-align: center;
@@ -715,7 +777,7 @@
             margin-top: 2px;
         }
 
-        /* Seed Vault Biometric Modal */
+        /* Realistic Seed Vault Hold-to-Authorize Sheet */
         .biometric-sheet {
             position: absolute;
             inset: 0;
@@ -729,42 +791,63 @@
         }
         .biometric-sheet.active { display: flex; animation: slideUp 0.25s ease-out; }
         .biometric-content {
-            background: var(--surface-dark);
+            background: var(--surface-card);
             border: 1px solid var(--border-active);
             border-radius: 32px;
-            padding: 28px 24px;
+            padding: 26px 22px;
             text-align: center;
         }
-        .fingerprint-icon {
-            width: 72px;
-            height: 72px;
-            border-radius: 50%;
-            background: rgba(20, 241, 149, 0.1);
-            border: 2px solid var(--solana-green);
-            margin: 0 auto 16px auto;
+        .fingerprint-btn-holder {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            margin: 16px auto;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 36px;
-            animation: pulse-ring 1.8s infinite;
             cursor: pointer;
         }
-        @keyframes pulse-ring {
-            0% { box-shadow: 0 0 0 0 rgba(20, 241, 149, 0.4); }
-            70% { box-shadow: 0 0 0 16px rgba(20, 241, 149, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(20, 241, 149, 0); }
+        .fingerprint-svg-ring {
+            position: absolute;
+            inset: 0;
+            transform: rotate(-90deg);
+        }
+        .fingerprint-circle-bg {
+            fill: none;
+            stroke: var(--surface-elevated);
+            stroke-width: 4;
+        }
+        .fingerprint-circle-fill {
+            fill: none;
+            stroke: var(--solana-green);
+            stroke-width: 4;
+            stroke-dasharray: 240;
+            stroke-dashoffset: 240;
+            transition: stroke-dashoffset 0.1s linear;
+        }
+        .fingerprint-core {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: rgba(20, 241, 149, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
         }
         .tx-receipt-details {
-            background: var(--surface-variant);
-            border-radius: 16px;
-            padding: 12px 16px;
+            background: var(--surface-dark);
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
+            padding: 12px 14px;
             margin: 16px 0;
             font-family: 'JetBrains Mono', monospace;
             font-size: 11px;
             text-align: left;
+            line-height: 1.6;
         }
 
-        /* Tx Success Bottom Sheet */
+        /* Tx Confirmed Sheet */
         .tx-success-sheet {
             position: absolute;
             inset: 0;
@@ -778,20 +861,20 @@
         }
         .tx-success-sheet.active { display: flex; animation: slideUp 0.25s ease-out; }
         .tx-success-content {
-            background: var(--surface-dark);
+            background: var(--surface-card);
             border: 1px solid var(--solana-green);
             border-radius: 32px;
             padding: 28px 24px;
             text-align: center;
         }
 
-        /* Judge / Demo Drawer */
+        /* Judge Drawer */
         .demo-drawer {
             position: absolute;
             bottom: 72px;
             left: 0;
             right: 0;
-            background: rgba(20, 23, 35, 0.98);
+            background: rgba(19, 22, 33, 0.98);
             backdrop-filter: blur(16px);
             border-top: 1px solid var(--solana-teal);
             border-radius: 24px 24px 0 0;
@@ -804,15 +887,11 @@
             display: block;
             animation: slideUp 0.25s ease-out;
         }
-        @keyframes slideUp {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
-        }
         input[type="range"] {
             width: 100%;
             height: 6px;
             accent-color: var(--solana-teal);
-            background: var(--border-dark);
+            background: var(--surface-dark);
             border-radius: 10px;
             outline: none;
             margin: 10px 0 14px 0;
@@ -822,7 +901,7 @@
         .wallet-modal-overlay {
             position: absolute;
             inset: 0;
-            background: rgba(5, 6, 8, 0.92);
+            background: rgba(4, 5, 8, 0.92);
             backdrop-filter: blur(10px);
             z-index: 300;
             display: none;
@@ -832,8 +911,8 @@
         }
         .wallet-modal-overlay.active { display: flex; }
         .wallet-modal-content {
-            background: var(--surface-dark);
-            border: 1px solid var(--border-dark);
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
             border-radius: 28px;
             padding: 24px;
         }
@@ -842,13 +921,14 @@
             align-items: center;
             justify-content: space-between;
             padding: 14px 16px;
-            background: var(--surface-variant);
+            background: var(--surface-dark);
+            border: 1px solid var(--border-subtle);
             border-radius: 16px;
             margin-bottom: 10px;
             cursor: pointer;
             transition: all 0.2s;
         }
-        .wallet-option:hover { border: 1px solid var(--solana-purple); }
+        .wallet-option:hover { border-color: var(--solana-purple); }
         .wallet-option-left {
             display: flex;
             align-items: center;
@@ -863,7 +943,7 @@
             top: 52px;
             left: 50%;
             transform: translateX(-50%) translateY(-100px);
-            background: var(--surface-variant);
+            background: var(--surface-elevated);
             border: 1px solid var(--solana-green);
             color: var(--text-primary);
             padding: 10px 18px;
@@ -884,7 +964,6 @@
 <body>
 
     <div class="phone-wrapper">
-        <!-- Confetti / Firework canvas -->
         <canvas id="fx-canvas"></canvas>
 
         <!-- Android Status Bar -->
@@ -901,74 +980,84 @@
             <div class="notch-camera"></div>
         </div>
 
-        <!-- Floating Judge / Demo Sandbox Switch -->
-        <div class="judge-toggle-pill" id="judge-toggle-btn" onclick="toggleDemoDrawer()">
-            <span>🧪</span>
-            <span id="judge-pill-text">Judge Mode</span>
-        </div>
-
-        <!-- Global Toast -->
         <div id="toast" class="toast">
             <span>⚡</span>
             <span id="toast-text">Verified on Solana Devnet!</span>
         </div>
 
         <div class="phone-screen">
-            <!-- App Header -->
-            <div class="app-header">
-                <div>
-                    <div class="brand-text">
-                        <h1>bozPLEDGE</h1>
-                    </div>
-                    <div class="brand-badge-row">
-                        <span class="network-tag">Devnet • Helius RPC</span>
-                        <span class="genesis-badge" id="genesis-pill">★ SEEKER GENESIS</span>
-                    </div>
+            <!-- Two-Tier Clean Header (No Overlap) -->
+            <div class="app-header-tier1">
+                <div class="brand-logo-wrap">
+                    <h1 class="brand-title">bozPLEDGE</h1>
+                    <span class="genesis-tag" id="genesis-pill">★ SEEKER GENESIS</span>
                 </div>
-                <button class="btn-wallet-connect" id="wallet-btn" onclick="openWalletModal()">
-                    <div class="wallet-dot"></div>
-                    <span id="wallet-btn-label">Connect</span>
-                </button>
+                <div class="header-actions">
+                    <div class="judge-toggle-btn" id="judge-toggle-btn" onclick="toggleDemoDrawer()">
+                        <span>🧪</span>
+                        <span id="judge-btn-label">Judge</span>
+                    </div>
+                    <button class="btn-wallet-connect" id="wallet-btn" onclick="openWalletModal()">
+                        <div class="wallet-dot"></div>
+                        <span id="wallet-btn-label">Connect</span>
+                    </button>
+                </div>
             </div>
 
-            <!-- Ethelsec Security / Hardware Attestation Bar -->
-            <div class="attestation-bar">
-                <div class="attestation-left">
-                    <span class="shield-icon">🛡️</span>
-                    <span>Hardware Seed Vault Attested</span>
+            <!-- Hardware Attestation Bar -->
+            <div class="sensor-sync-bar">
+                <div class="sync-indicator">
+                    <div class="pulse-dot"></div>
+                    <span id="sync-status-text">Health Connect Verified • Synced 4s ago</span>
                 </div>
-                <span class="helius-latency">Slot #294021 • 38ms</span>
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--solana-teal);">Slot #294022 • 38ms</span>
             </div>
 
             <!-- VIEW 1: DASHBOARD -->
             <div class="tab-view active" id="view-dashboard">
-                <!-- Multi-Track Chips -->
-                <div class="category-scroll">
-                    <div class="cat-chip active" onclick="switchCategory('steps', this)">
-                        <span>🏃</span> 8,000 Steps
-                    </div>
-                    <div class="cat-chip" onclick="switchCategory('screentime', this)">
-                        <span>📵</span> Screen Detox (&lt;3h)
-                    </div>
-                    <div class="cat-chip" onclick="switchCategory('sleep', this)">
-                        <span>😴</span> 7.0h Rest
+                
+                <!-- Drag-to-Scroll Horizontal Carousel Wrap -->
+                <div class="carousel-outer-wrap">
+                    <div class="carousel-edge-fade-right"></div>
+                    <div class="category-scroll-container" id="category-scroll-container">
+                        <div class="cat-chip active green" onclick="switchCategory('steps', this)">
+                            <span>🏃</span> 8,000 Steps
+                        </div>
+                        <div class="cat-chip" onclick="switchCategory('screentime', this)">
+                            <span>📵</span> Screen Detox (&lt;3h)
+                        </div>
+                        <div class="cat-chip" onclick="switchCategory('sleep', this)">
+                            <span>😴</span> 7.0h Deep Sleep
+                        </div>
+                        <div class="cat-chip" onclick="switchCategory('early', this)">
+                            <span>🌅</span> Early Rise 8:00 AM
+                        </div>
                     </div>
                 </div>
 
-                <!-- Live Window Cutoff Notice -->
-                <div class="cutoff-notice">
-                    <span>⏳ Today's Clock-In Window Closes in:</span>
-                    <span class="cutoff-timer" id="cutoff-timer-text">04h 28m 14s</span>
+                <!-- Loss Aversion Urgency Card -->
+                <div class="urgency-risk-box">
+                    <div class="risk-text">
+                        <div>Daily Window Deadline</div>
+                        <div style="font-size: 11px; color: var(--text-muted);">
+                            If missed: <span class="risk-burn-amount">71.4 $SKR burned</span>
+                        </div>
+                    </div>
+                    <div class="cutoff-timer" id="cutoff-timer-text">04h 28m 14s</div>
                 </div>
 
-                <!-- Main Hero Pledge Card -->
-                <div class="hero-card">
+                <!-- Hero Commitment Card -->
+                <div class="hero-card" id="hero-card-elem">
                     <div class="hero-badge-row">
                         <span class="tag-pill green" id="hero-sensor-tag">HEALTH CONNECT VERIFIED</span>
                         <span class="tag-pill purple" id="hero-stake-tag">500 $SKR STAKED</span>
                     </div>
 
-                    <div class="metric-main" id="metric-main">8,420</div>
+                    <!-- Razor Sharp Metric (No spacing bugs!) -->
+                    <div class="metric-row">
+                        <span class="metric-integer" id="metric-integer">8,420</span>
+                        <span class="metric-unit" id="metric-unit"></span>
+                    </div>
                     <div class="metric-sub" id="metric-sub">of 8,000 daily steps required</div>
 
                     <div class="progress-bar-wrap">
@@ -980,7 +1069,7 @@
                         <span id="metric-pct">105%</span>
                     </div>
 
-                    <!-- Screen Time Detail Breakdown (when screen detox active) -->
+                    <!-- UsageStats App Breakdown for Detox -->
                     <div class="app-breakdown-box" id="app-breakdown-box">
                         <div style="font-weight: 700; margin-bottom: 8px; color: var(--text-primary);">UsageStats Manager Log:</div>
                         <div class="app-row"><span>📸 Instagram</span><strong>45 mins</strong></div>
@@ -1046,7 +1135,7 @@
                     <span style="color: var(--solana-green); font-weight: 800; font-size: 14px;">+ JOIN</span>
                 </div>
 
-                <div class="pledge-item-card" onclick="startNewPledge('Digital Detox &lt;3h', 3, 300)">
+                <div class="pledge-item-card" onclick="startNewPledge('Digital Detox <3h', 3, 300)">
                     <div style="display: flex; align-items: center;">
                         <div class="pledge-icon-box">📵</div>
                         <div class="pledge-details">
@@ -1162,14 +1251,14 @@
             </div>
         </div>
 
-        <!-- Biometric Bottom Sheet (Simulating Seed Vault Hardware Approval) -->
+        <!-- Biometric Bottom Sheet with Hold-to-Authorize -->
         <div class="biometric-sheet" id="biometric-sheet">
             <div class="biometric-content">
                 <div style="font-size: 11px; font-weight: 800; color: var(--solana-green); letter-spacing: 1px; margin-bottom: 6px;">
                     SOLANA SEEKER SEED VAULT
                 </div>
                 <h3 style="font-size: 18px; font-weight: 900; margin-bottom: 4px;">Confirm Daily Clock-In</h3>
-                <p style="font-size: 12px; color: var(--text-secondary);">Touch biometric sensor to sign transaction</p>
+                <p style="font-size: 12px; color: var(--text-secondary);">Hold sensor for biometric hardware signing</p>
 
                 <div class="tx-receipt-details">
                     <div>Program: PLEDGE1111...11111</div>
@@ -1178,10 +1267,16 @@
                     <div>Signer: Local Session Key (Authorized)</div>
                 </div>
 
-                <div class="fingerprint-icon" onclick="confirmBiometricClockIn()">
-                    <span>👆</span>
+                <div class="fingerprint-btn-holder" id="fingerprint-btn" onmousedown="startFingerprintHold()" onmouseup="endFingerprintHold()" onmouseleave="endFingerprintHold()" ontouchstart="startFingerprintHold()" ontouchend="endFingerprintHold()">
+                    <svg class="fingerprint-svg-ring" width="80" height="80" viewBox="0 0 80 80">
+                        <circle class="fingerprint-circle-bg" cx="40" cy="40" r="38"></circle>
+                        <circle class="fingerprint-circle-fill" id="bio-progress-circle" cx="40" cy="40" r="38"></circle>
+                    </svg>
+                    <div class="fingerprint-core">
+                        <span>👆</span>
+                    </div>
                 </div>
-                <div style="font-size: 11px; color: var(--text-muted);">Tap fingerprint to authorize on-chain</div>
+                <div style="font-size: 11px; color: var(--text-muted);" id="bio-instruction-text">Hold to sign with Seed Vault</div>
             </div>
         </div>
 
@@ -1209,7 +1304,7 @@
             </div>
         </div>
 
-        <!-- Collapsible Judge Sandbox Drawer -->
+        <!-- Judge Sandbox Drawer -->
         <div class="demo-drawer" id="demo-drawer">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                 <div style="font-size: 12px; font-weight: 900; color: var(--solana-teal); letter-spacing: 0.5px;">
@@ -1305,7 +1400,7 @@
     </div>
 
     <script>
-        // Web Audio Synthesizer for Native Haptics & Sound FX
+        // Web Audio Synthesizer
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
         function playMechanicalClick() {
@@ -1313,14 +1408,14 @@
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
             osc.type = 'triangle';
-            osc.frequency.setValueAtTime(140, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 0.05);
-            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+            osc.frequency.setValueAtTime(160, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 0.04);
+            gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.04);
             osc.connect(gain);
             gain.connect(audioCtx.destination);
             osc.start();
-            osc.stop(audioCtx.currentTime + 0.05);
+            osc.stop(audioCtx.currentTime + 0.04);
         }
 
         function playSuccessChime() {
@@ -1370,10 +1465,10 @@
 
         function animateParticles() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach((p, idx) => {
+            particles.forEach((p) => {
                 p.x += p.vx;
                 p.y += p.vy;
-                p.vy += 0.35; // Gravity
+                p.vy += 0.35;
                 p.life--;
                 ctx.fillStyle = p.color;
                 ctx.fillRect(p.x, p.y, p.size, p.size);
@@ -1396,6 +1491,35 @@
         let demoDrawerOpen = false;
         let secondsLeftInDay = 30;
 
+        // Mouse Drag-To-Scroll & Mousewheel for Category Container
+        const scrollContainer = document.getElementById('category-scroll-container');
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        scrollContainer.addEventListener('mousedown', (e) => {
+            isDown = true;
+            startX = e.pageX - scrollContainer.offsetLeft;
+            scrollLeft = scrollContainer.scrollLeft;
+        });
+        scrollContainer.addEventListener('mouseleave', () => { isDown = false; });
+        scrollContainer.addEventListener('mouseup', () => { isDown = false; });
+        scrollContainer.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - scrollContainer.offsetLeft;
+            const walk = (x - startX) * 1.5;
+            scrollContainer.scrollLeft = scrollLeft - walk;
+        });
+
+        // Convert vertical mousewheel to horizontal scroll!
+        scrollContainer.addEventListener('wheel', (e) => {
+            if (e.deltaY !== 0) {
+                e.preventDefault();
+                scrollContainer.scrollLeft += e.deltaY;
+            }
+        });
+
         // Navigation Switcher
         function switchNavTab(tabName, el) {
             playMechanicalClick();
@@ -1409,40 +1533,68 @@
         // Category Switcher
         function switchCategory(cat, el) {
             playMechanicalClick();
-            document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
-            el.classList.add('active');
-            activeCategory = cat;
+            document.querySelectorAll('.cat-chip').forEach(c => {
+                c.className = 'cat-chip';
+            });
 
+            activeCategory = cat;
             const breakdown = document.getElementById('app-breakdown-box');
+            const card = document.getElementById('hero-card-elem');
 
             if (cat === 'steps') {
+                el.className = 'cat-chip active green';
                 currentTarget = 8000;
                 currentValue = 8420;
                 breakdown.style.display = 'none';
+                document.getElementById('hero-sensor-tag').className = 'tag-pill green';
                 document.getElementById('hero-sensor-tag').innerText = 'HEALTH CONNECT VERIFIED';
-                document.getElementById('metric-main').innerText = currentValue.toLocaleString();
+                document.getElementById('metric-integer').innerText = '8,420';
+                document.getElementById('metric-unit').innerText = '';
                 document.getElementById('metric-sub').innerText = 'of 8,000 daily steps required';
+                document.getElementById('sync-status-text').innerText = 'Health Connect Verified • Synced 4s ago';
                 document.getElementById('demo-slider').min = 1000;
                 document.getElementById('demo-slider').max = 14000;
                 document.getElementById('demo-slider').value = currentValue;
             } else if (cat === 'screentime') {
+                el.className = 'cat-chip active purple';
                 currentTarget = 3.0;
                 currentValue = 2.1;
                 breakdown.style.display = 'block';
+                document.getElementById('hero-sensor-tag').className = 'tag-pill purple';
                 document.getElementById('hero-sensor-tag').innerText = 'USAGESTATS DETOX';
-                document.getElementById('metric-main').innerText = currentValue + 'h';
+                document.getElementById('metric-integer').innerText = '2.1';
+                document.getElementById('metric-unit').innerText = 'h';
                 document.getElementById('metric-sub').innerText = 'under 3.0h phone limit today';
+                document.getElementById('sync-status-text').innerText = 'UsageStats Attested • App Limits OK';
                 document.getElementById('demo-slider').min = 0;
                 document.getElementById('demo-slider').max = 6;
                 document.getElementById('demo-slider').value = currentValue;
             } else if (cat === 'sleep') {
+                el.className = 'cat-chip active blue';
                 currentTarget = 7.0;
                 currentValue = 7.5;
                 breakdown.style.display = 'none';
+                document.getElementById('hero-sensor-tag').className = 'tag-pill blue';
                 document.getElementById('hero-sensor-tag').innerText = 'SLEEP SESSION API';
-                document.getElementById('metric-main').innerText = currentValue + 'h';
+                document.getElementById('metric-integer').innerText = '7.5';
+                document.getElementById('metric-unit').innerText = 'h';
                 document.getElementById('metric-sub').innerText = 'of 7.0h rest goal achieved';
+                document.getElementById('sync-status-text').innerText = 'SleepSessionRecord Validated';
                 document.getElementById('demo-slider').min = 4;
+                document.getElementById('demo-slider').max = 10;
+                document.getElementById('demo-slider').value = currentValue;
+            } else if (cat === 'early') {
+                el.className = 'cat-chip active';
+                currentTarget = 8.0;
+                currentValue = 7.8;
+                breakdown.style.display = 'none';
+                document.getElementById('hero-sensor-tag').className = 'tag-pill';
+                document.getElementById('hero-sensor-tag').innerText = 'SYSTEM CLOCK TIMED';
+                document.getElementById('metric-integer').innerText = '07:48';
+                document.getElementById('metric-unit').innerText = ' AM';
+                document.getElementById('metric-sub').innerText = 'clocked before 8:00 AM target';
+                document.getElementById('sync-status-text').innerText = 'Network Time Protocol Attested';
+                document.getElementById('demo-slider').min = 6;
                 document.getElementById('demo-slider').max = 10;
                 document.getElementById('demo-slider').value = currentValue;
             }
@@ -1498,21 +1650,54 @@
             }
         }
 
-        // Biometric Sheet Controls
+        // Biometric Sheet Controls with Hold-To-Scan
+        let holdTimer = null;
+        let holdProgress = 0;
+
         function openBiometricSheet() {
             if (isTodayClockedIn || currentValue < currentTarget) return;
             playMechanicalClick();
             document.getElementById('bio-day-index').innerText = currentDay;
             document.getElementById('biometric-sheet').classList.add('active');
+            resetHoldProgress();
+        }
+
+        function resetHoldProgress() {
+            holdProgress = 0;
+            const circle = document.getElementById('bio-progress-circle');
+            if (circle) circle.style.strokeDashoffset = '240';
+            document.getElementById('bio-instruction-text').innerText = 'Hold sensor to sign with Seed Vault';
+        }
+
+        function startFingerprintHold() {
+            playMechanicalClick();
+            holdProgress = 0;
+            clearInterval(holdTimer);
+            document.getElementById('bio-instruction-text').innerText = 'Scanning Seed Vault Hardware...';
+
+            holdTimer = setInterval(() => {
+                holdProgress += 10;
+                const offset = 240 - (240 * (holdProgress / 100));
+                document.getElementById('bio-progress-circle').style.strokeDashoffset = offset;
+
+                if (holdProgress >= 100) {
+                    clearInterval(holdTimer);
+                    confirmBiometricClockIn();
+                }
+            }, 80);
+        }
+
+        function endFingerprintHold() {
+            if (holdProgress < 100) {
+                clearInterval(holdTimer);
+                resetHoldProgress();
+            }
         }
 
         function confirmBiometricClockIn() {
-            playMechanicalClick();
             if (navigator.vibrate) navigator.vibrate([60, 80, 60]);
-
             document.getElementById('biometric-sheet').classList.remove('active');
 
-            // Generate realistic Solana tx hash
             const mockTxHash = "5Kz" + Math.random().toString(36).substring(2, 8) + "..." + Math.random().toString(36).substring(2, 6);
             document.getElementById('tx-hash-display').innerText = mockTxHash;
 
@@ -1558,10 +1743,10 @@
         function handleDrawerSlider(val) {
             currentValue = parseFloat(val);
             if (activeCategory === 'steps') {
-                document.getElementById('metric-main').innerText = parseInt(val).toLocaleString();
+                document.getElementById('metric-integer').innerText = parseInt(val).toLocaleString();
                 document.getElementById('drawer-slider-val').innerText = parseInt(val).toLocaleString() + ' steps';
             } else {
-                document.getElementById('metric-main').innerText = val + 'h';
+                document.getElementById('metric-integer').innerText = val;
                 document.getElementById('drawer-slider-val').innerText = val + 'h';
             }
             updateProgress();
@@ -1571,15 +1756,15 @@
             playMechanicalClick();
             demoDrawerOpen = !demoDrawerOpen;
             const drawer = document.getElementById('demo-drawer');
-            const pill = document.getElementById('judge-toggle-btn');
+            const btn = document.getElementById('judge-toggle-btn');
             if (demoDrawerOpen) {
                 drawer.classList.add('open');
-                pill.classList.add('active');
-                document.getElementById('judge-pill-text').innerText = 'Close Demo';
+                btn.classList.add('active');
+                document.getElementById('judge-btn-label').innerText = 'Close';
             } else {
                 drawer.classList.remove('open');
-                pill.classList.remove('active');
-                document.getElementById('judge-pill-text').innerText = 'Judge Mode';
+                btn.classList.remove('active');
+                document.getElementById('judge-btn-label').innerText = 'Judge';
             }
         }
 
@@ -1640,7 +1825,7 @@
             }, 2500);
         }
 
-        // Real-time Clock Update (Status bar)
+        // Status bar clock
         setInterval(() => {
             const d = new Date();
             const h = String(d.getHours()).padStart(2, '0');
