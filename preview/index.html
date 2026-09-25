@@ -3,23 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>bozPledge — Solana Mobile Interactive Simulator</title>
+    <title>bozPledge — Professional Solana Mobile Platform</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-dark: #0A0B10;
-            --surface-dark: #13151F;
-            --surface-variant: #1E2130;
-            --border-dark: #2B2E42;
+            --surface-dark: #12141F;
+            --surface-variant: #1B1E2D;
+            --border-dark: #262A3D;
             --solana-purple: #9945FF;
             --solana-green: #14F195;
             --solana-teal: #00C2FF;
             --flame-red: #FF453A;
+            --gold-accent: #FFD60A;
             --text-primary: #F7F8FA;
             --text-secondary: #9AA0B4;
-            --text-muted: #646B82;
+            --text-muted: #5D6379;
         }
 
         * {
@@ -31,7 +32,7 @@
         }
 
         body {
-            background: #06070A;
+            background: #050608;
             font-family: 'Outfit', -apple-system, sans-serif;
             color: var(--text-primary);
             min-height: 100vh;
@@ -40,29 +41,29 @@
             justify-content: center;
             padding: 24px;
             background-image: 
-                radial-gradient(circle at 20% 20%, rgba(153, 69, 255, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 80% 80%, rgba(20, 241, 149, 0.08) 0%, transparent 40%);
+                radial-gradient(circle at 15% 15%, rgba(153, 69, 255, 0.09) 0%, transparent 45%),
+                radial-gradient(circle at 85% 85%, rgba(20, 241, 149, 0.09) 0%, transparent 45%);
         }
 
         /* Seeker Phone Frame */
         .phone-wrapper {
             position: relative;
             width: 100%;
-            max-width: 410px;
-            height: 840px;
+            max-width: 420px;
+            height: 870px;
             background: #000;
-            border-radius: 52px;
+            border-radius: 54px;
             box-shadow: 
                 0 0 0 10px #181924,
                 0 0 0 12px #262938,
-                0 30px 90px rgba(0, 0, 0, 0.9),
-                0 0 60px rgba(153, 69, 255, 0.15);
+                0 30px 100px rgba(0, 0, 0, 0.95),
+                0 0 70px rgba(153, 69, 255, 0.15);
             display: flex;
             flex-direction: column;
             overflow: hidden;
         }
 
-        /* Top Notch / Dynamic Island */
+        /* Top Notch */
         .phone-notch {
             position: absolute;
             top: 14px;
@@ -72,7 +73,7 @@
             height: 24px;
             background: #000;
             border-radius: 20px;
-            z-index: 100;
+            z-index: 200;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -86,6 +87,33 @@
             border: 2px solid #07080e;
         }
 
+        /* Judge Mode Floating Toggle Pill */
+        .judge-toggle-pill {
+            position: absolute;
+            top: 14px;
+            right: 18px;
+            background: rgba(30, 33, 48, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 194, 255, 0.4);
+            border-radius: 20px;
+            padding: 4px 10px;
+            font-size: 10px;
+            font-weight: 800;
+            color: var(--solana-teal);
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            z-index: 250;
+            transition: all 0.2s;
+        }
+        .judge-toggle-pill.active {
+            background: var(--solana-teal);
+            color: #000;
+            box-shadow: 0 0 12px rgba(0, 194, 255, 0.6);
+        }
+
         /* Phone Screen Content */
         .phone-screen {
             flex: 1;
@@ -94,197 +122,259 @@
             overflow-x: hidden;
             display: flex;
             flex-direction: column;
-            padding: 48px 20px 24px 20px;
+            padding: 50px 20px 85px 20px;
             position: relative;
         }
         .phone-screen::-webkit-scrollbar {
             display: none;
         }
 
-        /* Header */
-        .app-header {
+        /* Top Bar */
+        .top-bar {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 20px;
         }
-        .app-brand h1 {
-            font-size: 24px;
+        .brand-title {
+            font-size: 22px;
             font-weight: 900;
-            letter-spacing: 0.5px;
+            letter-spacing: -0.3px;
             background: linear-gradient(135deg, #fff 40%, var(--solana-purple));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .app-brand p {
-            font-size: 12px;
-            font-weight: 600;
+        .brand-sub {
+            font-size: 11px;
             color: var(--solana-green);
+            font-weight: 700;
         }
-        .wallet-pill {
+
+        .btn-wallet {
             background: var(--surface-dark);
             border: 1px solid var(--border-dark);
             border-radius: 14px;
-            padding: 6px 12px;
+            padding: 7px 12px;
             display: flex;
             align-items: center;
-            gap: 6px;
-            font-size: 13px;
+            gap: 8px;
+            font-size: 12px;
             font-weight: 700;
             color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-wallet:hover {
+            border-color: var(--solana-purple);
+        }
+        .btn-wallet.connected {
+            background: rgba(20, 241, 149, 0.08);
+            border-color: rgba(20, 241, 149, 0.3);
         }
         .wallet-dot {
             width: 8px;
             height: 8px;
             border-radius: 50%;
+            background: var(--flame-red);
+        }
+        .btn-wallet.connected .wallet-dot {
             background: var(--solana-green);
             box-shadow: 0 0 8px var(--solana-green);
         }
 
-        /* Stats Row */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-        .stat-card {
-            background: var(--surface-dark);
-            border: 1px solid var(--border-dark);
-            border-radius: 18px;
-            padding: 14px 16px;
-        }
-        .stat-label {
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 4px;
-        }
-        .stat-value {
-            font-size: 20px;
-            font-weight: 900;
-        }
-        .stat-value.purple { color: var(--solana-purple); }
-
-        /* Timeline Dots */
-        .timeline-card {
-            background: var(--surface-dark);
-            border: 1px solid var(--border-dark);
-            border-radius: 16px;
-            padding: 12px 16px;
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 72px;
+            background: rgba(18, 20, 31, 0.94);
+            backdrop-filter: blur(14px);
+            border-top: 1px solid var(--border-dark);
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
+            justify-content: space-around;
+            padding: 0 10px;
+            z-index: 100;
         }
-        .timeline-label {
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--text-secondary);
-            letter-spacing: 0.5px;
-        }
-        .timeline-dots {
+        .nav-item {
             display: flex;
-            gap: 6px;
-        }
-        .dot {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            font-size: 10px;
-            font-weight: 800;
-            background: var(--surface-variant);
+            gap: 4px;
             color: var(--text-muted);
-            transition: all 0.3s;
+            cursor: pointer;
+            transition: color 0.2s;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 8px 12px;
+            border-radius: 12px;
         }
-        .dot.completed {
-            background: var(--solana-green);
-            color: var(--bg-dark);
+        .nav-item.active {
+            color: var(--solana-green);
         }
-        .dot.missed {
-            background: var(--flame-red);
-            color: #fff;
-        }
-        .dot.current {
-            background: var(--solana-purple);
-            color: #fff;
-            box-shadow: 0 0 10px rgba(153, 69, 255, 0.6);
+        .nav-icon {
+            font-size: 20px;
         }
 
-        /* Step Card */
-        .step-card {
+        /* Views */
+        .tab-view {
+            display: none;
+            flex-direction: column;
+            animation: fadeIn 0.2s ease-in-out;
+        }
+        .tab-view.active {
+            display: flex;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Dashboard Elements */
+        .category-scroll {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+        .category-scroll::-webkit-scrollbar { display: none; }
+        .cat-chip {
             background: var(--surface-dark);
             border: 1px solid var(--border-dark);
-            border-radius: 24px;
+            border-radius: 12px;
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            cursor: pointer;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+        .cat-chip.active {
+            background: rgba(153, 69, 255, 0.15);
+            border-color: var(--solana-purple);
+            color: #fff;
+        }
+
+        /* Hero Commitment Card */
+        .hero-card {
+            background: var(--surface-dark);
+            border: 1px solid var(--border-dark);
+            border-radius: 26px;
             padding: 22px;
-            text-align: center;
-            margin-bottom: 20px;
             position: relative;
+            margin-bottom: 20px;
             overflow: hidden;
         }
-        .step-tag {
+        .hero-badge-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 14px;
+            margin-bottom: 16px;
         }
-        .step-badge {
+        .tag-pill {
             font-size: 10px;
             font-weight: 800;
             letter-spacing: 1px;
-            color: var(--solana-green);
-            background: rgba(20, 241, 149, 0.1);
-            padding: 4px 8px;
+            padding: 4px 10px;
             border-radius: 8px;
+            text-transform: uppercase;
         }
-        .step-title {
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            color: var(--text-secondary);
+        .tag-pill.green {
+            background: rgba(20, 241, 149, 0.12);
+            color: var(--solana-green);
         }
-        .step-count {
+        .tag-pill.purple {
+            background: rgba(153, 69, 255, 0.15);
+            color: var(--solana-purple);
+        }
+
+        .metric-main {
             font-size: 46px;
             font-weight: 900;
             letter-spacing: -1px;
             line-height: 1;
             margin-bottom: 4px;
         }
-        .step-target {
+        .metric-sub {
             font-size: 14px;
             color: var(--text-muted);
             font-weight: 500;
             margin-bottom: 20px;
         }
-        .progress-track {
+
+        .progress-bar-wrap {
             width: 100%;
             height: 14px;
             background: var(--surface-variant);
             border-radius: 20px;
             overflow: hidden;
-            position: relative;
+            margin-bottom: 10px;
         }
-        .progress-fill {
+        .progress-bar-fill {
             height: 100%;
             border-radius: 20px;
             background: linear-gradient(90deg, var(--solana-purple), var(--solana-green));
             transition: width 0.4s ease;
         }
-        .progress-meta {
+
+        .progress-stats {
             display: flex;
             justify-content: space-between;
-            margin-top: 12px;
             font-size: 12px;
             font-weight: 600;
         }
 
+        /* Timeline Dots */
+        .timeline-card {
+            background: var(--surface-dark);
+            border: 1px solid var(--border-dark);
+            border-radius: 18px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .dots-row {
+            display: flex;
+            gap: 6px;
+        }
+        .day-dot {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 800;
+            background: var(--surface-variant);
+            color: var(--text-muted);
+            transition: all 0.3s;
+        }
+        .day-dot.completed {
+            background: var(--solana-green);
+            color: var(--bg-dark);
+        }
+        .day-dot.missed {
+            background: var(--flame-red);
+            color: #fff;
+        }
+        .day-dot.current {
+            background: var(--solana-purple);
+            color: #fff;
+            box-shadow: 0 0 10px rgba(153, 69, 255, 0.6);
+        }
+
         /* Hero Clock-In Button */
-        .clock-in-btn {
+        .btn-clock-in {
             width: 100%;
             height: 64px;
             border-radius: 20px;
@@ -300,23 +390,22 @@
             gap: 10px;
             cursor: pointer;
             transition: transform 0.15s, box-shadow 0.2s;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
         }
-        .clock-in-btn.active {
+        .btn-clock-in.active {
             background: linear-gradient(90deg, var(--solana-purple), var(--solana-green));
             box-shadow: 0 10px 30px rgba(20, 241, 149, 0.25);
             animation: pulse 2s infinite ease-in-out;
         }
-        .clock-in-btn.active:active {
+        .btn-clock-in.active:active {
             transform: scale(0.97);
         }
-        .clock-in-btn.done {
-            background: #14F195;
-            color: #0A0B10;
+        .btn-clock-in.done {
+            background: var(--solana-green);
+            color: var(--bg-dark);
             cursor: default;
-            box-shadow: 0 10px 25px rgba(20, 241, 149, 0.2);
         }
-        .clock-in-btn.disabled {
+        .btn-clock-in.disabled {
             background: var(--border-dark);
             color: var(--text-muted);
             cursor: not-allowed;
@@ -327,158 +416,273 @@
             50% { transform: scale(1.02); }
         }
 
-        /* Judge Control Bar */
-        .judge-panel {
-            background: rgba(30, 33, 48, 0.85);
-            border: 1px solid rgba(0, 194, 255, 0.4);
+        /* Stats Row */
+        .stats-2-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .mini-stat {
+            background: var(--surface-dark);
+            border: 1px solid var(--border-dark);
             border-radius: 18px;
-            padding: 16px;
-            margin-top: auto;
+            padding: 14px 16px;
         }
-        .judge-header {
+        .mini-stat-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+        .mini-stat-value {
+            font-size: 20px;
+            font-weight: 900;
+        }
+
+        /* Explore / Catalog Screen */
+        .catalog-title {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+        .catalog-sub {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 18px;
+        }
+        .pledge-item-card {
+            background: var(--surface-dark);
+            border: 1px solid var(--border-dark);
+            border-radius: 20px;
+            padding: 18px;
+            margin-bottom: 14px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        .pledge-item-card:hover {
+            border-color: var(--solana-purple);
+        }
+        .pledge-icon-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            background: var(--surface-variant);
+            margin-right: 14px;
+        }
+        .pledge-details h4 {
+            font-size: 15px;
+            font-weight: 800;
+            margin-bottom: 3px;
+        }
+        .pledge-details p {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* Squads / Leaderboard Screen */
+        .leader-card {
+            background: var(--surface-dark);
+            border: 1px solid var(--border-dark);
+            border-radius: 18px;
+            padding: 14px 16px;
             margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
-        .judge-title {
-            font-size: 11px;
-            font-weight: 800;
-            color: var(--solana-teal);
-            letter-spacing: 1px;
+        .rank-num {
+            font-size: 16px;
+            font-weight: 900;
+            color: var(--gold-accent);
+            width: 24px;
         }
-        .judge-timer {
-            font-size: 11px;
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+        .avatar-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--surface-variant);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-weight: 800;
+            font-size: 13px;
+        }
+        .streak-pill {
             background: rgba(255, 69, 58, 0.15);
             color: var(--flame-red);
-            padding: 3px 8px;
-            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
-        .slider-wrap {
-            margin-bottom: 12px;
+
+        /* Vault / Profile Screen */
+        .profile-header {
+            text-align: center;
+            margin-bottom: 24px;
         }
-        .slider-label {
-            font-size: 11px;
-            color: var(--text-secondary);
+        .profile-avatar {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--solana-purple), var(--solana-green));
+            margin: 0 auto 12px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            box-shadow: 0 0 20px rgba(153, 69, 255, 0.4);
+        }
+        .badge-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 14px;
+        }
+        .badge-item {
+            background: var(--surface-dark);
+            border: 1px solid var(--border-dark);
+            border-radius: 16px;
+            padding: 14px 8px;
+            text-align: center;
+        }
+        .badge-icon {
+            font-size: 28px;
             margin-bottom: 6px;
+        }
+        .badge-name {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .badge-type {
+            font-size: 9px;
+            color: var(--solana-teal);
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        /* Demo Mode Collapsible Drawer */
+        .demo-drawer {
+            position: absolute;
+            bottom: 72px;
+            left: 0;
+            right: 0;
+            background: rgba(22, 25, 38, 0.97);
+            backdrop-filter: blur(16px);
+            border-top: 1px solid var(--solana-teal);
+            border-radius: 24px 24px 0 0;
+            padding: 20px;
+            z-index: 150;
+            display: none;
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8);
+        }
+        .demo-drawer.open {
+            display: block;
+            animation: slideUp 0.25s ease-out;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        .demo-slider-row {
             display: flex;
             justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
         }
         input[type="range"] {
             width: 100%;
             height: 6px;
-            accent-color: var(--solana-green);
+            accent-color: var(--solana-teal);
             background: var(--border-dark);
             border-radius: 10px;
             outline: none;
-        }
-        .judge-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .next-btn {
-            background: rgba(0, 194, 255, 0.15);
-            border: 1px solid var(--solana-teal);
-            color: var(--solana-teal);
-            font-family: inherit;
-            font-size: 12px;
-            font-weight: 700;
-            padding: 6px 14px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .next-btn:hover {
-            background: rgba(0, 194, 255, 0.3);
+            margin-bottom: 14px;
         }
 
-        /* Modal Overlay for Settle */
-        .modal-overlay {
+        /* Wallet Modal */
+        .wallet-modal-overlay {
             position: absolute;
             inset: 0;
-            background: rgba(10, 11, 16, 0.95);
-            backdrop-filter: blur(8px);
-            z-index: 200;
+            background: rgba(5, 6, 8, 0.92);
+            backdrop-filter: blur(10px);
+            z-index: 300;
             display: none;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-            text-align: center;
+            justify-content: flex-end;
+            padding: 20px;
         }
-        .modal-overlay.active {
+        .wallet-modal-overlay.active {
             display: flex;
         }
-        .burn-icon {
-            font-size: 56px;
-            margin-bottom: 16px;
-        }
-        .modal-title {
-            font-size: 22px;
-            font-weight: 900;
-            margin-bottom: 8px;
-        }
-        .modal-subtitle {
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin-bottom: 24px;
-        }
-        .summary-box {
-            width: 100%;
+        .wallet-modal-content {
             background: var(--surface-dark);
             border: 1px solid var(--border-dark);
-            border-radius: 18px;
-            padding: 16px;
-            margin-bottom: 24px;
-            text-align: left;
+            border-radius: 28px;
+            padding: 24px;
         }
-        .summary-row {
+        .wallet-option {
             display: flex;
+            align-items: center;
             justify-content: space-between;
+            padding: 14px 16px;
+            background: var(--surface-variant);
+            border-radius: 16px;
             margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .wallet-option:hover {
+            border: 1px solid var(--solana-purple);
+        }
+        .wallet-option-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
             font-size: 14px;
         }
-        .summary-row.burn {
-            color: var(--flame-red);
-            font-weight: 800;
-        }
-        .summary-row.refund {
-            color: var(--solana-green);
-            font-weight: 800;
-        }
-        .settle-btn {
-            width: 100%;
-            height: 56px;
-            background: var(--flame-red);
-            color: #fff;
-            border: none;
-            border-radius: 18px;
-            font-size: 15px;
-            font-weight: 900;
-            cursor: pointer;
-        }
 
-        /* Toast notification */
+        /* Toast */
         .toast {
             position: absolute;
-            top: 54px;
+            top: 56px;
             left: 50%;
             transform: translateX(-50%) translateY(-100px);
             background: var(--surface-variant);
             border: 1px solid var(--solana-green);
             color: var(--text-primary);
             padding: 10px 18px;
-            border-radius: 14px;
+            border-radius: 16px;
             font-size: 12px;
             font-weight: 700;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
             display: flex;
             align-items: center;
             gap: 8px;
-            z-index: 300;
+            z-index: 400;
             transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            white-space: nowrap;
         }
         .toast.show {
             transform: translateX(-50%) translateY(0);
@@ -492,231 +696,527 @@
             <div class="notch-camera"></div>
         </div>
 
+        <!-- Floating Judge / Demo Switch (Subtle, doesn't ruin the real app look) -->
+        <div class="judge-toggle-pill" id="judge-toggle-btn" onclick="toggleDemoDrawer()">
+            <span>🧪</span>
+            <span id="judge-pill-text">Judge Mode</span>
+        </div>
+
+        <!-- Global Toast -->
         <div id="toast" class="toast">
             <span>⚡</span>
             <span id="toast-text">Verified on Solana Devnet!</span>
         </div>
 
         <div class="phone-screen">
-            <!-- App Header -->
-            <div class="app-header">
-                <div class="app-brand">
-                    <h1>bozPLEDGE</h1>
-                    <p>Clock In on Solana Mobile</p>
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div>
+                    <h1 class="brand-title">bozPLEDGE</h1>
+                    <div class="brand-sub">Daily Habit Staking on Seeker</div>
                 </div>
-                <div class="wallet-pill">
+                <button class="btn-wallet" id="wallet-btn" onclick="openWalletModal()">
                     <div class="wallet-dot"></div>
-                    <span id="wallet-balance">500 $SKR</span>
-                </div>
+                    <span id="wallet-btn-label">Connect</span>
+                </button>
             </div>
 
-            <!-- Stats Grid -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-label">Current Day</div>
-                    <div class="stat-value" id="current-day-text">Day 2 of 5</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Escrow Stake</div>
-                    <div class="stat-value purple">500 $SKR</div>
-                </div>
-            </div>
-
-            <!-- Timeline Dots -->
-            <div class="timeline-card">
-                <div class="timeline-label">TIMELINE</div>
-                <div class="timeline-dots" id="dots-container">
-                    <div class="dot completed">✓</div>
-                    <div class="dot current">2</div>
-                    <div class="dot">3</div>
-                    <div class="dot">4</div>
-                    <div class="dot">5</div>
-                </div>
-            </div>
-
-            <!-- Step Progress Card -->
-            <div class="step-card">
-                <div class="step-tag">
-                    <span class="step-title">TODAY'S PHYSICAL PROOF</span>
-                    <span class="step-badge" id="step-badge">HEALTH CONNECT</span>
-                </div>
-                <div class="step-count" id="step-display">8,500</div>
-                <div class="step-target">/ 8,000 daily steps</div>
-
-                <div class="progress-track">
-                    <div class="progress-fill" id="progress-fill" style="width: 100%;"></div>
-                </div>
-
-                <div class="progress-meta">
-                    <span id="progress-status" style="color: var(--solana-green)">Goal Achieved! Ready to Clock In</span>
-                    <span id="progress-percent">106%</span>
-                </div>
-            </div>
-
-            <!-- Hero Clock-In Button -->
-            <button class="clock-in-btn active" id="clock-in-btn" onclick="handleClockIn()">
-                <span>🔒</span>
-                <span>CLOCK IN (1-TAP SEED VAULT)</span>
-            </button>
-
-            <!-- Hackathon Judge Controls -->
-            <div class="judge-panel">
-                <div class="judge-header">
-                    <div class="judge-title">HACKATHON JUDGE CONTROLS</div>
-                    <div class="judge-timer" id="judge-timer">30s Day: 28s</div>
-                </div>
-                <div class="slider-wrap">
-                    <div class="slider-label">
-                        <span>Simulate Physical Steps</span>
-                        <strong id="slider-val">8,500 steps</strong>
+            <!-- VIEW 1: DASHBOARD -->
+            <div class="tab-view active" id="view-dashboard">
+                <!-- Multi-Pledge Filter Chips -->
+                <div class="category-scroll">
+                    <div class="cat-chip active" onclick="switchCategory('steps', this)">
+                        <span>🏃</span> 8k Steps Goal
                     </div>
-                    <input type="range" id="step-slider" min="1000" max="14000" step="500" value="8500" oninput="handleStepSlider(this.value)">
-                </div>
-                <div class="judge-actions">
-                    <span style="font-size: 11px; color: var(--text-muted);">Adjust to test goal trigger</span>
-                    <button class="next-btn" onclick="handleNextDay()">Next Day ⏭️</button>
-                </div>
-            </div>
-
-            <!-- Settle Modal -->
-            <div class="modal-overlay" id="settle-modal">
-                <div class="burn-icon">🔥</div>
-                <div class="modal-title">CHALLENGE CONCLUDED</div>
-                <div class="modal-subtitle" id="settle-summary">Completed 4 of 5 Days</div>
-
-                <div class="summary-box">
-                    <div class="summary-row refund">
-                        <span>Refund to Wallet:</span>
-                        <span id="settle-refund">400 $SKR</span>
+                    <div class="cat-chip" onclick="switchCategory('screentime', this)">
+                        <span>📵</span> Screen Detox (&lt;3h)
                     </div>
-                    <div class="summary-row burn">
-                        <span>Burned On-Chain:</span>
-                        <span id="settle-burn">100 $SKR</span>
-                    </div>
-                    <div style="font-size: 11px; color: var(--text-muted); margin-top: 10px; line-height: 1.4;">
-                        Deflationary Rule: Forfeited $SKR is sent to the SPL Burn instruction. No developer profits.
+                    <div class="cat-chip" onclick="switchCategory('sleep', this)">
+                        <span>😴</span> 7h Sleep
                     </div>
                 </div>
 
-                <button class="settle-btn" onclick="executeSettle()">EXECUTE SETTLE & BURN</button>
+                <!-- Main Hero Pledge Card -->
+                <div class="hero-card">
+                    <div class="hero-badge-row">
+                        <span class="tag-pill green" id="hero-sensor-tag">HEALTH CONNECT LIVE</span>
+                        <span class="tag-pill purple" id="hero-stake-tag">500 $SKR STAKED</span>
+                    </div>
+
+                    <div class="metric-main" id="metric-main">8,420</div>
+                    <div class="metric-sub" id="metric-sub">of 8,000 daily steps required</div>
+
+                    <div class="progress-bar-wrap">
+                        <div class="progress-bar-fill" id="metric-progress-fill" style="width: 100%;"></div>
+                    </div>
+
+                    <div class="progress-stats">
+                        <span id="metric-status" style="color: var(--solana-green)">Goal Complete! Ready to Clock In</span>
+                        <span id="metric-pct">105%</span>
+                    </div>
+                </div>
+
+                <!-- Timeline 7-Day Dots -->
+                <div class="timeline-card">
+                    <div style="font-size: 11px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase;">
+                        Day <span id="current-day-label">2</span> of 7
+                    </div>
+                    <div class="dots-row" id="timeline-dots-row">
+                        <div class="day-dot completed">✓</div>
+                        <div class="day-dot current">2</div>
+                        <div class="day-dot">3</div>
+                        <div class="day-dot">4</div>
+                        <div class="day-dot">5</div>
+                        <div class="day-dot">6</div>
+                        <div class="day-dot">7</div>
+                    </div>
+                </div>
+
+                <!-- Hero Clock-In Button -->
+                <button class="btn-clock-in active" id="hero-clockin-btn" onclick="handleClockInAction()">
+                    <span>🔒</span>
+                    <span id="clockin-btn-text">CLOCK IN TODAY (1-TAP)</span>
+                </button>
+
+                <!-- Stats 2 Col -->
+                <div class="stats-2-col">
+                    <div class="mini-stat">
+                        <div class="mini-stat-label">Active Streak</div>
+                        <div class="mini-stat-value" style="color: var(--flame-red)">🔥 4 Days</div>
+                    </div>
+                    <div class="mini-stat">
+                        <div class="mini-stat-label">Forfeited / Burned</div>
+                        <div class="mini-stat-value" style="color: var(--solana-teal)">0 $SKR</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW 2: EXPLORE / PLEDGE CATALOG -->
+            <div class="tab-view" id="view-explore">
+                <div class="catalog-title">Commitment Catalog</div>
+                <div class="catalog-sub">Select a discipline track, stake $SKR, and prove with mobile sensors.</div>
+
+                <div class="pledge-item-card" onclick="startNewPledge('Daily 10k Steps', 10000, 500)">
+                    <div style="display: flex; align-items: center;">
+                        <div class="pledge-icon-box">🏃</div>
+                        <div class="pledge-details">
+                            <h4>10,000 Steps Marathon</h4>
+                            <p>Health Connect • 7 Days • Stake 500 $SKR</p>
+                        </div>
+                    </div>
+                    <span style="color: var(--solana-green); font-weight: 800; font-size: 14px;">+ JOIN</span>
+                </div>
+
+                <div class="pledge-item-card" onclick="startNewPledge('Digital Detox', 3, 300)">
+                    <div style="display: flex; align-items: center;">
+                        <div class="pledge-icon-box">📵</div>
+                        <div class="pledge-details">
+                            <h4>Screen Time &lt; 3 Hours</h4>
+                            <p>Android UsageStats • 5 Days • Stake 300 $SKR</p>
+                        </div>
+                    </div>
+                    <span style="color: var(--solana-green); font-weight: 800; font-size: 14px;">+ JOIN</span>
+                </div>
+
+                <div class="pledge-item-card" onclick="startNewPledge('Early Riser', 8, 400)">
+                    <div style="display: flex; align-items: center;">
+                        <div class="pledge-icon-box">🌅</div>
+                        <div class="pledge-details">
+                            <h4>Clock In Before 8:00 AM</h4>
+                            <p>System Clock • 14 Days • Stake 400 $SKR</p>
+                        </div>
+                    </div>
+                    <span style="color: var(--solana-green); font-weight: 800; font-size: 14px;">+ JOIN</span>
+                </div>
+
+                <div class="pledge-item-card" onclick="startNewPledge('Deep Sleep 7h+', 7, 250)">
+                    <div style="display: flex; align-items: center;">
+                        <div class="pledge-icon-box">😴</div>
+                        <div class="pledge-details">
+                            <h4>7h+ Restorative Sleep</h4>
+                            <p>Health Connect • 7 Days • Stake 250 $SKR</p>
+                        </div>
+                    </div>
+                    <span style="color: var(--solana-green); font-weight: 800; font-size: 14px;">+ JOIN</span>
+                </div>
+            </div>
+
+            <!-- VIEW 3: SQUADS & LEADERBOARD -->
+            <div class="tab-view" id="view-squads">
+                <div class="catalog-title">Seeker Community Rank</div>
+                <div class="catalog-sub">Proof-of-Discipline global leaderboard.</div>
+
+                <div class="leader-card">
+                    <div class="rank-num">1</div>
+                    <div class="user-info">
+                        <div class="avatar-circle">⚡</div>
+                        <div>
+                            <div style="font-weight: 800; font-size: 14px;">Toly.sol</div>
+                            <div style="font-size: 11px; color: var(--text-secondary);">14,200 avg steps</div>
+                        </div>
+                    </div>
+                    <div class="streak-pill">🔥 28d</div>
+                </div>
+
+                <div class="leader-card">
+                    <div class="rank-num">2</div>
+                    <div class="user-info">
+                        <div class="avatar-circle">🛡️</div>
+                        <div>
+                            <div style="font-weight: 800; font-size: 14px;">Mert_Helius</div>
+                            <div style="font-size: 11px; color: var(--text-secondary);">11,800 avg steps</div>
+                        </div>
+                    </div>
+                    <div class="streak-pill">🔥 21d</div>
+                </div>
+
+                <div class="leader-card">
+                    <div class="rank-num" style="color: var(--solana-green);">3</div>
+                    <div class="user-info">
+                        <div class="avatar-circle" style="background: rgba(20, 241, 149, 0.2);">👤</div>
+                        <div>
+                            <div style="font-weight: 800; font-size: 14px;">You (Seeker)</div>
+                            <div style="font-size: 11px; color: var(--text-secondary);">8,500 avg steps</div>
+                        </div>
+                    </div>
+                    <div class="streak-pill">🔥 4d</div>
+                </div>
+            </div>
+
+            <!-- VIEW 4: VAULT / PROFILE & ACHIVEMENTS -->
+            <div class="tab-view" id="view-vault">
+                <div class="profile-header">
+                    <div class="profile-avatar">💎</div>
+                    <h3 style="font-weight: 900; font-size: 18px;" id="profile-address-text">Not Connected</h3>
+                    <p style="font-size: 12px; color: var(--solana-green);" id="profile-skr-text">0 $SKR in Vault</p>
+                </div>
+
+                <div class="stats-2-col">
+                    <div class="mini-stat">
+                        <div class="mini-stat-label">Total Returned</div>
+                        <div class="mini-stat-value" style="color: var(--solana-green)">1,450 $SKR</div>
+                    </div>
+                    <div class="mini-stat">
+                        <div class="mini-stat-label">Total Burned</div>
+                        <div class="mini-stat-value" style="color: var(--flame-red)">100 $SKR</div>
+                    </div>
+                </div>
+
+                <div style="font-weight: 800; font-size: 14px; margin-top: 10px;">Soulbound cNFT Badges</div>
+                <div class="badge-grid">
+                    <div class="badge-item">
+                        <div class="badge-icon">🥉</div>
+                        <div class="badge-name">7-Day Walker</div>
+                        <div class="badge-type">cNFT Verified</div>
+                    </div>
+                    <div class="badge-item">
+                        <div class="badge-icon">📵</div>
+                        <div class="badge-name">Detox Master</div>
+                        <div class="badge-type">cNFT Verified</div>
+                    </div>
+                    <div class="badge-item" style="opacity: 0.4;">
+                        <div class="badge-icon">👑</div>
+                        <div class="badge-name">30-Day Legend</div>
+                        <div class="badge-type">Locked</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Collapsible Judge / Demo Drawer -->
+        <div class="demo-drawer" id="demo-drawer">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <div style="font-size: 12px; font-weight: 900; color: var(--solana-teal); letter-spacing: 0.5px;">
+                    🧪 HACKATHON JUDGE SANDBOX
+                </div>
+                <div style="font-size: 11px; font-weight: 800; color: var(--flame-red);" id="drawer-timer">
+                    30s Day: 25s
+                </div>
+            </div>
+
+            <div class="demo-slider-row">
+                <span>Simulate Sensor Value:</span>
+                <strong id="drawer-slider-val" style="color: #fff;">8,420 steps</strong>
+            </div>
+            <input type="range" id="demo-slider" min="1000" max="14000" step="500" value="8420" oninput="handleDrawerSlider(this.value)">
+
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 11px; color: var(--text-muted);">Advance to test settlement:</span>
+                <button onclick="handleFastForwardDay()" style="background: rgba(0, 194, 255, 0.2); border: 1px solid var(--solana-teal); color: var(--solana-teal); font-family: inherit; font-size: 12px; font-weight: 800; padding: 6px 14px; border-radius: 10px; cursor: pointer;">
+                    Next Day ⏭️
+                </button>
+            </div>
+        </div>
+
+        <!-- Wallet Modal -->
+        <div class="wallet-modal-overlay" id="wallet-modal">
+            <div class="wallet-modal-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+                    <h3 style="font-size: 16px; font-weight: 900;">Connect Solana Wallet</h3>
+                    <span onclick="closeWalletModal()" style="font-size: 18px; cursor: pointer; color: var(--text-muted);">✕</span>
+                </div>
+
+                <div class="wallet-option" onclick="selectWallet('Seed Vault (Solana Seeker)')">
+                    <div class="wallet-option-left">
+                        <span style="font-size: 20px;">📱</span>
+                        <div>
+                            <div>Seeker Seed Vault</div>
+                            <div style="font-size: 11px; color: var(--solana-green);">Hardware Security Layer</div>
+                        </div>
+                    </div>
+                    <span>➔</span>
+                </div>
+
+                <div class="wallet-option" onclick="selectWallet('Phantom Wallet')">
+                    <div class="wallet-option-left">
+                        <span style="font-size: 20px;">👻</span>
+                        <div>
+                            <div>Phantom</div>
+                            <div style="font-size: 11px; color: var(--text-secondary);">MWA 2.0 Integration</div>
+                        </div>
+                    </div>
+                    <span>➔</span>
+                </div>
+
+                <div class="wallet-option" onclick="selectWallet('Solflare Wallet')">
+                    <div class="wallet-option-left">
+                        <span style="font-size: 20px;">🔥</span>
+                        <div>
+                            <div>Solflare</div>
+                            <div style="font-size: 11px; color: var(--text-secondary);">Mobile Adapter</div>
+                        </div>
+                    </div>
+                    <span>➔</span>
+                </div>
+
+                <div id="disconnect-btn-wrap" style="display: none; margin-top: 14px;">
+                    <button onclick="disconnectWallet()" style="width: 100%; height: 44px; background: rgba(255, 69, 58, 0.15); border: 1px solid var(--flame-red); color: var(--flame-red); border-radius: 14px; font-weight: 800; font-family: inherit; cursor: pointer;">
+                        Disconnect Wallet
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="switchNavTab('dashboard', this)">
+                <span class="nav-icon">⚡</span>
+                <span>Active</span>
+            </div>
+            <div class="nav-item" onclick="switchNavTab('explore', this)">
+                <span class="nav-icon">🧭</span>
+                <span>Pledges</span>
+            </div>
+            <div class="nav-item" onclick="switchNavTab('squads', this)">
+                <span class="nav-icon">🏆</span>
+                <span>Leaderboard</span>
+            </div>
+            <div class="nav-item" onclick="switchNavTab('vault', this)">
+                <span class="nav-icon">🛡️</span>
+                <span>Vault</span>
             </div>
         </div>
     </div>
 
     <script>
         // State
-        const targetSteps = 8000;
-        let currentSteps = 8500;
-        let totalDays = 5;
+        let isConnected = false;
+        let connectedAddress = null;
+        let userBalanceSKR = 1250;
+
+        let activeCategory = 'steps';
+        let currentTarget = 8000;
+        let currentValue = 8420;
         let currentDay = 2;
-        let completedDays = [1];
-        let isClockedInToday = false;
+        let totalDays = 7;
+        let isTodayClockedIn = false;
+        let demoDrawerOpen = false;
         let secondsLeftInDay = 30;
 
-        function updateUI() {
-            // Update step text
-            document.getElementById('step-display').innerText = currentSteps.toLocaleString();
-            document.getElementById('slider-val').innerText = `${currentSteps.toLocaleString()} steps`;
+        // Navigation Switcher
+        function switchNavTab(tabName, el) {
+            document.querySelectorAll('.tab-view').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
 
-            // Progress Bar
-            const percent = Math.min(Math.round((currentSteps / targetSteps) * 100), 100);
-            document.getElementById('progress-fill').style.width = `${percent}%`;
-            document.getElementById('progress-percent').innerText = `${Math.round((currentSteps / targetSteps) * 100)}%`;
-
-            // Status message
-            const statusEl = document.getElementById('progress-status');
-            const btnEl = document.getElementById('clock-in-btn');
-
-            if (isClockedInToday) {
-                statusEl.innerText = "Verified On-Chain! See you tomorrow.";
-                statusEl.style.color = "var(--solana-green)";
-                btnEl.className = "clock-in-btn done";
-                btnEl.innerHTML = "<span>✓</span><span>CLOCKED IN ON-CHAIN</span>";
-            } else if (currentSteps >= targetSteps) {
-                statusEl.innerText = "Goal Achieved! Ready to Clock In";
-                statusEl.style.color = "var(--solana-green)";
-                btnEl.className = "clock-in-btn active";
-                btnEl.innerHTML = "<span>🔒</span><span>CLOCK IN (1-TAP SEED VAULT)</span>";
-            } else {
-                const diff = targetSteps - currentSteps;
-                statusEl.innerText = `Walk ${diff.toLocaleString()} more steps to unlock`;
-                statusEl.style.color = "var(--text-secondary)";
-                btnEl.className = "clock-in-btn disabled";
-                btnEl.innerHTML = "<span>⏳</span><span>STEP GOAL NOT MET</span>";
-            }
-
-            // Timeline Dots
-            document.getElementById('current-day-text').innerText = `Day ${currentDay} of ${totalDays}`;
-            renderDots();
+            document.getElementById(`view-${tabName}`).classList.add('active');
+            el.classList.add('active');
         }
 
-        function renderDots() {
-            const container = document.getElementById('dots-container');
-            container.innerHTML = '';
+        // Category Switcher
+        function switchCategory(cat, el) {
+            document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+            activeCategory = cat;
+
+            if (cat === 'steps') {
+                currentTarget = 8000;
+                currentValue = 8420;
+                document.getElementById('hero-sensor-tag').innerText = 'HEALTH CONNECT LIVE';
+                document.getElementById('metric-main').innerText = currentValue.toLocaleString();
+                document.getElementById('metric-sub').innerText = 'of 8,000 daily steps required';
+                document.getElementById('demo-slider').min = 1000;
+                document.getElementById('demo-slider').max = 14000;
+                document.getElementById('demo-slider').value = currentValue;
+            } else if (cat === 'screentime') {
+                currentTarget = 3.0;
+                currentValue = 2.1;
+                document.getElementById('hero-sensor-tag').innerText = 'USAGESTATS DETOX';
+                document.getElementById('metric-main').innerText = currentValue + 'h';
+                document.getElementById('metric-sub').innerText = 'under 3.0h phone limit today';
+                document.getElementById('demo-slider').min = 0;
+                document.getElementById('demo-slider').max = 6;
+                document.getElementById('demo-slider').value = currentValue;
+            } else if (cat === 'sleep') {
+                currentTarget = 7.0;
+                currentValue = 7.5;
+                document.getElementById('hero-sensor-tag').innerText = 'SLEEP SESSION API';
+                document.getElementById('metric-main').innerText = currentValue + 'h';
+                document.getElementById('metric-sub').innerText = 'of 7.0h rest goal achieved';
+                document.getElementById('demo-slider').min = 4;
+                document.getElementById('demo-slider').max = 10;
+                document.getElementById('demo-slider').value = currentValue;
+            }
+
+            updateProgress();
+        }
+
+        function updateProgress() {
+            let pct = Math.min(Math.round((currentValue / currentTarget) * 100), 100);
+            document.getElementById('metric-progress-fill').style.width = pct + '%';
+            document.getElementById('metric-pct').innerText = pct + '%';
+
+            const btn = document.getElementById('hero-clockin-btn');
+            const status = document.getElementById('metric-status');
+
+            if (isTodayClockedIn) {
+                btn.className = 'btn-clock-in done';
+                btn.innerHTML = '<span>✓</span><span>CLOCKED IN ON-CHAIN</span>';
+                status.innerText = 'Verified On-Chain! See you tomorrow.';
+                status.style.color = 'var(--solana-green)';
+            } else if (currentValue >= currentTarget) {
+                btn.className = 'btn-clock-in active';
+                btn.innerHTML = '<span>🔒</span><span>CLOCK IN TODAY (1-TAP)</span>';
+                status.innerText = 'Goal Complete! Ready to Clock In';
+                status.style.color = 'var(--solana-green)';
+            } else {
+                btn.className = 'btn-clock-in disabled';
+                btn.innerHTML = '<span>⏳</span><span>TARGET NOT MET YET</span>';
+                status.innerText = 'Keep going to unlock daily Clock-In';
+                status.style.color = 'var(--text-secondary)';
+            }
+
+            document.getElementById('current-day-label').innerText = currentDay;
+            renderTimelineDots();
+        }
+
+        function renderTimelineDots() {
+            const row = document.getElementById('timeline-dots-row');
+            row.innerHTML = '';
             for (let i = 1; i <= totalDays; i++) {
                 const dot = document.createElement('div');
-                dot.className = 'dot';
-                if (completedDays.includes(i)) {
-                    dot.className = 'dot completed';
+                dot.className = 'day-dot';
+                if (i < currentDay) {
+                    dot.className = 'day-dot completed';
                     dot.innerText = '✓';
-                } else if (i < currentDay) {
-                    dot.className = 'dot missed';
-                    dot.innerText = '✕';
                 } else if (i === currentDay) {
-                    dot.className = isClockedInToday ? 'dot completed' : 'dot current';
-                    dot.innerText = isClockedInToday ? '✓' : i;
+                    dot.className = isTodayClockedIn ? 'day-dot completed' : 'day-dot current';
+                    dot.innerText = isTodayClockedIn ? '✓' : i;
                 } else {
                     dot.innerText = i;
                 }
-                container.appendChild(dot);
+                row.appendChild(dot);
             }
         }
 
-        function handleStepSlider(val) {
-            currentSteps = parseInt(val);
-            updateUI();
-        }
+        // Clock In Action
+        function handleClockInAction() {
+            if (isTodayClockedIn || currentValue < currentTarget) return;
 
-        function handleClockIn() {
-            if (isClockedInToday || currentSteps < targetSteps) return;
-
-            // Trigger haptic vibration if supported on device
             if (navigator.vibrate) navigator.vibrate([40, 60, 40]);
-
-            isClockedInToday = true;
-            completedDays.push(currentDay);
-            showToast("Day " + currentDay + " Clocked In via Seed Vault!");
-            updateUI();
+            isTodayClockedIn = true;
+            showToast("Day " + currentDay + " Clocked In with Seed Vault!");
+            updateProgress();
         }
 
-        function handleNextDay() {
+        // Fast Forward for Judge Testing
+        function handleFastForwardDay() {
             if (currentDay >= totalDays) {
-                // Show Settle Modal
-                const refund = (500 * completedDays.length) / totalDays;
-                const burn = 500 - refund;
-                document.getElementById('settle-summary').innerText = `Completed ${completedDays.length} of ${totalDays} Days`;
-                document.getElementById('settle-refund').innerText = `${Math.round(refund)} $SKR`;
-                document.getElementById('settle-burn').innerText = `${Math.round(burn)} $SKR`;
-                document.getElementById('settle-modal').className = 'modal-overlay active';
+                showToast("Challenge ended! Forfeited tokens burned.");
+                currentDay = 1;
+                isTodayClockedIn = false;
+                secondsLeftInDay = 30;
+                updateProgress();
                 return;
             }
-
             currentDay++;
-            isClockedInToday = false;
+            isTodayClockedIn = false;
             secondsLeftInDay = 30;
             showToast("Advanced to Day " + currentDay);
-            updateUI();
+            updateProgress();
         }
 
-        function executeSettle() {
-            document.getElementById('settle-modal').className = 'modal-overlay';
-            showToast("Settled! Forfeited tokens burned.");
-            // Reset to Day 1
-            currentDay = 1;
-            completedDays = [];
-            isClockedInToday = false;
-            secondsLeftInDay = 30;
-            updateUI();
+        // Drawer Slider Handler
+        function handleDrawerSlider(val) {
+            currentValue = parseFloat(val);
+            if (activeCategory === 'steps') {
+                document.getElementById('metric-main').innerText = parseInt(val).toLocaleString();
+                document.getElementById('drawer-slider-val').innerText = parseInt(val).toLocaleString() + ' steps';
+            } else {
+                document.getElementById('metric-main').innerText = val + 'h';
+                document.getElementById('drawer-slider-val').innerText = val + 'h';
+            }
+            updateProgress();
+        }
+
+        // Drawer Toggle
+        function toggleDemoDrawer() {
+            demoDrawerOpen = !demoDrawerOpen;
+            const drawer = document.getElementById('demo-drawer');
+            const pill = document.getElementById('judge-toggle-btn');
+            if (demoDrawerOpen) {
+                drawer.classList.add('open');
+                pill.classList.add('active');
+                document.getElementById('judge-pill-text').innerText = 'Close Demo';
+            } else {
+                drawer.classList.remove('open');
+                pill.classList.remove('active');
+                document.getElementById('judge-pill-text').innerText = 'Judge Mode';
+            }
+        }
+
+        // Wallet Handlers
+        function openWalletModal() {
+            document.getElementById('wallet-modal').classList.add('active');
+        }
+        function closeWalletModal() {
+            document.getElementById('wallet-modal').classList.remove('active');
+        }
+        function selectWallet(name) {
+            isConnected = true;
+            connectedAddress = "Seeker" + Math.random().toString(36).substring(2, 7) + "sol";
+            document.getElementById('wallet-btn-label').innerText = connectedAddress.substring(0, 8) + '...';
+            document.getElementById('wallet-btn').classList.add('connected');
+            document.getElementById('profile-address-text').innerText = connectedAddress;
+            document.getElementById('profile-skr-text').innerText = userBalanceSKR + " $SKR in Vault";
+            document.getElementById('disconnect-btn-wrap').style.display = 'block';
+            closeWalletModal();
+            showToast("Connected to " + name + " via MWA 2.0!");
+        }
+        function disconnectWallet() {
+            isConnected = false;
+            connectedAddress = null;
+            document.getElementById('wallet-btn-label').innerText = 'Connect';
+            document.getElementById('wallet-btn').classList.remove('connected');
+            document.getElementById('profile-address-text').innerText = 'Not Connected';
+            document.getElementById('profile-skr-text').innerText = '0 $SKR in Vault';
+            document.getElementById('disconnect-btn-wrap').style.display = 'none';
+            closeWalletModal();
+            showToast("Wallet Disconnected");
+        }
+
+        function startNewPledge(name, target, stake) {
+            showToast("Staked " + stake + " $SKR for " + name);
+            switchNavTab('dashboard', document.querySelectorAll('.nav-item')[0]);
         }
 
         function showToast(msg) {
@@ -728,18 +1228,21 @@
             }, 2500);
         }
 
-        // Timer Tick
+        // 30s Day Timer for Judge Mode
         setInterval(() => {
             secondsLeftInDay--;
             if (secondsLeftInDay <= 0) {
-                handleNextDay();
-            } else {
-                document.getElementById('judge-timer').innerText = `30s Day: ${secondsLeftInDay}s`;
+                if (demoDrawerOpen) {
+                    handleFastForwardDay();
+                } else {
+                    secondsLeftInDay = 30;
+                }
             }
+            document.getElementById('drawer-timer').innerText = `30s Day: ${secondsLeftInDay}s`;
         }, 1000);
 
-        // Initial render
-        updateUI();
+        // Initial setup
+        updateProgress();
     </script>
 </body>
 </html>
