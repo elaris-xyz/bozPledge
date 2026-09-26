@@ -141,9 +141,19 @@ class MainActivity : ComponentActivity() {
                     onSelectPreset = { preset ->
                         commitmentState = commitmentState.copy(
                             rule = preset,
-                            totalAmountSKR = if (preset.id == "early_6am") 5000.0 else 2500.0
+                            totalAmountSKR = when (preset.id) {
+                                "early_6am" -> 5000.0
+                                "steps_10k" -> 1000.0
+                                "screen_detox" -> 1500.0
+                                "gym_workout" -> 750.0
+                                else -> 2500.0
+                            },
+                            targetSteps = if (preset.sensorType == SensorType.HEALTH_STEPS) preset.thresholdLimit.toInt() else 8000,
+                            completedDays = 0,
+                            clockedInBitmap = 0L,
+                            startTimestamp = System.currentTimeMillis() / 1000L
                         )
-                        Toast.makeText(this@MainActivity, "Selected: ${preset.title}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@MainActivity, "چالش «${preset.title}» با موفقیت فعال شد!", Toast.LENGTH_SHORT).show()
                     },
                     onSettle = {
                         currentScreen = Screen.SETTLE
