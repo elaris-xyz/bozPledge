@@ -3,42 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>bozPledge — Hardware-Attested Sovereign Habit Escrow</title>
+    <title>bozPledge — Hardware-Attested Sovereign Commitments</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-void: #06080E;
-            --surface-deep: #0B0E17;
-            --surface-card: #101522;
-            --surface-elevated: #161D2E;
-            --surface-glass: rgba(16, 21, 34, 0.72);
+            /* Apple Dark Mode Palette (Pitch OLED Black & Inset Grouped) */
+            --ios-bg: #000000;
+            --ios-card: #1C1C1E;
+            --ios-card-secondary: #2C2C2E;
+            --ios-card-tertiary: #3A3A3C;
+            --ios-separator: rgba(255, 255, 255, 0.08);
+            --ios-separator-opaque: #38383A;
             
-            --border-subtle: rgba(255, 255, 255, 0.07);
-            --border-medium: rgba(255, 255, 255, 0.12);
-            --border-active: rgba(20, 241, 149, 0.45);
+            /* Apple HIG Accent Colors */
+            --ios-green: #30D158;
+            --ios-green-subtle: rgba(48, 209, 88, 0.14);
+            --ios-teal: #64D2FF;
+            --ios-teal-subtle: rgba(100, 210, 255, 0.14);
+            --ios-blue: #0A84FF;
+            --ios-blue-subtle: rgba(10, 132, 255, 0.14);
+            --ios-purple: #BF5AF2;
+            --ios-purple-subtle: rgba(191, 90, 242, 0.14);
+            --ios-orange: #FF9F0A;
+            --ios-orange-subtle: rgba(255, 159, 10, 0.14);
+            --ios-red: #FF453A;
+            --ios-red-subtle: rgba(255, 69, 58, 0.14);
+            --ios-gold: #FFD60A;
             
-            --solana-mint: #14F195;
-            --solana-purple: #9945FF;
-            --solana-teal: #00E5FF;
-            --crimson-burn: #FF3B30;
-            --gold-genesis: #F59E0B;
-            --warning-amber: #FB923C;
+            /* Legacy aliases for JS compatibility */
+            --solana-mint: #30D158;
+            --solana-purple: #BF5AF2;
+            --solana-teal: #64D2FF;
+            --crimson-burn: #FF453A;
+            --gold-genesis: #FF9F0A;
+            --warning-amber: #FF9F0A;
+            --bg-void: #000000;
+            --surface-deep: #141416;
+            --surface-card: #1C1C1E;
+            --surface-elevated: #2C2C2E;
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --border-medium: rgba(255, 255, 255, 0.15);
+            --border-active: #30D158;
             
-            --text-primary: #F8FAFC;
-            --text-secondary: #94A3B8;
-            --text-muted: #64748B;
+            /* Apple Text Hierarchy */
+            --text-primary: #FFFFFF;
+            --text-secondary: #8E8E93;
+            --text-muted: #636366;
             
-            --radius-outer: 52px;
-            --radius-card: 22px;
-            --radius-inner: 16px;
-            --radius-pill: 9999px;
+            --radius-phone: 54px;
+            --radius-card: 20px;
+            --radius-inner: 14px;
+            --radius-pill: 100px;
             
-            --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-            --font-heading: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
-            --font-mono: 'JetBrains Mono', monospace;
-            --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+            --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Plus Jakarta Sans", sans-serif;
+            --font-heading: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Plus Jakarta Sans", sans-serif;
+            --font-mono: "SF Mono", "JetBrains Mono", Menlo, monospace;
+            --ease-ios: cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         * {
@@ -50,7 +72,7 @@
         }
 
         body {
-            background: #030407;
+            background: #000000;
             font-family: var(--font-sans);
             color: var(--text-primary);
             min-height: 100vh;
@@ -58,13 +80,8 @@
             align-items: center;
             justify-content: center;
             padding: 24px;
-            background-image: 
-                radial-gradient(circle at 15% 15%, rgba(153, 69, 255, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 85% 85%, rgba(20, 241, 149, 0.07) 0%, transparent 40%),
-                linear-gradient(180deg, #020306 0%, #06080F 100%);
         }
 
-        /* SVG Icon styling */
         .icon {
             width: 18px;
             height: 18px;
@@ -73,989 +90,741 @@
             stroke-width: 2;
             stroke-linecap: round;
             stroke-linejoin: round;
-            flex-shrink: 0;
             display: inline-block;
             vertical-align: middle;
-            transition: stroke 0.2s ease, transform 0.2s var(--ease-spring);
+            flex-shrink: 0;
         }
-        .icon.sm { width: 14px; height: 14px; stroke-width: 2.2; }
-        .icon.md { width: 16px; height: 16px; }
-        .icon.lg { width: 22px; height: 22px; }
-        .icon.xl { width: 28px; height: 28px; }
+        .icon.sm { width: 14px; height: 14px; }
+        .icon.md { width: 18px; height: 18px; }
+        .icon.lg { width: 24px; height: 24px; }
 
-        /* Outer Solana Seeker Device Chassis */
+        /* iPhone Chassis (Premium Titanium Frame) */
         .phone-chassis {
+            width: 390px;
+            height: 844px;
+            background: #000000;
+            border-radius: var(--radius-phone);
+            border: 4px solid #2C2C2E;
+            box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 35px 80px rgba(0, 0, 0, 0.95);
             position: relative;
-            width: 100%;
-            max-width: 416px;
-            height: 890px;
-            background: #000;
-            border-radius: var(--radius-outer);
-            box-shadow: 
-                0 0 0 10px #11141F,
-                0 0 0 12px #1D2333,
-                0 32px 100px rgba(0, 0, 0, 0.95),
-                0 0 80px rgba(20, 241, 149, 0.08);
+            overflow: hidden;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        /* Ambient Glass Reflection */
-        .phone-chassis::before {
-            content: '';
+        #fx-canvas {
             position: absolute;
             top: 0;
             left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
-            z-index: 200;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
+            z-index: 500;
         }
 
         /* Status Bar */
         .status-bar {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
             height: 44px;
-            padding: 12px 24px 0 24px;
+            padding: 0 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-family: var(--font-mono);
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--text-secondary);
-            z-index: 100;
-            pointer-events: none;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: -0.2px;
+            z-index: 300;
         }
         .status-bar-icons {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
-        /* Seeker Hardware Notch */
         .phone-notch {
             position: absolute;
             top: 10px;
             left: 50%;
             transform: translateX(-50%);
-            width: 90px;
-            height: 22px;
-            background: #000;
-            border-radius: var(--radius-pill);
-            z-index: 150;
+            width: 120px;
+            height: 32px;
+            background: #000000;
+            border-radius: 18px;
+            z-index: 350;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 0 12px rgba(0, 0, 0, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.05);
         }
         .notch-camera {
-            width: 8px;
-            height: 8px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
-            background: #0F1322;
-            border: 1.5px solid #06080E;
-            box-shadow: inset 0 0 3px #00E5FF50;
+            background: #111;
+            margin-right: 32px;
         }
 
-        /* Particle Overlay Canvas */
-        #fx-canvas {
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            z-index: 500;
-        }
-
-        /* Main View Container */
+        /* Phone Screen Content Area */
         .phone-screen {
             flex: 1;
-            background: var(--bg-void);
             overflow-y: auto;
             overflow-x: hidden;
-            display: flex;
-            flex-direction: column;
-            padding: 50px 16px 104px 16px;
-            position: relative;
+            padding: 8px 16px 84px 16px;
+            scrollbar-width: none;
         }
         .phone-screen::-webkit-scrollbar { display: none; }
 
-        /* Typography System: Headings (Space Grotesk) & UI (Plus Jakarta Sans) */
-        h1, h2, h3, h4, h5, h6,
-        .brand-title,
-        .modal-title,
-        .catalog-main-title,
-        .urgency-title,
-        .metric-primary-val,
-        .card-btn-header span,
-        .timeline-label,
-        .composer-section-title,
-        .leader-rank,
-        .mini-stat-title {
-            font-family: var(--font-heading);
-            letter-spacing: -0.3px;
-        }
-
-        /* Top Tier App Header */
+        /* App Header (Apple Navigation Bar) */
         .app-header {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            margin-bottom: 12px;
-            gap: 6px;
+            align-items: center;
+            padding: 6px 0 14px 0;
         }
         .brand-wrap {
             display: flex;
             align-items: center;
-            gap: 7px;
-            flex-shrink: 0;
+            gap: 10px;
         }
         .brand-logo-mark {
-            width: 28px;
-            height: 28px;
-            border-radius: 8px;
-            background: linear-gradient(135deg, rgba(20, 241, 149, 0.15), rgba(153, 69, 255, 0.2));
-            border: 1px solid rgba(20, 241, 149, 0.3);
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            background: #1C1C1E;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--solana-mint);
+            color: var(--ios-green);
+            border: 0.5px solid var(--ios-separator);
         }
         .brand-title {
-            font-size: 18px;
+            font-family: var(--font-heading);
+            font-size: 17px;
             font-weight: 800;
-            letter-spacing: -0.5px;
-            color: var(--text-primary);
+            letter-spacing: -0.4px;
+            color: #FFFFFF;
         }
         .brand-title span {
-            background: linear-gradient(135deg, var(--solana-mint), var(--solana-teal));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--ios-green);
         }
-        .genesis-badge {
-            font-size: 9px;
-            font-weight: 800;
-            color: var(--gold-genesis);
-            background: rgba(245, 158, 11, 0.1);
-            border: 1px solid rgba(245, 158, 11, 0.25);
-            border-radius: 6px;
-            padding: 2px 6px;
-            letter-spacing: 0.5px;
-            display: none;
+        .brand-subtitle {
+            font-size: 11px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 1px;
+        }
+        .pulse-beacon {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--ios-green);
+            box-shadow: 0 0 8px var(--ios-green);
         }
 
         .header-actions {
             display: flex;
             align-items: center;
-            gap: 5px;
-            flex-shrink: 0;
+            gap: 6px;
         }
-        .btn-ghost-action {
-            background: var(--surface-deep);
-            border: 1px solid var(--border-subtle);
-            border-radius: 10px;
-            padding: 5px 8px;
-            font-size: 10.5px;
-            font-weight: 700;
-            color: var(--text-secondary);
+        .btn-ios-pill {
+            background: #1C1C1E;
+            color: #FFFFFF;
+            border: none;
+            border-radius: var(--radius-pill);
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            font-family: var(--font-sans);
             cursor: pointer;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 4px;
-            white-space: nowrap;
-            transition: all 0.2s var(--ease-spring);
+            transition: all 0.15s ease;
         }
-        .btn-ghost-action:hover {
-            border-color: var(--border-medium);
-            color: var(--text-primary);
-            transform: translateY(-1px);
-        }
-        .btn-ghost-action:active {
+        .btn-ios-pill:active {
             transform: scale(0.96);
+            background: #2C2C2E;
         }
-        .btn-ghost-action.active {
-            background: rgba(0, 229, 255, 0.12);
-            border-color: var(--solana-teal);
-            color: var(--solana-teal);
-            box-shadow: 0 0 16px rgba(0, 229, 255, 0.25);
-        }
-        .btn-wallet {
-            background: var(--surface-deep);
-            border: 1px solid var(--border-subtle);
-            border-radius: 10px;
-            padding: 5px 9px;
-            font-size: 11px;
+        .btn-ios-pill.connect-pill {
+            background: rgba(48, 209, 88, 0.15);
+            color: var(--ios-green);
             font-weight: 700;
-            color: var(--text-primary);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            white-space: nowrap;
-            transition: all 0.2s var(--ease-spring);
         }
-        .btn-wallet:hover {
-            border-color: var(--border-medium);
-        }
-        .btn-wallet:active {
-            transform: scale(0.96);
-        }
-        .btn-wallet.connected {
-            background: rgba(20, 241, 149, 0.08);
-            border-color: rgba(20, 241, 149, 0.3);
-        }
-        .status-dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: var(--crimson-burn);
-            transition: background 0.3s ease, box-shadow 0.3s ease;
-        }
-        .btn-wallet.connected .status-dot {
-            background: var(--solana-mint);
-            box-shadow: 0 0 8px var(--solana-mint);
-        }
-
-        /* Telemetry Attestation Banner */
-        .hardware-telemetry-bar {
-            background: var(--surface-deep);
-            border: 1px solid var(--border-subtle);
-            border-radius: 14px;
-            padding: 8px 12px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--text-secondary);
-            margin-bottom: 14px;
-        }
-        .telemetry-left {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .pulse-beacon {
-            position: relative;
+        .btn-ios-pill .status-dot {
             width: 6px;
             height: 6px;
             border-radius: 50%;
-            background: var(--solana-mint);
-        }
-        .pulse-beacon::after {
-            content: '';
-            position: absolute;
-            inset: -4px;
-            border-radius: 50%;
-            border: 1px solid var(--solana-mint);
-            animation: radar-ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
-        }
-        @keyframes radar-ping {
-            0% { transform: scale(0.8); opacity: 1; }
-            100% { transform: scale(2.4); opacity: 0; }
-        }
-        .telemetry-right {
-            font-family: var(--font-mono);
-            font-size: 10px;
-            color: var(--solana-teal);
-            font-weight: 600;
+            background: var(--ios-green);
         }
 
-        /* Top Action Row: Rule Composer & Custom Pledge */
+        /* Orientation Tip Banner (Apple Tips style) */
+        .ios-tip-banner {
+            background: #1C1C1E;
+            border-radius: 16px;
+            padding: 14px 16px;
+            margin-bottom: 12px;
+        }
+        .ios-tip-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        .ios-tip-title {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--ios-green);
+        }
+        .ios-tip-close {
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 13px;
+            padding: 2px 6px;
+        }
+        .ios-tip-text {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+        .ios-tip-action {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--ios-green);
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        /* Action Grid (Composer & 6 AM Club) */
         .studio-action-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
         }
         .studio-card-btn {
-            background: var(--surface-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-inner);
-            padding: 12px 14px;
+            background: #1C1C1E;
+            border-radius: 16px;
+            padding: 14px 12px;
             cursor: pointer;
-            transition: all 0.25s var(--ease-spring);
+            transition: all 0.2s var(--ease-ios);
             display: flex;
-            flex-direction: column;
-            gap: 6px;
-            position: relative;
-            overflow: hidden;
-        }
-        .studio-card-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
-        }
-        .studio-card-btn:hover {
-            border-color: rgba(0, 229, 255, 0.4);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 24px -6px rgba(0, 0, 0, 0.5);
+            align-items: center;
+            gap: 10px;
         }
         .studio-card-btn:active {
             transform: scale(0.97);
+            background: #2C2C2E;
         }
-        .studio-card-btn.highlight {
-            background: linear-gradient(145deg, rgba(0, 229, 255, 0.08) 0%, rgba(153, 69, 255, 0.08) 100%), var(--surface-card);
-            border-color: rgba(0, 229, 255, 0.35);
-        }
-        .card-btn-header {
+        .card-btn-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: #2C2C2E;
             display: flex;
             align-items: center;
-            gap: 7px;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .card-btn-title {
             font-size: 13px;
-            font-weight: 800;
-            color: var(--text-primary);
+            font-weight: 700;
+            color: #FFFFFF;
         }
         .card-btn-desc {
-            font-size: 10.5px;
+            font-size: 11px;
             color: var(--text-secondary);
-            line-height: 1.35;
+            line-height: 1.3;
+            margin-top: 2px;
         }
 
-        /* Horizontal Carousel (Active Trackers) */
+        /* Chips Carousel */
         .carousel-outer {
-            position: relative;
-            margin-bottom: 14px;
-        }
-        .carousel-fade-edge {
-            position: absolute;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            width: 24px;
-            background: linear-gradient(90deg, transparent, var(--bg-void));
-            pointer-events: none;
-            z-index: 5;
+            margin-bottom: 12px;
+            overflow: hidden;
         }
         .chips-scroll-track {
             display: flex;
             gap: 8px;
             overflow-x: auto;
-            scroll-behavior: smooth;
-            padding: 2px 2px 6px 2px;
-            cursor: grab;
+            scrollbar-width: none;
+            padding: 2px 0;
         }
-        .chips-scroll-track:active { cursor: grabbing; }
         .chips-scroll-track::-webkit-scrollbar { display: none; }
         .habit-chip {
-            background: var(--surface-deep);
-            border: 1px solid var(--border-subtle);
+            background: #1C1C1E;
+            color: var(--text-secondary);
             border-radius: var(--radius-pill);
             padding: 7px 14px;
             font-size: 12px;
-            font-weight: 700;
-            color: var(--text-secondary);
-            cursor: pointer;
-            white-space: nowrap;
-            display: flex;
+            font-weight: 600;
+            display: inline-flex;
             align-items: center;
-            gap: 7px;
-            flex-shrink: 0;
-            transition: all 0.2s var(--ease-spring);
+            gap: 6px;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.15s ease;
         }
-        .habit-chip:hover {
-            color: var(--text-primary);
-            border-color: var(--border-medium);
-        }
-        .habit-chip:active {
-            transform: scale(0.96);
-        }
+        .habit-chip:active { transform: scale(0.96); }
         .habit-chip.active {
-            background: rgba(153, 69, 255, 0.14);
-            border-color: var(--solana-purple);
-            color: #fff;
-            box-shadow: 0 0 16px rgba(153, 69, 255, 0.2);
-        }
-        .habit-chip.active.cyan {
-            background: rgba(0, 229, 255, 0.12);
-            border-color: var(--solana-teal);
-            color: #fff;
-            box-shadow: 0 0 16px rgba(0, 229, 255, 0.2);
-        }
-        .habit-chip.active.mint {
-            background: rgba(20, 241, 149, 0.12);
-            border-color: var(--solana-mint);
-            color: #fff;
-            box-shadow: 0 0 16px rgba(20, 241, 149, 0.2);
-        }
-        .habit-chip.active.amber {
-            background: rgba(245, 158, 11, 0.12);
-            border-color: var(--gold-genesis);
-            color: #fff;
-            box-shadow: 0 0 16px rgba(245, 158, 11, 0.2);
+            background: var(--ios-green);
+            color: #000000;
+            font-weight: 700;
         }
 
-        /* Urgency Loss Aversion Banner */
+        /* Loss Aversion Box (Apple Alert Widget) */
         .urgency-loss-box {
-            background: rgba(255, 59, 48, 0.08);
-            border: 1px solid rgba(255, 59, 48, 0.22);
-            border-radius: var(--radius-inner);
+            background: rgba(255, 69, 58, 0.08);
+            border-radius: 14px;
             padding: 10px 14px;
             display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
             margin-bottom: 12px;
         }
-        .urgency-loss-left {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
         .urgency-title {
-            font-size: 12px;
-            font-weight: 800;
-            color: var(--crimson-burn);
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--ios-red);
         }
         .urgency-sub {
             font-size: 11px;
             color: var(--text-secondary);
+            margin-top: 2px;
         }
-        .urgency-sub strong {
-            color: #fff;
-        }
+        .urgency-sub strong { color: var(--ios-red); }
         .urgency-countdown {
             font-family: var(--font-mono);
-            font-size: 13px;
-            font-weight: 800;
-            color: var(--crimson-burn);
-            background: rgba(255, 59, 48, 0.12);
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--ios-red);
+            background: rgba(255, 69, 58, 0.12);
             padding: 4px 8px;
             border-radius: 8px;
-            border: 1px solid rgba(255, 59, 48, 0.25);
         }
 
-        /* Hero Commitment Card (Primary Focal Point) */
+        /* Hero Commitment Card (Apple Fitness Ring / Activity Card) */
         .hero-pledge-card {
-            background: var(--surface-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-card);
-            padding: 22px;
-            position: relative;
+            background: #1C1C1E;
+            border-radius: 20px;
+            padding: 18px;
             margin-bottom: 12px;
-            overflow: hidden;
-            box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.7);
-            transition: border-color 0.3s ease;
-        }
-        .hero-pledge-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.16), transparent);
         }
         .hero-tag-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
         .pill-badge {
-            font-size: 10px;
-            font-weight: 800;
-            letter-spacing: 0.6px;
-            padding: 4px 10px;
+            background: #2C2C2E;
+            color: var(--ios-teal);
             border-radius: var(--radius-pill);
-            text-transform: uppercase;
-            display: flex;
+            padding: 4px 10px;
+            font-size: 11px;
+            font-weight: 700;
+            display: inline-flex;
             align-items: center;
             gap: 5px;
         }
-        .pill-badge.cyan { background: rgba(0, 229, 255, 0.1); border: 1px solid rgba(0, 229, 255, 0.25); color: var(--solana-teal); }
-        .pill-badge.mint { background: rgba(20, 241, 149, 0.1); border: 1px solid rgba(20, 241, 149, 0.25); color: var(--solana-mint); }
-        .pill-badge.purple { background: rgba(153, 69, 255, 0.12); border: 1px solid rgba(153, 69, 255, 0.25); color: var(--solana-purple); }
-        .pill-badge.amber { background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.25); color: var(--gold-genesis); }
-
+        .pill-badge.stake-pill {
+            color: var(--ios-purple);
+        }
         .metric-display-group {
             display: flex;
             align-items: baseline;
-            gap: 4px;
-            margin-bottom: 4px;
+            gap: 6px;
+            margin-bottom: 2px;
         }
         .metric-primary-val {
-            font-size: 48px;
+            font-family: var(--font-heading);
+            font-size: 46px;
             font-weight: 800;
-            letter-spacing: -1.5px;
+            letter-spacing: -1px;
+            color: #FFFFFF;
             line-height: 1;
-            font-family: var(--font-mono);
-            color: var(--text-primary);
-            font-feature-settings: "tnum" on;
         }
         .metric-unit-tag {
             font-size: 18px;
             font-weight: 700;
             color: var(--text-secondary);
-            font-family: var(--font-mono);
         }
         .metric-sub-label {
             font-size: 13px;
             color: var(--text-secondary);
-            font-weight: 500;
-            margin-bottom: 18px;
+            margin-bottom: 14px;
         }
-
         .meter-bar-track {
-            width: 100%;
             height: 10px;
-            background: var(--surface-deep);
-            border-radius: var(--radius-pill);
+            background: #2C2C2E;
+            border-radius: 10px;
             overflow: hidden;
-            margin-bottom: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 8px;
         }
         .meter-bar-fill {
             height: 100%;
-            border-radius: var(--radius-pill);
-            background: linear-gradient(90deg, var(--solana-purple), var(--solana-mint));
-            transition: width 0.4s var(--ease-spring);
+            background: linear-gradient(90deg, #30D158, #64D2FF);
+            border-radius: 10px;
+            transition: width 0.4s var(--ease-ios);
         }
-
         .meter-stats-row {
             display: flex;
             justify-content: space-between;
             font-size: 12px;
             font-weight: 600;
+            margin-bottom: 14px;
         }
-
-        /* Smart Rule Details Expandable Box */
         .smart-rule-details-box {
-            background: var(--surface-deep);
-            border: 1px solid var(--border-subtle);
+            background: #2C2C2E;
             border-radius: 12px;
             padding: 10px 12px;
-            font-size: 11px;
-            color: var(--text-secondary);
-            margin-top: 14px;
-            line-height: 1.5;
             display: flex;
             flex-direction: column;
-            gap: 2px;
+            gap: 6px;
+            font-size: 11.5px;
         }
-        .smart-rule-details-box span {
-            color: var(--text-primary);
-            font-weight: 600;
-        }
-
-        /* Timeline Card */
-        .timeline-card {
-            background: var(--surface-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-inner);
-            padding: 14px 16px;
-            margin-bottom: 12px;
+        .spec-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
+        .spec-row span { color: var(--text-secondary); }
+        .spec-row strong { color: #FFFFFF; font-weight: 600; }
+
+        /* Timeline 7-Day Dots Card */
+        .timeline-card {
+            background: #1C1C1E;
+            border-radius: 16px;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
         .timeline-label {
-            font-size: 11px;
-            font-weight: 800;
+            font-size: 12px;
+            font-weight: 700;
             color: var(--text-secondary);
-            letter-spacing: 0.5px;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         .dots-row {
             display: flex;
-            gap: 6px;
+            gap: 8px;
         }
         .day-dot {
             width: 26px;
             height: 26px;
             border-radius: 50%;
-            background: var(--surface-deep);
-            border: 1px solid var(--border-subtle);
+            background: #2C2C2E;
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 700;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: var(--font-mono);
-            font-size: 10px;
-            font-weight: 700;
-            color: var(--text-muted);
-            transition: all 0.2s var(--ease-spring);
         }
         .day-dot.completed {
-            background: rgba(20, 241, 149, 0.15);
-            border-color: var(--solana-mint);
-            color: var(--solana-mint);
+            background: rgba(48, 209, 88, 0.2);
+            color: var(--ios-green);
         }
         .day-dot.current {
-            background: rgba(153, 69, 255, 0.25);
-            border-color: var(--solana-purple);
-            color: #fff;
-            box-shadow: 0 0 10px rgba(153, 69, 255, 0.4);
-            transform: scale(1.1);
+            background: var(--ios-green);
+            color: #000000;
+            font-weight: 800;
         }
 
-        /* Hero Primary Action (Seed Vault Biometric CTA) */
+        /* Primary Action: Solid Apple Fitness Green Capsule CTA */
         .btn-clock-in {
             width: 100%;
-            height: 58px;
-            border-radius: var(--radius-inner);
+            height: 52px;
+            background: var(--ios-green);
+            color: #000000;
             border: none;
-            cursor: pointer;
+            border-radius: var(--radius-pill);
             font-family: var(--font-sans);
-            font-size: 15px;
-            font-weight: 800;
-            letter-spacing: 0.5px;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.25s var(--ease-spring);
+            box-shadow: 0 4px 20px rgba(48, 209, 88, 0.35);
+            transition: all 0.2s var(--ease-ios);
             margin-bottom: 10px;
         }
         .btn-clock-in:active {
-            transform: scale(0.98);
+            transform: scale(0.97);
+            filter: brightness(0.95);
         }
-        .btn-clock-in.active {
-            background: linear-gradient(135deg, var(--solana-mint) 0%, #00D285 100%);
-            color: #030407;
-            box-shadow: 0 12px 32px -4px rgba(20, 241, 149, 0.35);
+        .btn-clockin-text-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
         }
-        .btn-clock-in.active:hover {
-            box-shadow: 0 14px 40px -2px rgba(20, 241, 149, 0.45);
+        .btn-clockin-text-wrap span:first-child {
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: -0.2px;
+            line-height: 1.2;
         }
-        .btn-clock-in.disabled {
-            background: var(--surface-deep);
-            color: var(--text-muted);
-            border: 1px solid var(--border-subtle);
-            cursor: not-allowed;
-        }
-        .btn-clock-in.done {
-            background: rgba(20, 241, 149, 0.12);
-            border: 1px solid var(--solana-mint);
-            color: var(--solana-mint);
-            cursor: default;
+        .btn-clockin-sub {
+            font-size: 10px;
+            font-weight: 600;
+            opacity: 0.8;
+            letter-spacing: 0.2px;
         }
 
-        /* Share Blink Button */
         .btn-share-blink {
             width: 100%;
-            height: 44px;
-            background: var(--surface-deep);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-inner);
+            height: 42px;
+            background: #1C1C1E;
             color: var(--text-secondary);
+            border: none;
+            border-radius: 12px;
+            font-family: var(--font-sans);
             font-size: 12px;
-            font-weight: 700;
+            font-weight: 600;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
             cursor: pointer;
-            transition: all 0.2s var(--ease-spring);
             margin-bottom: 12px;
+            transition: all 0.15s ease;
         }
-        .btn-share-blink:hover {
-            border-color: var(--border-medium);
-            color: var(--text-primary);
-        }
-        .btn-share-blink:active {
-            transform: scale(0.97);
-        }
+        .btn-share-blink:active { background: #2C2C2E; }
 
-        /* 2-Column Summary Metrics */
+        /* Stats 2-Col */
         .stats-2-col {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
         }
         .mini-stat-card {
-            background: var(--surface-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-inner);
-            padding: 12px 14px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
+            background: #1C1C1E;
+            border-radius: 16px;
+            padding: 14px;
         }
         .mini-stat-title {
             font-size: 11px;
-            font-weight: 700;
+            font-weight: 600;
             color: var(--text-secondary);
+            margin-bottom: 4px;
         }
         .mini-stat-val {
             font-size: 17px;
             font-weight: 800;
-            color: var(--text-primary);
-            font-family: var(--font-mono);
+            font-family: var(--font-heading);
             display: flex;
             align-items: center;
             gap: 5px;
         }
 
-        /* Bottom Tab Navigation Bar */
-        .bottom-nav-dock {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 74px;
-            background: rgba(11, 14, 23, 0.88);
-            backdrop-filter: blur(24px);
-            border-top: 1px solid var(--border-subtle);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            padding: 0 10px 10px 10px;
-            z-index: 100;
-        }
-        .nav-dock-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--text-muted);
-            cursor: pointer;
-            transition: all 0.2s var(--ease-spring);
-            padding: 6px 14px;
-            border-radius: 12px;
-        }
-        .nav-dock-item:hover {
-            color: var(--text-secondary);
-        }
-        .nav-dock-item.active {
-            color: var(--solana-mint);
-        }
-        .nav-dock-item.active .icon {
-            stroke: var(--solana-mint);
-            transform: translateY(-2px);
-        }
-
-        /* Tabs Content Area */
-        .tab-panel {
-            display: none;
-            flex-direction: column;
-            animation: tab-enter 0.25s var(--ease-spring) forwards;
-        }
-        .tab-panel.active {
-            display: flex;
-        }
-        @keyframes tab-enter {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Catalog Cards (View 2) */
+        /* -------------------------------------------------------------
+           Apple Inset Grouped List (Explore / Catalog)
+        ------------------------------------------------------------- */
         .catalog-title-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 14px;
         }
         .catalog-main-title {
-            font-size: 16px;
+            font-size: 20px;
             font-weight: 800;
-            color: var(--text-primary);
+            letter-spacing: -0.4px;
         }
         .catalog-sub-title {
-            font-size: 11.5px;
+            font-size: 12px;
             color: var(--text-secondary);
+            margin-top: 2px;
         }
-        .catalog-card-item {
-            background: var(--surface-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-inner);
-            padding: 14px;
+        .ios-grouped-list {
+            background: #1C1C1E;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+        .ios-list-row {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            margin-bottom: 10px;
+            padding: 14px 16px;
+            gap: 14px;
             cursor: pointer;
-            gap: 10px;
-            transition: all 0.2s var(--ease-spring);
+            transition: background 0.15s ease;
+            position: relative;
         }
-        .catalog-card-item:hover {
-            border-color: rgba(255, 255, 255, 0.14);
-            transform: translateY(-2px);
+        .ios-list-row:not(:last-child)::after {
+            content: "";
+            position: absolute;
+            left: 68px;
+            right: 0;
+            bottom: 0;
+            height: 0.5px;
+            background: var(--ios-separator);
         }
-        .catalog-card-item:active {
-            transform: scale(0.98);
+        .ios-list-row:active {
+            background: #2C2C2E;
         }
-        .catalog-card-item > div:first-child {
-            display: flex;
-            align-items: center;
-            flex: 1;
-            min-width: 0;
-        }
-        .catalog-icon-box {
+        .ios-icon-box {
             width: 42px;
             height: 42px;
-            border-radius: 12px;
-            background: var(--surface-deep);
-            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 12px;
             flex-shrink: 0;
-            color: var(--solana-teal);
         }
-        .catalog-info {
+        .ios-row-content {
             flex: 1;
             min-width: 0;
         }
-        .catalog-info h4 {
-            font-size: 13.5px;
-            font-weight: 800;
-            color: var(--text-primary);
-            margin-bottom: 3px;
+        .ios-row-content h4 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #FFFFFF;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        .catalog-info p {
+        .ios-row-content p {
             font-size: 11px;
             color: var(--text-secondary);
+            margin-top: 2px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        .catalog-status-badge {
-            font-size: 11px;
-            font-weight: 800;
-            padding: 5px 10px;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid currentColor;
-            letter-spacing: 0.5px;
+        /* App Store Pill Button */
+        .app-store-pill {
+            background: #2C2C2E;
+            color: var(--ios-blue);
+            border-radius: var(--radius-pill);
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
             flex-shrink: 0;
-            white-space: nowrap;
+        }
+        .app-store-pill.active {
+            background: var(--ios-green);
+            color: #000000;
         }
 
-        /* Leaderboard Items (View 3) */
-        .leader-row {
-            background: var(--surface-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-inner);
-            padding: 12px 14px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            gap: 10px;
-        }
-        .leader-rank {
-            font-family: var(--font-heading);
-            font-size: 14px;
-            font-weight: 800;
-            width: 22px;
-            flex-shrink: 0;
-            color: var(--text-muted);
-        }
-        .leader-user-box {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex: 1;
-            min-width: 0;
-        }
-        .leader-user-box > div {
-            flex: 1;
-            min-width: 0;
-        }
-        .leader-user-box > div > div {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .leader-avatar {
-            width: 32px;
-            height: 32px;
+        /* -------------------------------------------------------------
+           Apple Activity Sharing (Leaderboard / Ranks)
+        ------------------------------------------------------------- */
+        .leader-medal {
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
-            background: var(--surface-deep);
-            border: 1px solid var(--border-subtle);
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 13px;
+            font-weight: 800;
             flex-shrink: 0;
-            color: var(--solana-mint);
+            background: #2C2C2E;
+            color: var(--text-secondary);
+        }
+        .leader-medal.gold { background: rgba(255, 214, 10, 0.2); color: #FFD60A; }
+        .leader-medal.silver { background: rgba(220, 220, 225, 0.2); color: #E5E5EA; }
+        .leader-medal.bronze { background: rgba(205, 127, 50, 0.2); color: #FF9F0A; }
+        .ios-list-row.user-row {
+            background: rgba(48, 209, 88, 0.08);
         }
 
-        /* Toast Alert */
-        .toast-banner {
-            position: absolute;
-            top: 56px;
-            left: 20px;
-            right: 20px;
-            background: rgba(16, 21, 34, 0.95);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--solana-mint);
-            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.8), 0 0 24px rgba(20, 241, 149, 0.2);
-            border-radius: var(--radius-inner);
-            padding: 10px 14px;
+        /* -------------------------------------------------------------
+           Apple Watch Activity Awards (Vault Tab)
+        ------------------------------------------------------------- */
+        .nft-award-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .nft-award-card {
+            background: #1C1C1E;
+            border-radius: 16px;
+            padding: 16px 12px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .award-icon-circle {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--text-primary);
-            z-index: 600;
-            transform: translateY(-90px);
-            opacity: 0;
-            transition: all 0.3s var(--ease-spring);
+            justify-content: center;
+            margin-bottom: 8px;
         }
-        .toast-banner.show {
-            transform: translateY(0);
-            opacity: 1;
+        .award-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #FFFFFF;
+        }
+        .award-tag {
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 2px;
         }
 
-        /* Full-Screen Drawer / Modals */
+        /* -------------------------------------------------------------
+           Apple Bottom Sheets (Modals)
+        ------------------------------------------------------------- */
         .modal-scrim {
             position: absolute;
             inset: 0;
-            background: rgba(3, 4, 7, 0.85);
-            backdrop-filter: blur(16px);
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(15px);
             z-index: 400;
             display: none;
             align-items: flex-end;
         }
-        .modal-scrim.active {
-            display: flex;
-        }
+        .modal-scrim.active { display: flex; }
         .modal-panel-content {
             width: 100%;
-            background: var(--surface-deep);
-            border-top: 1px solid var(--border-medium);
+            background: #1C1C1E;
             border-radius: 28px 28px 0 0;
-            padding: 22px 20px 32px 20px;
-            max-height: 88%;
+            padding: 12px 20px 32px 20px;
+            max-height: 85vh;
             overflow-y: auto;
-            animation: panel-slide-up 0.3s var(--ease-spring) forwards;
+            scrollbar-width: none;
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.8);
+            animation: slideUpSheet 0.3s var(--ease-ios);
         }
-        @keyframes panel-slide-up {
+        @keyframes slideUpSheet {
             from { transform: translateY(100%); }
             to { transform: translateY(0); }
         }
+        .ios-sheet-handle {
+            width: 36px;
+            height: 5px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.25);
+            margin: 0 auto 16px auto;
+        }
         .modal-header-row {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
             margin-bottom: 16px;
         }
         .modal-title {
             font-size: 17px;
-            font-weight: 800;
-            color: var(--text-primary);
+            font-weight: 700;
+            color: #FFFFFF;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -1064,175 +833,150 @@
             width: 28px;
             height: 28px;
             border-radius: 50%;
-            background: var(--surface-card);
-            border: 1px solid var(--border-subtle);
-            color: var(--text-secondary);
+            background: #2C2C2E;
             display: flex;
             align-items: center;
             justify-content: center;
+            color: var(--text-secondary);
             cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .modal-close-btn:hover {
-            color: #fff;
-            border-color: var(--border-medium);
         }
 
         .composer-section-label {
-            font-size: 11px;
-            font-weight: 800;
+            font-size: 12px;
+            font-weight: 700;
             color: var(--text-secondary);
-            letter-spacing: 0.6px;
             text-transform: uppercase;
-            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+            margin: 14px 0 8px 0;
         }
-
-        /* Sensor Selection Grid */
         .sensor-select-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 8px;
-            margin-bottom: 16px;
         }
         .sensor-btn-tile {
-            background: var(--surface-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-inner);
+            background: #2C2C2E;
+            border-radius: 12px;
             padding: 12px;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 10px;
-            transition: all 0.2s var(--ease-spring);
-        }
-        .sensor-btn-tile:hover {
-            border-color: var(--border-medium);
+            transition: all 0.15s ease;
         }
         .sensor-btn-tile.active {
-            background: rgba(0, 229, 255, 0.1);
-            border-color: var(--solana-teal);
-            color: #fff;
+            background: rgba(48, 209, 88, 0.2);
+            box-shadow: inset 0 0 0 1.5px var(--ios-green);
         }
-        .sensor-btn-tile.active .icon {
-            stroke: var(--solana-teal);
-        }
-        .sensor-btn-tile .tile-title {
-            font-size: 12px;
-            font-weight: 800;
-            color: var(--text-primary);
-        }
-        .sensor-btn-tile .tile-sub {
-            font-size: 10px;
-            color: var(--text-muted);
-        }
+        .sensor-btn-tile.active .tile-title { color: var(--ios-green); }
+        .tile-title { font-size: 13px; font-weight: 700; color: #FFFFFF; }
+        .tile-sub { font-size: 10px; color: var(--text-secondary); }
 
-        /* Custom Inputs */
         .input-dark-field {
             width: 100%;
-            height: 48px;
-            background: var(--surface-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: 12px;
-            padding: 0 14px;
-            font-family: var(--font-sans);
-            font-size: 14px;
-            font-weight: 600;
-            color: #fff;
-            outline: none;
-            transition: border-color 0.2s ease;
-        }
-        .input-dark-field:focus {
-            border-color: var(--solana-teal);
-        }
-
-        /* Day Selection Pills */
-        .days-pill-row {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 4px;
-            margin-bottom: 16px;
-        }
-        .day-toggle-pill {
-            height: 38px;
-            background: var(--surface-card);
-            border: 1px solid var(--border-subtle);
+            height: 44px;
+            background: #2C2C2E;
+            border: none;
             border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: var(--font-mono);
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: all 0.2s var(--ease-spring);
-        }
-        .day-toggle-pill:active {
-            transform: scale(0.94);
-        }
-        .day-toggle-pill.active {
-            background: rgba(20, 241, 149, 0.16);
-            border-color: var(--solana-mint);
-            color: var(--solana-mint);
+            padding: 0 14px;
+            color: #FFFFFF;
+            font-size: 15px;
+            font-family: var(--font-sans);
+            outline: none;
         }
 
-        /* Schedule Presets (Odd Days / Even Days) */
         .schedule-preset-row {
             display: flex;
             gap: 8px;
             margin-bottom: 10px;
         }
         .preset-badge-btn {
-            background: var(--surface-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-pill);
-            padding: 6px 12px;
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: all 0.2s ease;
+            flex: 1;
+            height: 38px;
+            background: #2C2C2E;
+            border-radius: 10px;
             display: flex;
             align-items: center;
-            gap: 5px;
+            justify-content: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s ease;
         }
         .preset-badge-btn.active {
-            background: rgba(0, 229, 255, 0.12);
-            border-color: var(--solana-teal);
-            color: var(--solana-teal);
+            background: rgba(100, 210, 255, 0.2);
+            color: var(--ios-teal);
+            font-weight: 700;
+            box-shadow: inset 0 0 0 1.5px var(--ios-teal);
         }
 
-        /* Generated On-Chain Rule Preview */
-        .smart-code-preview {
-            background: #06080F;
-            border: 1px solid rgba(0, 229, 255, 0.25);
+        .days-pill-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+        .day-toggle-pill {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #2C2C2E;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .day-toggle-pill.active {
+            background: var(--ios-green);
+            color: #000000;
+            font-weight: 800;
+        }
+
+        /* Apple Shortcuts Style Summary Card */
+        .apple-shortcuts-card {
+            background: #2C2C2E;
             border-radius: 14px;
             padding: 14px;
-            font-family: var(--font-mono);
-            font-size: 11px;
-            line-height: 1.6;
-            margin-bottom: 18px;
+            margin: 12px 0 16px 0;
+        }
+        .apple-shortcuts-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--ios-teal);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .apple-shortcuts-text {
+            font-size: 13px;
+            color: #FFFFFF;
+            line-height: 1.5;
         }
 
         /* Biometric Sheet Overlay */
         .biometric-modal-sheet {
             position: absolute;
             inset: 0;
-            background: rgba(3, 4, 7, 0.92);
+            background: rgba(0, 0, 0, 0.75);
             backdrop-filter: blur(20px);
             z-index: 450;
             display: none;
             align-items: flex-end;
         }
-        .biometric-modal-sheet.active {
-            display: flex;
-        }
+        .biometric-modal-sheet.active { display: flex; }
         .biometric-sheet-card {
             width: 100%;
-            background: var(--surface-deep);
-            border-top: 1px solid var(--border-medium);
+            background: #1C1C1E;
             border-radius: 28px 28px 0 0;
-            padding: 24px 20px 36px 20px;
+            padding: 12px 20px 36px 20px;
             text-align: center;
             display: flex;
             flex-direction: column;
@@ -1240,9 +984,9 @@
         }
         .biometric-sensor-circle {
             position: relative;
-            width: 100px;
-            height: 100px;
-            margin: 20px 0 16px 0;
+            width: 86px;
+            height: 86px;
+            margin: 18px 0 14px 0;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -1254,21 +998,44 @@
             transform: rotate(-90deg);
         }
         .biometric-core-btn {
-            width: 76px;
-            height: 76px;
+            width: 68px;
+            height: 68px;
             border-radius: 50%;
-            background: var(--surface-card);
-            border: 1px solid var(--border-subtle);
+            background: #2C2C2E;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--solana-mint);
-            box-shadow: 0 0 24px rgba(20, 241, 149, 0.15);
-            transition: all 0.2s var(--ease-spring);
+            color: var(--ios-green);
+            transition: transform 0.2s var(--ease-ios);
         }
-        .biometric-core-btn:active {
-            transform: scale(0.92);
-            box-shadow: 0 0 32px rgba(20, 241, 149, 0.4);
+        .biometric-core-btn:active { transform: scale(0.92); }
+
+        /* Toast Alert */
+        .toast-banner {
+            position: absolute;
+            top: 50px;
+            left: 20px;
+            right: 20px;
+            background: rgba(28, 28, 30, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 14px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #FFFFFF;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            z-index: 600;
+            opacity: 0;
+            transform: translateY(-16px);
+            pointer-events: none;
+            transition: all 0.3s var(--ease-ios);
+        }
+        .toast-banner.active {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         /* Judge Sandbox Bottom Drawer */
@@ -1277,19 +1044,50 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: rgba(11, 14, 23, 0.96);
-            backdrop-filter: blur(24px);
-            border-top: 1px solid rgba(0, 229, 255, 0.4);
-            border-radius: 24px 24px 0 0;
-            padding: 16px 20px 24px 20px;
+            background: #1C1C1E;
+            border-radius: 28px 28px 0 0;
+            padding: 12px 20px 28px 20px;
             z-index: 350;
             transform: translateY(110%);
-            transition: transform 0.3s var(--ease-spring);
-            box-shadow: 0 -16px 40px rgba(0, 0, 0, 0.8);
+            transition: transform 0.3s var(--ease-ios);
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8);
         }
-        .sandbox-drawer.active {
-            transform: translateY(0);
+        .sandbox-drawer.active { transform: translateY(0); }
+
+        /* Apple Translucent Tab Bar */
+        .bottom-nav-dock {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 74px;
+            background: rgba(28, 28, 30, 0.9);
+            backdrop-filter: blur(25px);
+            border-top: 0.5px solid var(--ios-separator);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0 10px 10px 10px;
+            z-index: 100;
         }
+        .nav-dock-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: color 0.15s ease;
+            padding: 4px 16px;
+        }
+        .nav-dock-item.active { color: var(--ios-green); }
+        .nav-dock-item.active .icon { stroke: var(--ios-green); }
+
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; animation: fadeIn 0.25s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
@@ -1313,7 +1111,7 @@
 
         <!-- Toast Banner -->
         <div id="toast" class="toast-banner">
-            <svg class="icon sm" style="color: var(--solana-mint)" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            <svg class="icon sm" style="color: var(--ios-green)" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
             <span id="toast-text">Verified on Solana Devnet</span>
         </div>
 
@@ -1324,46 +1122,43 @@
                     <div class="brand-logo-mark">
                         <svg class="icon md" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                     </div>
-                    <div class="brand-title">boz<span>PLEDGE</span></div>
-                    <span class="genesis-badge" id="genesis-pill">SEEKER GENESIS</span>
+                    <div>
+                        <div class="brand-title">boz<span>PLEDGE</span></div>
+                        <div class="brand-subtitle">
+                            <span class="pulse-beacon"></span>
+                            <span id="sync-status-text">NetworkStats Active • Synced</span>
+                        </div>
+                    </div>
+                    <span class="genesis-badge" id="genesis-pill" style="display:none">SEEKER GENESIS</span>
                 </div>
                 <div class="header-actions">
-                    <div class="btn-ghost-action" id="guide-toggle-btn" style="color: var(--gold-genesis); border-color: rgba(245, 158, 11, 0.4); background: rgba(245, 158, 11, 0.12);" onclick="openHowItWorksModal()">
+                    <div class="btn-ios-pill" id="guide-toggle-btn" onclick="openHowItWorksModal()">
                         <span>💡 Guide</span>
                     </div>
-                    <div class="btn-ghost-action" id="judge-toggle-btn" onclick="toggleSandboxDrawer()">
+                    <div class="btn-ios-pill" id="judge-toggle-btn" onclick="toggleSandboxDrawer()">
                         <svg class="icon sm" viewBox="0 0 24 24"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/></svg>
                         <span id="judge-btn-label">Judge</span>
                     </div>
-                    <button class="btn-wallet" id="wallet-btn" onclick="openWalletModal()">
+                    <button class="btn-ios-pill connect-pill" id="wallet-btn" onclick="openWalletModal()">
                         <div class="status-dot"></div>
                         <span id="wallet-btn-label">Connect</span>
                     </button>
                 </div>
             </div>
 
-            <!-- Hardware Telemetry Bar -->
-            <div class="hardware-telemetry-bar">
-                <div class="telemetry-left">
-                    <div class="pulse-beacon"></div>
-                    <span id="sync-status-text">NetworkStats Active • Synced</span>
-                </div>
-                <div class="telemetry-right">Slot #294025 • 28ms</div>
-            </div>
-
             <!-- VIEW 1: ACTIVE DASHBOARD -->
             <div class="tab-panel active" id="view-dashboard">
                 
                 <!-- EMPTY STATE (Day 0 / Fresh User) -->
-                <div id="empty-state-container" style="display: none; background: var(--surface-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-card); padding: 32px 20px; text-align: center; margin-bottom: 14px;">
-                    <div style="width: 58px; height: 58px; border-radius: 18px; background: rgba(0, 229, 255, 0.1); border: 1px solid rgba(0, 229, 255, 0.3); display: inline-flex; align-items: center; justify-content: center; color: var(--solana-teal); margin-bottom: 14px;">
+                <div id="empty-state-container" style="display: none; background: #1C1C1E; border-radius: 20px; padding: 32px 20px; text-align: center; margin-bottom: 14px;">
+                    <div style="width: 58px; height: 58px; border-radius: 18px; background: rgba(100, 210, 255, 0.14); display: inline-flex; align-items: center; justify-content: center; color: var(--ios-teal); margin-bottom: 14px;">
                         <svg class="icon lg" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                     </div>
                     <h3 style="font-size: 17px; font-weight: 800; margin-bottom: 6px;">No Active Escrow Pledge</h3>
                     <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 20px;">
                         You have not locked any $SKR in escrow yet. Build a custom multi-sensor rule or select a verified blueprint below to start Day 1.
                     </p>
-                    <button onclick="openComposerModal()" style="width: 100%; height: 52px; background: linear-gradient(135deg, var(--solana-mint) 0%, var(--solana-teal) 100%); border: none; border-radius: var(--radius-inner); font-size: 14px; font-weight: 800; color: #030407; cursor: pointer; font-family: var(--font-sans); box-shadow: 0 10px 24px rgba(20, 241, 149, 0.25);">
+                    <button onclick="openComposerModal()" class="btn-clock-in" style="height: 48px;">
                         + CREATE FIRST COMMITMENT
                     </button>
                 </div>
@@ -1371,248 +1166,240 @@
                 <!-- ACTIVE DASHBOARD CONTENT WRAPPER -->
                 <div id="active-dashboard-content">
 
-                <!-- Quick Orientation Tip Banner -->
-                <div id="quick-guide-banner" style="background: rgba(153, 69, 255, 0.12); border: 1px solid rgba(153, 69, 255, 0.35); border-radius: 16px; padding: 14px; margin-bottom: 14px; position: relative;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                        <div style="display: flex; align-items: center; gap: 6px;">
-                            <span style="font-size: 14px;">💡</span>
-                            <span style="font-size: 12.5px; font-weight: 800; color: var(--solana-mint);">Quick Orientation Guide</span>
+                    <!-- Quick Orientation Tip Banner -->
+                    <div id="quick-guide-banner" class="ios-tip-banner">
+                        <div class="ios-tip-header">
+                            <div class="ios-tip-title">
+                                <span>💡</span>
+                                <span>Quick Orientation Guide</span>
+                            </div>
+                            <div class="ios-tip-close" onclick="document.getElementById('quick-guide-banner').style.display = 'none';">✕</div>
                         </div>
-                        <div style="cursor: pointer; color: var(--text-muted); font-size: 14px;" onclick="document.getElementById('quick-guide-banner').style.display = 'none';">✕</div>
+                        <div class="ios-tip-text">
+                            Active Habit: <strong>Odd-Days Internet Detox</strong>. Hardware sensors track your habit without cheating. When your limit is met, tap the verification button to lock in your daily progress.
+                        </div>
+                        <div class="ios-tip-action" onclick="openHowItWorksModal()">How it works (interactive 3-step walkthrough) →</div>
                     </div>
-                    <div style="font-size: 11.5px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 8px;">
-                        Active Habit: <strong>Odd-Days Internet Detox</strong>. Hardware sensors track your habit without cheating. When your limit is met, tap the verification button to lock in your daily progress.
+
+                    <!-- Action Row: Rule Composer & 6 AM Club -->
+                    <div class="studio-action-grid">
+                        <div class="studio-card-btn" onclick="openComposerModal()">
+                            <div class="card-btn-icon" style="color: var(--ios-teal)">
+                                <svg class="icon md" viewBox="0 0 24 24"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></svg>
+                            </div>
+                            <div>
+                                <div class="card-btn-title">Rule Composer</div>
+                                <div class="card-btn-desc">Custom sensor rules (e.g. &lt;1h Net on Odd Days)</div>
+                            </div>
+                        </div>
+
+                        <div class="studio-card-btn" onclick="openStudioModal()">
+                            <div class="card-btn-icon" style="color: var(--ios-orange)">
+                                <svg class="icon md" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><polyline points="12 9 12 12 13.5 13.5"/><path d="M16.5 4.5l1.5-1.5M7.5 4.5L6 3"/></svg>
+                            </div>
+                            <div>
+                                <div class="card-btn-title">6 AM Club</div>
+                                <div class="card-btn-desc">Wake-up before 06:00 AM & stake 5,000 $SKR</div>
+                            </div>
+                        </div>
                     </div>
-                    <div style="text-align: right;">
-                        <span style="font-size: 11.5px; font-weight: 800; color: var(--solana-mint); cursor: pointer;" onclick="openHowItWorksModal()">How it works (interactive 3-step walkthrough) →</span>
+
+                    <!-- Horizontal Carousel of Habit Blueprints -->
+                    <div class="carousel-outer">
+                        <div class="chips-scroll-track" id="chips-track">
+                            <div class="habit-chip active" onclick="switchCategory('oddInternet', this)">
+                                <svg class="icon sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20M2 12h20"/></svg>
+                                <span>&lt;1h Net (Odd Days)</span>
+                            </div>
+                            <div class="habit-chip" onclick="switchCategory('early6am', this)">
+                                <svg class="icon sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><polyline points="12 9 12 12 13.5 13.5"/></svg>
+                                <span>6:00 AM Club (5k)</span>
+                            </div>
+                            <div class="habit-chip" onclick="switchCategory('steps', this)">
+                                <svg class="icon sm" viewBox="0 0 24 24"><path d="M13 4v16M17 8l-4-4-4 4"/><circle cx="12" cy="4" r="1.5"/><path d="M7 13l3 3 7-7"/></svg>
+                                <span>10,000 Steps</span>
+                            </div>
+                            <div class="habit-chip" onclick="switchCategory('screentime', this)">
+                                <svg class="icon sm" viewBox="0 0 24 24"><rect width="14" height="20" x="5" y="2" rx="3"/><line x1="12" x2="12.01" y1="18" y2="18"/></svg>
+                                <span>App Detox (&lt;2h)</span>
+                            </div>
+                            <div class="habit-chip" onclick="switchCategory('gym', this)">
+                                <svg class="icon sm" viewBox="0 0 24 24"><path d="m6.5 6.5 11 11M21 21l-1-1a2 2 0 0 0-2.8 0L16 21M3 3l1 1a2 2 0 0 0 2.8 0L8 3"/></svg>
+                                <span>45m Gym Workout</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Loss Aversion Urgency Box -->
+                    <div class="urgency-loss-box">
+                        <div class="urgency-loss-left">
+                            <div class="urgency-title">
+                                <svg class="icon sm" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+                                <span>Daily Window Deadline</span>
+                            </div>
+                            <div class="urgency-sub">If missed: <strong id="risk-burn-text">357.14 $SKR burned</strong></div>
+                        </div>
+                        <div class="urgency-countdown" id="cutoff-timer-text">04h 28m 14s</div>
+                    </div>
+
+                    <!-- Hero Commitment Card (Apple Activity Style) -->
+                    <div class="hero-pledge-card" id="hero-card-elem">
+                        <div class="hero-tag-row">
+                            <span class="pill-badge" id="hero-sensor-tag">
+                                <svg class="icon sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20M2 12h20"/></svg>
+                                <span id="hero-sensor-name">NETWORKSTATS ODD DAYS</span>
+                            </span>
+                            <span class="pill-badge stake-pill" id="hero-stake-tag">
+                                <svg class="icon sm" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                <span id="hero-stake-val">2,500 $SKR STAKED</span>
+                            </span>
+                        </div>
+
+                        <!-- Metric Row -->
+                        <div class="metric-display-group">
+                            <span class="metric-primary-val" id="metric-integer">38</span>
+                            <span class="metric-unit-tag" id="metric-unit"> mins</span>
+                        </div>
+                        <div class="metric-sub-label" id="metric-sub">used of 60 mins max allowed today</div>
+
+                        <div class="meter-bar-track">
+                            <div class="meter-bar-fill" id="metric-progress-fill" style="width: 63%;"></div>
+                        </div>
+
+                        <div class="meter-stats-row">
+                            <span id="metric-status" style="color: var(--ios-green)">✓ Within daily limit • Ready to check in</span>
+                            <span id="metric-pct" style="color: var(--text-secondary); font-family: var(--font-mono);">63%</span>
+                        </div>
+
+                        <!-- Rule Logic Inset Details -->
+                        <div class="smart-rule-details-box" id="rule-spec-card">
+                            <div class="spec-row"><span>Schedule</span><strong>Mon, Wed, Fri, Sun (Odd Days)</strong></div>
+                            <div class="spec-row"><span>Constraint</span><strong>Max 1.0 hr Internet / Mobile Data</strong></div>
+                            <div class="spec-row"><span>Attestation</span><strong>Hardware Attested Nonce #84201</strong></div>
+                        </div>
+                    </div>
+
+                    <!-- Timeline 7-Day Dots Card -->
+                    <div class="timeline-card">
+                        <div class="timeline-label">
+                            Day <span id="current-day-label" style="color: #fff;">2</span> of 7
+                        </div>
+                        <div class="dots-row" id="timeline-dots-row">
+                            <div class="day-dot completed">✓</div>
+                            <div class="day-dot current">2</div>
+                            <div class="day-dot">3</div>
+                            <div class="day-dot">4</div>
+                            <div class="day-dot">5</div>
+                            <div class="day-dot">6</div>
+                            <div class="day-dot">7</div>
+                        </div>
+                    </div>
+
+                    <!-- Hero Clock-In Button -->
+                    <button class="btn-clock-in active" id="hero-clockin-btn" onclick="openBiometricSheet()">
+                        <svg class="icon md" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 12 15 16 10"/></svg>
+                        <div class="btn-clockin-text-wrap">
+                            <span id="clockin-btn-text">VERIFY & CHECK IN TODAY</span>
+                            <span class="btn-clockin-sub">Automated sensor proof + Seed Vault Ed25519 signature</span>
+                        </div>
+                    </button>
+
+                    <!-- Share as Blink Button -->
+                    <button class="btn-share-blink" onclick="shareAsBlink()">
+                        <svg class="icon sm" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                        <span>Share Custom Plan as Solana Blink on X</span>
+                    </button>
+
+                    <!-- 2-Col Metrics -->
+                    <div class="stats-2-col">
+                        <div class="mini-stat-card">
+                            <div class="mini-stat-title">Active Streak</div>
+                            <div class="mini-stat-val" style="color: var(--ios-orange)">
+                                <svg class="icon sm" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+                                <span>4 Days</span>
+                            </div>
+                        </div>
+                        <div class="mini-stat-card">
+                            <div class="mini-stat-title">Forfeited / Burned</div>
+                            <div class="mini-stat-val" style="color: var(--ios-green)">
+                                <span>0 $SKR</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-                <!-- Action Row: Rule Composer & Custom Studio -->
-                <div class="studio-action-grid">
-                    <div class="studio-card-btn highlight" onclick="openComposerModal()">
-                        <div class="card-btn-header">
-                            <svg class="icon md" style="color: var(--solana-teal)" viewBox="0 0 24 24"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></svg>
-                            <span>Rule Composer</span>
-                        </div>
-                        <div class="card-btn-desc">Custom sensor rules (e.g. &lt;1h Net on Odd Days)</div>
-                    </div>
-
-                    <div class="studio-card-btn" onclick="openStudioModal()">
-                        <div class="card-btn-header">
-                            <svg class="icon md" style="color: var(--gold-genesis)" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><polyline points="12 9 12 12 13.5 13.5"/><path d="M16.5 4.5l1.5-1.5M7.5 4.5L6 3"/></svg>
-                            <span>6 AM Club</span>
-                        </div>
-                        <div class="card-btn-desc">Wake-up before 06:00 AM & stake 5,000 $SKR</div>
-                    </div>
-                </div>
-
-                <!-- Horizontal Carousel of Habit Blueprints -->
-                <div class="carousel-outer">
-                    <div class="carousel-fade-edge"></div>
-                    <div class="chips-scroll-track" id="chips-track">
-                        <div class="habit-chip active cyan" onclick="switchCategory('oddInternet', this)">
-                            <svg class="icon sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20M2 12h20"/></svg>
-                            <span>&lt;1h Net (Odd Days)</span>
-                        </div>
-                        <div class="habit-chip" onclick="switchCategory('early6am', this)">
-                            <svg class="icon sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><polyline points="12 9 12 12 13.5 13.5"/></svg>
-                            <span>6:00 AM Club (5k)</span>
-                        </div>
-                        <div class="habit-chip" onclick="switchCategory('steps', this)">
-                            <svg class="icon sm" viewBox="0 0 24 24"><path d="M13 4v16M17 8l-4-4-4 4"/><circle cx="12" cy="4" r="1.5"/><path d="M7 13l3 3 7-7"/></svg>
-                            <span>10,000 Steps</span>
-                        </div>
-                        <div class="habit-chip" onclick="switchCategory('screentime', this)">
-                            <svg class="icon sm" viewBox="0 0 24 24"><rect width="14" height="20" x="5" y="2" rx="3"/><line x1="12" x2="12.01" y1="18" y2="18"/></svg>
-                            <span>App Detox (&lt;2h)</span>
-                        </div>
-                        <div class="habit-chip" onclick="switchCategory('gym', this)">
-                            <svg class="icon sm" viewBox="0 0 24 24"><path d="m6.5 6.5 11 11M21 21l-1-1a2 2 0 0 0-2.8 0L16 21M3 3l1 1a2 2 0 0 0 2.8 0L8 3M14 7l3-3M7 14l-3 3"/></svg>
-                            <span>45m Gym Workout</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Loss Aversion Urgency Box -->
-                <div class="urgency-loss-box">
-                    <div class="urgency-loss-left">
-                        <div class="urgency-title">
-                            <svg class="icon sm" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
-                            <span>Daily Window Deadline</span>
-                        </div>
-                        <div class="urgency-sub">If missed: <strong id="risk-burn-text">357.14 $SKR burned</strong></div>
-                    </div>
-                    <div class="urgency-countdown" id="cutoff-timer-text">04h 28m 14s</div>
-                </div>
-
-                <!-- Hero Commitment Card -->
-                <div class="hero-pledge-card" id="hero-card-elem">
-                    <div class="hero-tag-row">
-                        <span class="pill-badge cyan" id="hero-sensor-tag">
-                            <svg class="icon sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20M2 12h20"/></svg>
-                            <span id="hero-sensor-name">NETWORKSTATS ODD DAYS</span>
-                        </span>
-                        <span class="pill-badge purple" id="hero-stake-tag">
-                            <svg class="icon sm" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                            <span id="hero-stake-val">2,500 $SKR STAKED</span>
-                        </span>
-                    </div>
-
-                    <!-- Metric Row -->
-                    <div class="metric-display-group">
-                        <span class="metric-primary-val" id="metric-integer">38</span>
-                        <span class="metric-unit-tag" id="metric-unit"> mins</span>
-                    </div>
-                    <div class="metric-sub-label" id="metric-sub">used of 60 mins max allowed today</div>
-
-                    <div class="meter-bar-track">
-                        <div class="meter-bar-fill" id="metric-progress-fill" style="width: 63%;"></div>
-                    </div>
-
-                    <div class="meter-stats-row">
-                        <span id="metric-status" style="color: var(--solana-mint)">Within Limit (22m buffer)</span>
-                        <span id="metric-pct" style="color: var(--text-secondary); font-family: var(--font-mono);">63%</span>
-                    </div>
-
-                    <!-- Rule Logic Specification Box -->
-                    <div class="smart-rule-details-box" id="rule-spec-card">
-                        <div>Schedule: <span>Mon, Wed, Fri, Sun (Odd Days)</span></div>
-                        <div>Constraint: <span>Max 1.0 hr Internet / Mobile Data</span></div>
-                        <div>Attestation: <span>Hardware Attested Nonce #84201</span></div>
-                    </div>
-                </div>
-
-                <!-- Timeline 7-Day Dots Card -->
-                <div class="timeline-card">
-                    <div class="timeline-label">
-                        Day <span id="current-day-label" style="color: #fff;">2</span> of 7
-                    </div>
-                    <div class="dots-row" id="timeline-dots-row">
-                        <div class="day-dot completed">✓</div>
-                        <div class="day-dot current">2</div>
-                        <div class="day-dot">3</div>
-                        <div class="day-dot">4</div>
-                        <div class="day-dot">5</div>
-                        <div class="day-dot">6</div>
-                        <div class="day-dot">7</div>
-                    </div>
-                </div>
-
-                <!-- Hero Clock-In Button -->
-                <button class="btn-clock-in active" id="hero-clockin-btn" onclick="openBiometricSheet()" style="height: 60px;">
-                    <svg class="icon md" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                    <div style="display: flex; flex-direction: column; align-items: center; gap: 2px;">
-                        <span id="clockin-btn-text" style="font-size: 13.5px; font-weight: 900; letter-spacing: 0.3px;">VERIFY & CHECK IN TODAY</span>
-                        <span style="font-size: 10px; font-weight: 700; opacity: 0.85;">Automated sensor proof + Seed Vault Ed25519 signature</span>
-                    </div>
-                </button>
-
-                <!-- Share as Blink Button -->
-                <button class="btn-share-blink" onclick="shareAsBlink()">
-                    <svg class="icon sm" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-                    <span>Share Custom Plan as Solana Blink on X</span>
-                </button>
-
-                <!-- 2-Col Metrics -->
-                <div class="stats-2-col">
-                    <div class="mini-stat-card">
-                        <div class="mini-stat-title">Active Streak</div>
-                        <div class="mini-stat-val" style="color: var(--crimson-burn)">
-                            <svg class="icon sm" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
-                            <span>4 Days</span>
-                        </div>
-                    </div>
-                    <div class="mini-stat-card">
-                        <div class="mini-stat-title">Forfeited / Burned</div>
-                        <div class="mini-stat-val" style="color: var(--solana-teal)">
-                            <span>0 $SKR</span>
-                        </div>
-                    </div>
-                </div>
-                </div> <!-- /active-dashboard-content -->
             </div>
 
-            <!-- VIEW 2: EXPLORE / CATALOG -->
+            <!-- VIEW 2: EXPLORE / CATALOG (Apple Inset Grouped) -->
             <div class="tab-panel" id="view-explore">
                 <div class="catalog-title-row">
                     <div>
                         <div class="catalog-main-title">Commitment Catalog</div>
                         <div class="catalog-sub-title">Hardware-attested habit blueprints. Pick one to activate.</div>
                     </div>
-                    <button onclick="openComposerModal()" style="background: rgba(0, 229, 255, 0.15); color: var(--solana-teal); border: 1px solid var(--solana-teal); padding: 6px 12px; border-radius: 10px; font-weight: 800; font-size: 11px; cursor: pointer; display: flex; align-items: center; gap: 5px;">
-                        <svg class="icon sm" viewBox="0 0 24 24"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/></svg>
+                    <button class="btn-ios-pill connect-pill" onclick="openComposerModal()">
                         <span>+ Custom</span>
                     </button>
                 </div>
 
-                <div class="catalog-card-item" onclick="switchCategory('oddInternet', document.querySelectorAll('.habit-chip')[0]); switchNavTab('dashboard', document.querySelectorAll('.nav-dock-item')[0]); showToast('Activated: Odd-Days Internet Detox!');">
-                    <div style="display: flex; align-items: center;">
-                        <div class="catalog-icon-box" style="color: var(--solana-teal);">
+                <div class="ios-grouped-list">
+                    <div class="ios-list-row" onclick="switchCategory('oddInternet', document.querySelectorAll('.habit-chip')[0]); switchNavTab('dashboard', document.querySelectorAll('.nav-dock-item')[0]); showToast('Activated: Odd-Days Internet Detox!');">
+                        <div class="ios-icon-box" style="background: rgba(100, 210, 255, 0.14); color: var(--ios-teal);">
                             <svg class="icon md" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20M2 12h20"/></svg>
                         </div>
-                        <div class="catalog-info">
+                        <div class="ios-row-content">
                             <h4>Odd-Days Internet Detox (&lt;1h)</h4>
                             <p>NetworkStats • Mon/Wed/Fri/Sun • 2,500 $SKR</p>
                         </div>
+                        <div class="app-store-pill active">ACTIVE</div>
                     </div>
-                    <span class="catalog-status-badge" style="color: var(--solana-teal)">ACTIVE</span>
-                </div>
 
-                <div class="catalog-card-item" onclick="switchCategory('early6am', document.querySelectorAll('.habit-chip')[1]); switchNavTab('dashboard', document.querySelectorAll('.nav-dock-item')[0]); showToast('Activated: 6:00 AM Club!');">
-                    <div style="display: flex; align-items: center;">
-                        <div class="catalog-icon-box" style="color: var(--gold-genesis);">
+                    <div class="ios-list-row" onclick="switchCategory('early6am', document.querySelectorAll('.habit-chip')[1]); switchNavTab('dashboard', document.querySelectorAll('.nav-dock-item')[0]); showToast('Activated: 6:00 AM Club!');">
+                        <div class="ios-icon-box" style="background: rgba(255, 159, 10, 0.14); color: var(--ios-orange);">
                             <svg class="icon md" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><polyline points="12 9 12 12 13.5 13.5"/></svg>
                         </div>
-                        <div class="catalog-info">
+                        <div class="ios-row-content">
                             <h4>The 6:00 AM Club (High Stakes)</h4>
-                            <p>Hardware NTP Clock • 7 Days • Stake 5,000 $SKR</p>
+                            <p>Hardware NTP Clock • 7 Days • 5,000 $SKR</p>
                         </div>
+                        <div class="app-store-pill">ACTIVATE</div>
                     </div>
-                    <span class="catalog-status-badge" style="color: var(--gold-genesis)">ACTIVATE</span>
-                </div>
 
-                <div class="catalog-card-item" onclick="switchCategory('steps', document.querySelectorAll('.habit-chip')[2]); switchNavTab('dashboard', document.querySelectorAll('.nav-dock-item')[0]); showToast('Activated: 10,000 Steps Daily!');">
-                    <div style="display: flex; align-items: center;">
-                        <div class="catalog-icon-box" style="color: var(--solana-mint);">
+                    <div class="ios-list-row" onclick="switchCategory('steps', document.querySelectorAll('.habit-chip')[2]); switchNavTab('dashboard', document.querySelectorAll('.nav-dock-item')[0]); showToast('Activated: 10,000 Steps Daily!');">
+                        <div class="ios-icon-box" style="background: rgba(48, 209, 88, 0.14); color: var(--ios-green);">
                             <svg class="icon md" viewBox="0 0 24 24"><path d="M13 4v16M17 8l-4-4-4 4"/><circle cx="12" cy="4" r="1.5"/></svg>
                         </div>
-                        <div class="catalog-info">
+                        <div class="ios-row-content">
                             <h4>10,000 Steps Daily Marathon</h4>
-                            <p>Health Connect Sensors • 7 Days • Stake 1,000 $SKR</p>
+                            <p>Health Connect Sensors • 7 Days • 1,000 $SKR</p>
                         </div>
+                        <div class="app-store-pill">ACTIVATE</div>
                     </div>
-                    <span class="catalog-status-badge" style="color: var(--solana-mint)">ACTIVATE</span>
-                </div>
 
-                <div class="catalog-card-item" onclick="switchCategory('screentime', document.querySelectorAll('.habit-chip')[3]); switchNavTab('dashboard', document.querySelectorAll('.nav-dock-item')[0]); showToast('Activated: Social Media Detox!');">
-                    <div style="display: flex; align-items: center;">
-                        <div class="catalog-icon-box" style="color: var(--solana-purple);">
+                    <div class="ios-list-row" onclick="switchCategory('screentime', document.querySelectorAll('.habit-chip')[3]); switchNavTab('dashboard', document.querySelectorAll('.nav-dock-item')[0]); showToast('Activated: Social Media Detox!');">
+                        <div class="ios-icon-box" style="background: rgba(191, 90, 242, 0.14); color: var(--ios-purple);">
                             <svg class="icon md" viewBox="0 0 24 24"><rect width="14" height="20" x="5" y="2" rx="3"/><line x1="12" x2="12.01" y1="18" y2="18"/></svg>
                         </div>
-                        <div class="catalog-info">
+                        <div class="ios-row-content">
                             <h4>Social Media Detox (&lt;2h)</h4>
-                            <p>Android UsageStats • 14 Days • Stake 1,500 $SKR</p>
+                            <p>Android UsageStats • 14 Days • 1,500 $SKR</p>
                         </div>
+                        <div class="app-store-pill">ACTIVATE</div>
                     </div>
-                    <span class="catalog-status-badge" style="color: var(--solana-purple)">ACTIVATE</span>
-                </div>
 
-                <div class="catalog-card-item" onclick="switchCategory('gym', document.querySelectorAll('.habit-chip')[4]); switchNavTab('dashboard', document.querySelectorAll('.nav-dock-item')[0]); showToast('Activated: Daily 45m Gym Workout!');">
-                    <div style="display: flex; align-items: center;">
-                        <div class="catalog-icon-box" style="color: var(--solana-teal);">
+                    <div class="ios-list-row" onclick="switchCategory('gym', document.querySelectorAll('.habit-chip')[4]); switchNavTab('dashboard', document.querySelectorAll('.nav-dock-item')[0]); showToast('Activated: Daily 45m Gym Workout!');">
+                        <div class="ios-icon-box" style="background: rgba(100, 210, 255, 0.14); color: var(--ios-teal);">
                             <svg class="icon md" viewBox="0 0 24 24"><path d="m6.5 6.5 11 11M21 21l-1-1a2 2 0 0 0-2.8 0L16 21M3 3l1 1a2 2 0 0 0 2.8 0L8 3"/></svg>
                         </div>
-                        <div class="catalog-info">
+                        <div class="ios-row-content">
                             <h4>Daily 45m Gym Workout</h4>
-                            <p>HeartRateRecord Sensors • 7 Days • Stake 750 $SKR</p>
+                            <p>HeartRateRecord Sensors • 7 Days • 750 $SKR</p>
                         </div>
+                        <div class="app-store-pill">ACTIVATE</div>
                     </div>
-                    <span class="catalog-status-badge" style="color: var(--solana-teal)">ACTIVATE</span>
                 </div>
             </div>
 
-            <!-- VIEW 3: LEADERBOARD -->
+            <!-- VIEW 3: LEADERBOARD (Apple Activity Sharing) -->
             <div class="tab-panel" id="view-squads">
                 <div class="catalog-title-row">
                     <div>
@@ -1621,114 +1408,109 @@
                     </div>
                 </div>
 
-                <div class="stats-2-col" style="margin-bottom: 12px;">
-                    <div class="mini-stat-card" style="border-color: rgba(255, 59, 48, 0.3);">
+                <div class="stats-2-col" style="margin-bottom: 14px;">
+                    <div class="mini-stat-card">
                         <div class="mini-stat-title">Total Protocol Burned</div>
-                        <div class="mini-stat-val" style="color: var(--crimson-burn); font-size: 15px;">48,250 $SKR</div>
+                        <div class="mini-stat-val" style="color: var(--ios-red);">48,250 $SKR</div>
                     </div>
-                    <div class="mini-stat-card" style="border-color: rgba(20, 241, 149, 0.3);">
+                    <div class="mini-stat-card">
                         <div class="mini-stat-title">Community Success Rate</div>
-                        <div class="mini-stat-val" style="color: var(--solana-mint); font-size: 15px;">92.4%</div>
+                        <div class="mini-stat-val" style="color: var(--ios-green);">92.4%</div>
                     </div>
                 </div>
 
-                <div class="leader-row">
-                    <div class="leader-rank">1</div>
-                    <div class="leader-user-box">
-                        <div class="leader-avatar">
-                            <svg class="icon sm" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                <div class="ios-grouped-list">
+                    <div class="ios-list-row">
+                        <div class="leader-medal gold">1</div>
+                        <div class="ios-row-content">
+                            <h4>Toly.sol</h4>
+                            <p>14,200 avg steps • 0 burns</p>
                         </div>
-                        <div>
-                            <div style="font-weight: 800; font-size: 14px;">Toly.sol</div>
-                            <div style="font-size: 11px; color: var(--text-secondary);">14,200 avg steps • 0 burns</div>
-                        </div>
+                        <div class="app-store-pill" style="color: var(--ios-orange);">28D STREAK 🔥</div>
                     </div>
-                    <span class="pill-badge amber">28d STREAK 🔥</span>
-                </div>
 
-                <div class="leader-row">
-                    <div class="leader-rank">2</div>
-                    <div class="leader-user-box">
-                        <div class="leader-avatar">
-                            <svg class="icon sm" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    <div class="ios-list-row">
+                        <div class="leader-medal silver">2</div>
+                        <div class="ios-row-content">
+                            <h4>Mert_Helius</h4>
+                            <p>11,800 avg steps • 0 burns</p>
                         </div>
-                        <div>
-                            <div style="font-weight: 800; font-size: 14px;">Mert_Helius</div>
-                            <div style="font-size: 11px; color: var(--text-secondary);">11,800 avg steps • 0 burns</div>
-                        </div>
+                        <div class="app-store-pill" style="color: var(--ios-orange);">21D STREAK 🔥</div>
                     </div>
-                    <span class="pill-badge amber">21d STREAK 🔥</span>
-                </div>
 
-                <div class="leader-row" style="border-color: rgba(20, 241, 149, 0.4); background: rgba(20, 241, 149, 0.06);">
-                    <div class="leader-rank" style="color: var(--solana-mint);">3</div>
-                    <div class="leader-user-box">
-                        <div class="leader-avatar" style="border-color: var(--solana-mint); color: var(--solana-mint);">
-                            <svg class="icon sm" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    <div class="ios-list-row user-row">
+                        <div class="leader-medal bronze" style="background: rgba(48, 209, 88, 0.2); color: var(--ios-green);">3</div>
+                        <div class="ios-row-content">
+                            <h4 style="color: var(--ios-green);">You (Seeker Genesis)</h4>
+                            <p>2,500 $SKR Staked • Net Detox</p>
                         </div>
-                        <div>
-                            <div style="font-weight: 800; font-size: 14px;">You (Seeker Genesis)</div>
-                            <div style="font-size: 11px; color: var(--text-secondary);">2,500 $SKR Staked • Net Detox</div>
-                        </div>
+                        <div class="app-store-pill" style="background: var(--ios-green); color: #000000;">4D STREAK ✨</div>
                     </div>
-                    <span class="pill-badge mint">4d STREAK ✨</span>
                 </div>
             </div>
 
-            <!-- VIEW 4: VAULT / PROFILE -->
+            <!-- VIEW 4: VAULT / PROFILE (Apple Wallet & Awards) -->
             <div class="tab-panel" id="view-vault">
-                <div style="text-align: center; margin: 16px 0 20px 0;">
-                    <div style="width: 54px; height: 54px; border-radius: 18px; background: rgba(20, 241, 149, 0.1); border: 1px solid rgba(20, 241, 149, 0.3); display: inline-flex; align-items: center; justify-content: center; color: var(--solana-mint); margin-bottom: 10px;">
+                <div style="background: #1C1C1E; border-radius: 20px; padding: 22px 16px; text-align: center; margin-bottom: 14px;">
+                    <div style="width: 54px; height: 54px; border-radius: 16px; background: rgba(48, 209, 88, 0.14); display: inline-flex; align-items: center; justify-content: center; color: var(--ios-green); margin-bottom: 10px;">
                         <svg class="icon lg" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
                     </div>
                     <h3 style="font-weight: 800; font-size: 17px;" id="profile-address-text">Seeker...7xK2 (Solana Devnet)</h3>
-                    <p style="font-size: 12px; color: var(--solana-mint); font-family: var(--font-mono); margin-top: 4px;" id="profile-skr-text">2,500 $SKR Locked in Smart Escrow</p>
+                    <p style="font-size: 13px; color: var(--ios-green); font-family: var(--font-mono); margin-top: 4px;" id="profile-skr-text">2,500 $SKR Locked in Smart Escrow</p>
                 </div>
 
-                <button onclick="showToast('Settle request submitted to Seed Vault'); playSuccessChime();" style="width: 100%; height: 46px; background: var(--solana-purple); border: none; border-radius: var(--radius-inner); font-size: 12.5px; font-weight: 800; color: #fff; cursor: pointer; margin-bottom: 14px; font-family: var(--font-sans);">
+                <button onclick="showToast('Settle request submitted to Seed Vault'); playSuccessChime();" class="btn-clock-in" style="height: 48px; background: var(--ios-purple); color: #FFFFFF; box-shadow: 0 4px 20px rgba(191, 90, 242, 0.35);">
                     Settle & Claim Vault Escrow
                 </button>
 
-                <div class="stats-2-col">
+                <div class="stats-2-col" style="margin-top: 10px;">
                     <div class="mini-stat-card">
                         <div class="mini-stat-title">Total Returned</div>
-                        <div class="mini-stat-val" style="color: var(--solana-mint)">1,450 $SKR</div>
+                        <div class="mini-stat-val" style="color: var(--ios-green)">1,450 $SKR</div>
                     </div>
                     <div class="mini-stat-card">
                         <div class="mini-stat-title">Total Burned</div>
-                        <div class="mini-stat-val" style="color: var(--crimson-burn)">100 $SKR</div>
+                        <div class="mini-stat-val" style="color: var(--ios-red)">100 $SKR</div>
                     </div>
                 </div>
 
-                <div style="font-weight: 800; font-size: 12px; margin: 14px 0 8px 0; color: var(--text-secondary); letter-spacing: 0.5px;">
+                <div style="font-weight: 700; font-size: 13px; margin: 16px 0 10px 0; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;">
                     Soulbound Proof-of-Action cNFTs
                 </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                    <div style="background: var(--surface-card); border: 1px solid var(--border-subtle); border-radius: 14px; padding: 12px; text-align: center;">
-                        <svg class="icon md" style="color: var(--solana-teal); margin-bottom: 6px;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20M2 12h20"/></svg>
-                        <div style="font-weight: 800; font-size: 12px;">Data Master</div>
-                        <div style="font-size: 10px; color: var(--solana-teal);">cNFT Verified ✓</div>
+                <div class="nft-award-grid">
+                    <div class="nft-award-card">
+                        <div class="award-icon-circle" style="background: rgba(100, 210, 255, 0.14); color: var(--ios-teal);">
+                            <svg class="icon md" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20M2 12h20"/></svg>
+                        </div>
+                        <div class="award-title">Data Master</div>
+                        <div class="award-tag" style="color: var(--ios-teal);">cNFT Verified ✓</div>
                     </div>
-                    <div style="background: var(--surface-card); border: 1px solid var(--border-subtle); border-radius: 14px; padding: 12px; text-align: center;">
-                        <svg class="icon md" style="color: var(--gold-genesis); margin-bottom: 6px;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><polyline points="12 9 12 12 13.5 13.5"/></svg>
-                        <div style="font-weight: 800; font-size: 12px;">6 AM Club Hero</div>
-                        <div style="font-size: 10px; color: var(--gold-genesis);">cNFT Verified ✓</div>
+                    <div class="nft-award-card">
+                        <div class="award-icon-circle" style="background: rgba(255, 159, 10, 0.14); color: var(--ios-orange);">
+                            <svg class="icon md" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><polyline points="12 9 12 12 13.5 13.5"/></svg>
+                        </div>
+                        <div class="award-title">6 AM Club Hero</div>
+                        <div class="award-tag" style="color: var(--ios-orange);">cNFT Verified ✓</div>
                     </div>
-                    <div style="background: var(--surface-card); border: 1px solid var(--border-subtle); border-radius: 14px; padding: 12px; text-align: center;">
-                        <svg class="icon md" style="color: var(--solana-mint); margin-bottom: 6px;" viewBox="0 0 24 24"><path d="M13 4v16M17 8l-4-4-4 4"/><circle cx="12" cy="4" r="1.5"/></svg>
-                        <div style="font-weight: 800; font-size: 12px;">10k Pioneer</div>
-                        <div style="font-size: 10px; color: var(--solana-mint);">cNFT Verified ✓</div>
+                    <div class="nft-award-card">
+                        <div class="award-icon-circle" style="background: rgba(48, 209, 88, 0.14); color: var(--ios-green);">
+                            <svg class="icon md" viewBox="0 0 24 24"><path d="M13 4v16M17 8l-4-4-4 4"/><circle cx="12" cy="4" r="1.5"/></svg>
+                        </div>
+                        <div class="award-title">10k Pioneer</div>
+                        <div class="award-tag" style="color: var(--ios-green);">cNFT Verified ✓</div>
                     </div>
-                    <div style="background: var(--surface-card); border: 1px solid var(--border-subtle); border-radius: 14px; padding: 12px; text-align: center;">
-                        <svg class="icon md" style="color: var(--solana-purple); margin-bottom: 6px;" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                        <div style="font-weight: 800; font-size: 12px;">Iron Will Genesis</div>
-                        <div style="font-size: 10px; color: var(--solana-purple);">Genesis cNFT ✓</div>
+                    <div class="nft-award-card">
+                        <div class="award-icon-circle" style="background: rgba(191, 90, 242, 0.14); color: var(--ios-purple);">
+                            <svg class="icon md" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        </div>
+                        <div class="award-title">Iron Will Genesis</div>
+                        <div class="award-tag" style="color: var(--ios-purple);">Genesis cNFT ✓</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Bottom Navigation Dock -->
+        <!-- Apple Translucent Bottom Navigation Bar -->
         <div class="bottom-nav-dock">
             <div class="nav-dock-item active" onclick="switchNavTab('dashboard', this)">
                 <svg class="icon md" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
@@ -1748,12 +1530,13 @@
             </div>
         </div>
 
-        <!-- 🧠 SMART RULE COMPOSER MODAL (IFTTT of Habits) -->
+        <!-- 🧠 SMART RULE COMPOSER MODAL (Apple Bottom Sheet) -->
         <div class="modal-scrim" id="composer-modal">
             <div class="modal-panel-content">
+                <div class="ios-sheet-handle"></div>
                 <div class="modal-header-row">
                     <div class="modal-title">
-                        <svg class="icon md" style="color: var(--solana-teal);" viewBox="0 0 24 24"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></svg>
+                        <svg class="icon md" style="color: var(--ios-teal);" viewBox="0 0 24 24"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></svg>
                         <span>Smart Rule Composer</span>
                     </div>
                     <div class="modal-close-btn" onclick="closeComposerModal()">
@@ -1810,10 +1593,10 @@
                 <div class="schedule-preset-row">
                     <div class="preset-badge-btn active" id="sched-odd-btn" onclick="applySchedulePreset('odd')">
                         <svg class="icon sm" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
-                        <span>Odd Days (M/W/F/Su)</span>
+                        <span>Odd Days</span>
                     </div>
                     <div class="preset-badge-btn" id="sched-even-btn" onclick="applySchedulePreset('even')">
-                        <span>Even Days (Tu/Th/Sa)</span>
+                        <span>Even Days</span>
                     </div>
                     <div class="preset-badge-btn" id="sched-all-btn" onclick="applySchedulePreset('all')">
                         <span>Daily</span>
@@ -1832,30 +1615,34 @@
 
                 <!-- 4. Stake Collateral -->
                 <div class="composer-section-label">4. Collateral $SKR (Free Input)</div>
-                <input type="number" class="input-dark-field" id="composer-stake-val" value="2500" style="margin-bottom: 16px;" oninput="updateComposerPreview()">
+                <input type="number" class="input-dark-field" id="composer-stake-val" value="2500" style="margin-bottom: 14px;" oninput="updateComposerPreview()">
 
-                <!-- Live Generated On-Chain Rule Preview -->
-                <div class="smart-code-preview">
-                    <div style="color: var(--solana-teal); font-weight: 800; margin-bottom: 4px;">// ON-CHAIN ESCROW SPECIFICATION</div>
-                    <div style="color: var(--text-primary);" id="preview-rule-text">
+                <!-- Apple Shortcuts Style Natural Summary -->
+                <div class="apple-shortcuts-card">
+                    <div class="apple-shortcuts-header">
+                        <svg class="icon sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+                        <span>Smart Escrow Logic Specification</span>
+                    </div>
+                    <div class="apple-shortcuts-text" id="preview-rule-text">
                         IF (Internet & Data &lt;= 1.0 Hours) ON (Odd Days: Mon, Wed, Fri, Sun)<br>
                         THEN Unlock Daily Clock-In (Seed Vault Sign)<br>
                         ELSE Burn 357.14 $SKR from PDA Escrow
                     </div>
                 </div>
 
-                <button onclick="deployComposerRule()" style="width: 100%; height: 56px; background: linear-gradient(135deg, var(--solana-teal) 0%, var(--solana-mint) 100%); border: none; border-radius: var(--radius-inner); font-size: 14px; font-weight: 800; color: #030407; cursor: pointer; font-family: var(--font-sans); box-shadow: 0 10px 28px rgba(0, 229, 255, 0.25);">
+                <button onclick="deployComposerRule()" class="btn-clock-in" style="height: 50px;">
                     DEPLOY SMART RULE (2,500 $SKR)
                 </button>
             </div>
         </div>
 
-        <!-- ✨ CUSTOM 6 AM GOAL BUILDER MODAL -->
+        <!-- ✨ 6 AM CLUB BUILDER MODAL -->
         <div class="modal-scrim" id="studio-modal">
             <div class="modal-panel-content">
+                <div class="ios-sheet-handle"></div>
                 <div class="modal-header-row">
                     <div class="modal-title">
-                        <svg class="icon md" style="color: var(--gold-genesis)" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><polyline points="12 9 12 12 13.5 13.5"/></svg>
+                        <svg class="icon md" style="color: var(--ios-orange)" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><polyline points="12 9 12 12 13.5 13.5"/></svg>
                         <span>6:00 AM Club Builder</span>
                     </div>
                     <div class="modal-close-btn" onclick="closeStudioModal()">
@@ -1864,21 +1651,24 @@
                 </div>
 
                 <div class="composer-section-label">Wake-Up Cutoff Time</div>
-                <input type="text" class="input-dark-field" value="06:00 AM" style="margin-bottom: 14px;" readonly>
+                <input type="text" class="input-dark-field" value="06:00 AM" style="margin-bottom: 12px;" readonly>
 
                 <div class="composer-section-label">Collateral $SKR</div>
-                <input type="number" class="input-dark-field" value="5000" style="margin-bottom: 18px;" readonly>
+                <input type="number" class="input-dark-field" value="5000" style="margin-bottom: 14px;" readonly>
 
-                <div class="smart-code-preview">
-                    <div style="color: var(--gold-genesis); font-weight: 800; margin-bottom: 4px;">// HARDWARE CLOCK SPECIFICATION</div>
-                    <div style="color: var(--text-primary);">
+                <div class="apple-shortcuts-card">
+                    <div class="apple-shortcuts-header" style="color: var(--ios-orange);">
+                        <svg class="icon sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+                        <span>Hardware NTP Clock Specification</span>
+                    </div>
+                    <div class="apple-shortcuts-text">
                         IF (Clock-In Timestamp &lt;= 06:00 AM) NTP-attested<br>
                         THEN Mark Day Valid &amp; Safe<br>
                         ELSE Burn 714.28 $SKR on-chain
                     </div>
                 </div>
 
-                <button onclick="deployStudioGoal()" style="width: 100%; height: 56px; background: linear-gradient(135deg, var(--gold-genesis) 0%, var(--warning-amber) 100%); border: none; border-radius: var(--radius-inner); font-size: 14px; font-weight: 800; color: #030407; cursor: pointer; font-family: var(--font-sans); box-shadow: 0 10px 28px rgba(245, 158, 11, 0.25);">
+                <button onclick="deployStudioGoal()" class="btn-clock-in" style="height: 50px; background: var(--ios-orange); color: #000000; box-shadow: 0 4px 20px rgba(255, 159, 10, 0.35);">
                     LOCK 5,000 $SKR IN ESCROW
                 </button>
             </div>
@@ -1886,10 +1676,11 @@
 
         <!-- 💡 30-SECOND INTERACTIVE HOW IT WORKS MODAL -->
         <div class="modal-scrim" id="howitworks-modal">
-            <div class="modal-panel-content" style="max-height: 85vh; overflow-y: auto;">
+            <div class="modal-panel-content">
+                <div class="ios-sheet-handle"></div>
                 <div class="modal-header-row">
                     <div>
-                        <div class="modal-title" style="color: var(--solana-mint);">
+                        <div class="modal-title" style="color: var(--ios-green);">
                             <span>💡 How bozPLEDGE Works</span>
                         </div>
                         <div style="font-size: 11.5px; color: var(--text-secondary); margin-top: 2px;">
@@ -1901,34 +1692,31 @@
                     </div>
                 </div>
 
-                <!-- Step 1 -->
-                <div style="background: var(--surface-deep); border: 1px solid var(--border-subtle); border-radius: 14px; padding: 14px; display: flex; gap: 12px; margin-top: 14px; align-items: flex-start;">
-                    <div style="width: 34px; height: 34px; border-radius: 50%; background: rgba(153, 69, 255, 0.16); border: 1px solid rgba(153, 69, 255, 0.4); display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--solana-purple); font-size: 14px; flex-shrink: 0;">1</div>
-                    <div>
-                        <div style="font-size: 13px; font-weight: 800; color: #fff; margin-bottom: 3px;">1. Stake Collateral (Skin In The Game)</div>
-                        <div style="font-size: 11px; color: var(--text-secondary); line-height: 1.5;">Choose a pledge (Screen Time, Steps, Early Wakeup) and lock $SKR tokens in the smart contract escrow. Tangible financial stakes destroy excuses.</div>
+                <div class="ios-grouped-list" style="margin-bottom: 16px;">
+                    <div class="ios-list-row">
+                        <div class="ios-icon-box" style="background: rgba(191, 90, 242, 0.16); color: var(--ios-purple); font-weight: 800;">1</div>
+                        <div class="ios-row-content">
+                            <h4>Stake Collateral (Skin In The Game)</h4>
+                            <p>Lock $SKR tokens in escrow. Tangible stakes eliminate procrastination.</p>
+                        </div>
+                    </div>
+                    <div class="ios-list-row">
+                        <div class="ios-icon-box" style="background: rgba(100, 210, 255, 0.16); color: var(--ios-teal); font-weight: 800;">2</div>
+                        <div class="ios-row-content">
+                            <h4>Zero-Cheat Hardware Attestation</h4>
+                            <p>No manual self-reporting. Seeker phone sensors prove discipline cryptographically.</p>
+                        </div>
+                    </div>
+                    <div class="ios-list-row">
+                        <div class="ios-icon-box" style="background: rgba(48, 209, 88, 0.16); color: var(--ios-green); font-weight: 800;">3</div>
+                        <div class="ios-row-content">
+                            <h4>Reclaim + Soulbound cNFT or Burn</h4>
+                            <p>Fulfill your pledge to reclaim 100% collateral and earn medals. Miss a day and tokens burn.</p>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Step 2 -->
-                <div style="background: var(--surface-deep); border: 1px solid var(--border-subtle); border-radius: 14px; padding: 14px; display: flex; gap: 12px; margin-top: 10px; align-items: flex-start;">
-                    <div style="width: 34px; height: 34px; border-radius: 50%; background: rgba(0, 229, 255, 0.16); border: 1px solid rgba(0, 229, 255, 0.4); display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--solana-teal); font-size: 14px; flex-shrink: 0;">2</div>
-                    <div>
-                        <div style="font-size: 13px; font-weight: 800; color: #fff; margin-bottom: 3px;">2. Zero-Cheat Hardware Attestation</div>
-                        <div style="font-size: 11px; color: var(--text-secondary); line-height: 1.5;">No manual self-reporting. Seeker and phone sensors (Network usage, pedometer, hardware RTC clock) verify your discipline with tamper-proof cryptographic proofs.</div>
-                    </div>
-                </div>
-
-                <!-- Step 3 -->
-                <div style="background: var(--surface-deep); border: 1px solid var(--border-subtle); border-radius: 14px; padding: 14px; display: flex; gap: 12px; margin-top: 10px; align-items: flex-start;">
-                    <div style="width: 34px; height: 34px; border-radius: 50%; background: rgba(20, 241, 149, 0.16); border: 1px solid rgba(20, 241, 149, 0.4); display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--solana-mint); font-size: 14px; flex-shrink: 0;">3</div>
-                    <div>
-                        <div style="font-size: 13px; font-weight: 800; color: #fff; margin-bottom: 3px;">3. Reclaim + Soulbound cNFT or Burn</div>
-                        <div style="font-size: 11px; color: var(--text-secondary); line-height: 1.5;">Fulfill your pledge to reclaim 100% of your collateral plus earn permanent Soulbound cNFT medals. Miss a day and tokens are burned on-chain.</div>
-                    </div>
-                </div>
-
-                <button onclick="closeHowItWorksModal()" style="width: 100%; height: 50px; background: var(--solana-mint); border: none; border-radius: var(--radius-inner); font-size: 13.5px; font-weight: 900; color: #030407; cursor: pointer; margin-top: 18px; font-family: var(--font-sans); box-shadow: 0 8px 24px rgba(20, 241, 149, 0.25);">
+                <button onclick="closeHowItWorksModal()" class="btn-clock-in" style="height: 48px;">
                     Got It, Let's Start!
                 </button>
             </div>
@@ -1937,18 +1725,19 @@
         <!-- 🔒 BIOMETRIC SEED VAULT SIGNING SHEET -->
         <div class="biometric-modal-sheet" id="biometric-sheet">
             <div class="biometric-sheet-card">
-                <div style="font-size: 12px; font-weight: 800; color: var(--solana-mint); letter-spacing: 0.8px; text-transform: uppercase;">
+                <div class="ios-sheet-handle"></div>
+                <div style="font-size: 11px; font-weight: 700; color: var(--ios-green); letter-spacing: 0.8px; text-transform: uppercase;">
                     Seeker Seed Vault Hardware Sign
                 </div>
-                <div style="font-size: 17px; font-weight: 800; margin: 4px 0 2px 0;">Day <span id="bio-day-index">2</span> Daily Clock-In</div>
+                <div style="font-size: 18px; font-weight: 800; margin: 4px 0 2px 0;">Day <span id="bio-day-index">2</span> Daily Clock-In</div>
                 <div style="font-size: 12px; color: var(--text-secondary);" id="bio-instruction-text">
                     Hold sensor to sign with Seed Vault
                 </div>
 
                 <div class="biometric-sensor-circle" onmousedown="startFingerprintHold()" onmouseup="endFingerprintHold()" ontouchstart="startFingerprintHold()" ontouchend="endFingerprintHold()">
-                    <svg class="progress-ring" width="100" height="100">
-                        <circle stroke="rgba(255,255,255,0.06)" stroke-width="4" fill="transparent" r="38" cx="50" cy="50"/>
-                        <circle id="bio-progress-circle" stroke="var(--solana-mint)" stroke-width="4" stroke-dasharray="240" stroke-dashoffset="240" stroke-linecap="round" fill="transparent" r="38" cx="50" cy="50" style="transition: stroke-dashoffset 0.05s linear;"/>
+                    <svg class="progress-ring" width="86" height="86">
+                        <circle stroke="rgba(255,255,255,0.08)" stroke-width="4" fill="transparent" r="38" cx="43" cy="43"/>
+                        <circle id="bio-progress-circle" stroke="var(--ios-green)" stroke-width="4" stroke-dasharray="240" stroke-dashoffset="240" stroke-linecap="round" fill="transparent" r="38" cx="43" cy="43" style="transition: stroke-dashoffset 0.05s linear;"/>
                     </svg>
                     <div class="biometric-core-btn">
                         <svg class="icon lg" viewBox="0 0 24 24"><path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4"/><path d="M14 13.12c0 2.38 0 6.38-1 8.88"/><path d="M2 16h.01"/><path d="M21.8 16c.2-2 .131-5.354 0-6"/><path d="M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2"/><path d="M8.65 22c.21-.66.45-1.32.57-2"/><path d="M9 6.8a6 6 0 0 1 9 5.2v2"/><path d="M12 2a10 10 0 0 0-6.88 17.24"/></svg>
@@ -1958,7 +1747,7 @@
                 <div style="font-family: var(--font-mono); font-size: 10px; color: var(--text-muted); margin-bottom: 8px;">
                     ECDSA Secp256r1 Key #8472 • Secure Element Enclave
                 </div>
-                <div style="font-size: 11px; color: var(--text-secondary); cursor: pointer; text-decoration: underline;" onclick="closeBiometricSheet()">
+                <div style="font-size: 12px; color: var(--text-secondary); cursor: pointer; text-decoration: underline;" onclick="closeBiometricSheet()">
                     Cancel
                 </div>
             </div>
@@ -1966,12 +1755,13 @@
 
         <!-- 🧪 JUDGE SANDBOX DRAWER -->
         <div class="sandbox-drawer" id="sandbox-drawer">
+            <div class="ios-sheet-handle"></div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 800; color: var(--solana-teal); letter-spacing: 0.5px;">
+                <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: var(--ios-teal); letter-spacing: 0.5px;">
                     <svg class="icon sm" viewBox="0 0 24 24"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/></svg>
                     <span>HACKATHON JUDGE SANDBOX</span>
                 </div>
-                <div style="font-family: var(--font-mono); font-size: 11px; font-weight: 800; color: var(--crimson-burn);" id="drawer-timer">
+                <div style="font-family: var(--font-mono); font-size: 11px; font-weight: 700; color: var(--ios-red);" id="drawer-timer">
                     30s Day: 25s
                 </div>
             </div>
@@ -1980,22 +1770,21 @@
                 <span>Simulate Telemetry Value:</span>
                 <strong id="drawer-slider-val" style="color: #fff; font-family: var(--font-mono);">38 mins</strong>
             </div>
-            <input type="range" id="demo-slider" min="10" max="90" step="5" value="38" oninput="handleDrawerSlider(this.value)" style="width: 100%; margin-bottom: 14px; accent-color: var(--solana-teal);">
+            <input type="range" id="demo-slider" min="10" max="90" step="5" value="38" oninput="handleDrawerSlider(this.value)" style="width: 100%; margin-bottom: 14px; accent-color: var(--ios-teal);">
 
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                 <span style="font-size: 11px; color: var(--text-muted);">Advance timestamp by 24h:</span>
-                <button onclick="handleFastForwardDay()" style="background: rgba(0, 229, 255, 0.15); border: 1px solid var(--solana-teal); color: var(--solana-teal); font-family: var(--font-sans); font-size: 12px; font-weight: 800; padding: 6px 14px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                <button onclick="handleFastForwardDay()" class="btn-ios-pill" style="background: rgba(100, 210, 255, 0.15); color: var(--ios-teal);">
                     <span>Next Day</span>
                     <svg class="icon sm" viewBox="0 0 24 24"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" x2="19" y1="5" y2="19"/></svg>
                 </button>
             </div>
 
-            <!-- State Toggle for Judges / Test From Scratch -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding-top: 10px; border-top: 1px solid var(--border-subtle);">
-                <button onclick="simulateFreshUser()" style="background: var(--surface-card); border: 1px solid var(--border-subtle); color: var(--text-secondary); font-family: var(--font-sans); font-size: 11px; font-weight: 700; padding: 7px 10px; border-radius: 10px; cursor: pointer;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding-top: 10px; border-top: 0.5px solid var(--ios-separator);">
+                <button onclick="simulateFreshUser()" class="btn-ios-pill" style="width: 100%; justify-content: center; height: 38px;">
                     Reset: Day 0 (Fresh)
                 </button>
-                <button onclick="simulateActiveUser()" style="background: rgba(20, 241, 149, 0.1); border: 1px solid var(--solana-mint); color: var(--solana-mint); font-family: var(--font-sans); font-size: 11px; font-weight: 700; padding: 7px 10px; border-radius: 10px; cursor: pointer;">
+                <button onclick="simulateActiveUser()" class="btn-ios-pill" style="width: 100%; justify-content: center; height: 38px; background: rgba(48, 209, 88, 0.15); color: var(--ios-green);">
                     Resume: Day 2 (Active)
                 </button>
             </div>
@@ -2004,6 +1793,7 @@
         <!-- WALLET CONNECT MODAL -->
         <div class="modal-scrim" id="wallet-modal">
             <div class="modal-panel-content">
+                <div class="ios-sheet-handle"></div>
                 <div class="modal-header-row">
                     <div class="modal-title">
                         <svg class="icon md" viewBox="0 0 24 24"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg>
@@ -2014,47 +1804,43 @@
                     </div>
                 </div>
 
-                <div class="catalog-card-item" onclick="selectWallet('Seeker Seed Vault')">
-                    <div style="display: flex; align-items: center;">
-                        <div class="catalog-icon-box" style="color: var(--solana-mint);">
+                <div class="ios-grouped-list">
+                    <div class="ios-list-row" onclick="selectWallet('Seeker Seed Vault')">
+                        <div class="ios-icon-box" style="background: rgba(48, 209, 88, 0.14); color: var(--ios-green);">
                             <svg class="icon md" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                         </div>
-                        <div class="catalog-info">
+                        <div class="ios-row-content">
                             <h4>Seeker Seed Vault</h4>
                             <p>Hardware Security Enclave • Genesis Attested</p>
                         </div>
+                        <svg class="icon sm" style="color: var(--text-muted);" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
                     </div>
-                    <svg class="icon sm" style="color: var(--text-muted);" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-                </div>
 
-                <div class="catalog-card-item" onclick="selectWallet('Phantom Wallet')">
-                    <div style="display: flex; align-items: center;">
-                        <div class="catalog-icon-box" style="color: var(--solana-purple);">
+                    <div class="ios-list-row" onclick="selectWallet('Phantom Wallet')">
+                        <div class="ios-icon-box" style="background: rgba(191, 90, 242, 0.14); color: var(--ios-purple);">
                             <svg class="icon md" viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-10 10c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/></svg>
                         </div>
-                        <div class="catalog-info">
+                        <div class="ios-row-content">
                             <h4>Phantom Mobile</h4>
                             <p>Solana Mobile Wallet Adapter (MWA 2.0)</p>
                         </div>
+                        <svg class="icon sm" style="color: var(--text-muted);" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
                     </div>
-                    <svg class="icon sm" style="color: var(--text-muted);" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-                </div>
 
-                <div class="catalog-card-item" onclick="selectWallet('Solflare')">
-                    <div style="display: flex; align-items: center;">
-                        <div class="catalog-icon-box" style="color: var(--warning-amber);">
+                    <div class="ios-list-row" onclick="selectWallet('Solflare')">
+                        <div class="ios-icon-box" style="background: rgba(255, 159, 10, 0.14); color: var(--ios-orange);">
                             <svg class="icon md" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
                         </div>
-                        <div class="catalog-info">
+                        <div class="ios-row-content">
                             <h4>Solflare</h4>
                             <p>Solana dApp Browser</p>
                         </div>
+                        <svg class="icon sm" style="color: var(--text-muted);" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
                     </div>
-                    <svg class="icon sm" style="color: var(--text-muted);" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
                 </div>
 
                 <div id="disconnect-btn-wrap" style="display: none; margin-top: 14px;">
-                    <button onclick="disconnectWallet()" style="width: 100%; height: 46px; background: rgba(255, 59, 48, 0.12); border: 1px solid var(--crimson-burn); color: var(--crimson-burn); border-radius: var(--radius-inner); font-weight: 800; font-family: var(--font-sans); cursor: pointer;">
+                    <button onclick="disconnectWallet()" class="btn-ios-pill" style="width: 100%; justify-content: center; height: 44px; color: var(--ios-red); background: rgba(255, 69, 58, 0.12);">
                         Disconnect Wallet
                     </button>
                 </div>
@@ -2063,7 +1849,7 @@
 
     </div>
 
-    <script>
+<script>
         // Web Audio Synthesizer
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 

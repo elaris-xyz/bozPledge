@@ -440,25 +440,36 @@ fun CreateCommitmentScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Smart Rule Logic Specification Box
+            // Smart Rule Logic Specification Box (Apple Shortcuts style)
             Card(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .border(1.dp, SolanaGreen.copy(alpha = 0.4f), RoundedCornerShape(18.dp)),
-                colors = CardDefaults.cardColors(containerColor = DarkSurfaceElevated)
+                    .fillMaxWidth(),
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = SurfaceCard)
             ) {
-                Column(modifier = Modifier.padding(18.dp)) {
-                    Text(
-                        text = "// GENERATED ON-CHAIN SPECIFICATION",
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Black,
-                        color = SolanaTeal,
-                        letterSpacing = 0.5.sp
-                    )
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Security,
+                            contentDescription = null,
+                            tint = AppleTeal,
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Text(
+                            text = "SMART ESCROW SPECIFICATION",
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = AppleTeal,
+                            letterSpacing = 0.5.sp
+                        )
+                    }
                     Spacer(modifier = Modifier.height(8.dp))
 
                     val dailyLoss = (stakeAmount / 7).toInt()
-                    val ruleDesc = "IF (${activeRule.sensorType.displayName} <= ${activeRule.thresholdLimit} ${activeRule.unit}) ON (${activeRule.schedulePreset.displayName})\nTHEN Unlock Daily Clock-In\nELSE Burn $dailyLoss \$SKR from PDA Escrow"
+                    val ruleDesc = "IF (${activeRule.sensorType.displayName} <= ${activeRule.thresholdLimit} ${activeRule.unit}) ON (${activeRule.schedulePreset.displayName})\nTHEN Unlock Daily Clock-In (Seed Vault Sign)\nELSE Burn $dailyLoss \$SKR from PDA Escrow"
 
                     Text(
                         text = ruleDesc,
@@ -470,9 +481,9 @@ fun CreateCommitmentScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
-            // Deploy Button
+            // Deploy Button (Solid Apple Fitness Green Capsule)
             Button(
                 onClick = {
                     val stepsTarget = activeRule.thresholdLimit.toInt()
@@ -480,15 +491,15 @@ fun CreateCommitmentScreen(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(58.dp),
-                shape = RoundedCornerShape(18.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = SolanaGreen)
+                    .height(52.dp),
+                shape = RoundedCornerShape(50),
+                colors = ButtonDefaults.buttonColors(containerColor = AppleGreen)
             ) {
                 Text(
-                    text = "DEPLOY SMART RULE (${stakeAmount.toInt()} \$SKR)",
+                    text = "Deploy Smart Rule (${stakeAmount.toInt()} \$SKR)",
                     color = Color.Black,
-                    fontWeight = FontWeight.Black,
-                    fontSize = 15.sp
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.5.sp
                 )
             }
 

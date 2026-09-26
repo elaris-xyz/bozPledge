@@ -60,22 +60,21 @@ fun SettleScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Breakdown Card
+        // Breakdown Card (Apple Inset Grouped style)
         Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .border(1.dp, DarkBorder, RoundedCornerShape(20.dp)),
-            colors = CardDefaults.cardColors(containerColor = DarkSurface)
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(20.dp),
+            colors = CardDefaults.cardColors(containerColor = SurfaceCard)
         ) {
             Column(modifier = Modifier.padding(20.dp)) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(text = "Refund to Wallet:", color = TextSecondary, fontSize = 14.sp)
+                    Text(text = "Refund to Wallet", color = TextSecondary, fontSize = 14.sp)
                     Text(
                         text = "${state.refundAmountSKR.toInt()} \$SKR",
-                        color = SolanaGreen,
+                        color = AppleGreen,
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp
                     )
@@ -87,17 +86,17 @@ fun SettleScreen(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(text = "Burned On-Chain:", color = TextSecondary, fontSize = 14.sp)
+                    Text(text = "Burned On-Chain", color = TextSecondary, fontSize = 14.sp)
                     Text(
                         text = "${state.burnAmountSKR.toInt()} \$SKR",
-                        color = FlameBurn,
+                        color = AppleRed,
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp
                     )
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
-                Divider(color = DarkBorder)
+                Divider(color = DarkBorder, thickness = 0.5.dp)
                 Spacer(modifier = Modifier.height(12.dp))
 
                 Text(
@@ -109,41 +108,41 @@ fun SettleScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(36.dp))
+        Spacer(modifier = Modifier.height(32.dp))
 
         if (!state.settled) {
             Button(
                 onClick = onSettleConfirmed,
-                colors = ButtonDefaults.buttonColors(containerColor = if (state.completedDays == state.totalDays) SolanaGreen else FlameBurn),
-                shape = RoundedCornerShape(18.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = if (state.completedDays == state.totalDays) AppleGreen else AppleRed),
+                shape = RoundedCornerShape(50),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(58.dp)
+                    .height(52.dp)
             ) {
                 if (isSettling) {
-                    CircularProgressIndicator(color = DarkBackground, modifier = Modifier.size(24.dp))
+                    CircularProgressIndicator(color = Color.Black, modifier = Modifier.size(24.dp))
                 } else {
                     Text(
-                        text = "EXECUTE SETTLE ON-CHAIN",
-                        fontWeight = FontWeight.Black,
-                        fontSize = 15.sp,
-                        color = DarkBackground
+                        text = "Execute Settle On-Chain",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.5.sp,
+                        color = if (state.completedDays == state.totalDays) Color.Black else Color.White
                     )
                 }
             }
         } else {
             Button(
                 onClick = onDone,
-                colors = ButtonDefaults.buttonColors(containerColor = SolanaPurple),
-                shape = RoundedCornerShape(18.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = ApplePurple),
+                shape = RoundedCornerShape(50),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(58.dp)
+                    .height(52.dp)
             ) {
                 Text(
-                    text = "START NEXT COMMITMENT",
+                    text = "Start Next Commitment",
                     fontWeight = FontWeight.Bold,
-                    fontSize = 15.sp,
+                    fontSize = 14.5.sp,
                     color = Color.White
                 )
             }

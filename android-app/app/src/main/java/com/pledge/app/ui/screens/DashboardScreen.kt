@@ -147,16 +147,16 @@ fun DashboardScreen(
     Scaffold(
         containerColor = BgVoid,
         bottomBar = {
-            // Bottom Navigation Dock with 4 functional tabs
+            // Apple Translucent Tab Bar
             Surface(
-                color = SurfaceDeep.copy(alpha = 0.96f),
-                border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle),
+                color = SurfaceCard.copy(alpha = 0.94f),
+                border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 8.dp, vertical = 8.dp),
+                        .padding(horizontal = 8.dp, vertical = 6.dp),
                     horizontalArrangement = Arrangement.SpaceAround,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -172,35 +172,25 @@ fun DashboardScreen(
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier
-                                .clip(RoundedCornerShape(14.dp))
                                 .clickable {
                                     haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                                     selectedNavTab = index
                                 }
-                                .padding(horizontal = 14.dp, vertical = 6.dp)
+                                .padding(horizontal = 14.dp, vertical = 4.dp)
                         ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(36.dp)
-                                    .clip(RoundedCornerShape(10.dp))
-                                    .background(
-                                        if (isSelected) SolanaMint.copy(alpha = 0.16f) else Color.Transparent
-                                    ),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-                                    imageVector = icon,
-                                    contentDescription = title,
-                                    tint = if (isSelected) SolanaMint else TextMuted,
-                                    modifier = Modifier.size(20.dp)
-                                )
-                            }
+                            Icon(
+                                imageVector = icon,
+                                contentDescription = title,
+                                tint = if (isSelected) AppleGreen else TextMuted,
+                                modifier = Modifier.size(22.dp)
+                            )
                             Spacer(modifier = Modifier.height(2.dp))
                             Text(
                                 text = title,
-                                fontSize = 11.sp,
-                                fontWeight = if (isSelected) FontWeight.ExtraBold else FontWeight.Medium,
-                                color = if (isSelected) SolanaMint else TextMuted
+                                fontFamily = PlusJakartaSans,
+                                fontSize = 10.5.sp,
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                                color = if (isSelected) AppleGreen else TextMuted
                             )
                         }
                     }
@@ -213,122 +203,129 @@ fun DashboardScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            // 1. TOP APP HEADER
+            // 1. TOP APP HEADER (Apple Navigation Bar)
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 14.dp, vertical = 10.dp),
+                    .padding(horizontal = 16.dp, vertical = 10.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Brand Logo Mark + Text
+                // Brand Logo Mark + Text + Subtitle
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(7.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Box(
                         modifier = Modifier
-                            .size(30.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(
-                                Brush.linearGradient(
-                                    listOf(
-                                        SolanaMint.copy(alpha = 0.22f),
-                                        SolanaPurple.copy(alpha = 0.28f)
-                                    )
-                                )
-                            )
-                            .border(1.dp, SolanaMint.copy(alpha = 0.45f), RoundedCornerShape(8.dp)),
+                            .size(34.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(SurfaceCard)
+                            .border(0.5.dp, BorderSubtle, RoundedCornerShape(10.dp)),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Lock,
+                            imageVector = Icons.Default.Shield,
                             contentDescription = "Logo",
-                            tint = SolanaMint,
-                            modifier = Modifier.size(15.dp)
+                            tint = AppleGreen,
+                            modifier = Modifier.size(18.dp)
                         )
                     }
 
-                    Row {
-                        Text(
-                            text = "boz",
-                            fontFamily = SpaceGrotesk,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Black,
-                            color = TextPrimary,
-                            letterSpacing = (-0.5).sp
-                        )
-                        Text(
-                            text = "PLEDGE",
-                            fontFamily = SpaceGrotesk,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Black,
-                            color = SolanaMint,
-                            letterSpacing = (-0.5).sp
-                        )
+                    Column {
+                        Row {
+                            Text(
+                                text = "boz",
+                                fontFamily = PlusJakartaSans,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.ExtraBold,
+                                color = TextPrimary,
+                                letterSpacing = (-0.5).sp
+                            )
+                            Text(
+                                text = "PLEDGE",
+                                fontFamily = PlusJakartaSans,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.ExtraBold,
+                                color = AppleGreen,
+                                letterSpacing = (-0.5).sp
+                            )
+                        }
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(6.dp)
+                                    .clip(CircleShape)
+                                    .background(AppleGreen)
+                            )
+                            Text(
+                                text = "Seeker Hardware Protected",
+                                fontSize = 10.sp,
+                                color = TextSecondary,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
                     }
                 }
 
-                // Header Actions: "Guide" + "Judge" + "Connect"
+                // Header Actions: "Guide" + "Judge" + "Connect" (Apple Translucent Capsules)
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(5.dp)
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     // Guide Pill Button
                     Surface(
-                        color = GoldGenesis.copy(alpha = 0.14f),
-                        shape = RoundedCornerShape(10.dp),
-                        border = androidx.compose.foundation.BorderStroke(1.dp, GoldGenesis.copy(alpha = 0.35f)),
+                        color = SurfaceCard,
+                        shape = RoundedCornerShape(50),
                         modifier = Modifier.clickable {
                             haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                             isHowItWorksOpen = true
                         }
                     ) {
                         Row(
-                            modifier = Modifier.padding(horizontal = 7.dp, vertical = 5.dp),
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(3.dp)
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
-                            Text(
-                                text = "💡",
-                                fontSize = 10.sp
-                            )
+                            Text(text = "💡", fontSize = 11.sp)
                             Text(
                                 text = "Guide",
                                 fontFamily = PlusJakartaSans,
-                                fontSize = 10.5.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = GoldGenesis
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = TextPrimary
                             )
                         }
                     }
 
                     // Judge Button
                     Surface(
-                        color = SurfaceDeep,
-                        shape = RoundedCornerShape(10.dp),
-                        border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle),
+                        color = SurfaceCard,
+                        shape = RoundedCornerShape(50),
                         modifier = Modifier.clickable {
                             haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                             isJudgeSheetOpen = true
                         }
                     ) {
                         Row(
-                            modifier = Modifier.padding(horizontal = 7.dp, vertical = 5.dp),
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(3.dp)
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Gavel,
                                 contentDescription = "Judge",
                                 tint = TextSecondary,
-                                modifier = Modifier.size(11.dp)
+                                modifier = Modifier.size(12.dp)
                             )
                             Text(
                                 text = "Judge",
                                 fontFamily = PlusJakartaSans,
-                                fontSize = 10.5.sp,
-                                fontWeight = FontWeight.Bold,
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.SemiBold,
                                 color = TextSecondary
                             )
                         }
@@ -337,34 +334,30 @@ fun DashboardScreen(
                     // Connect Wallet Button
                     val isConnected = walletAddress != null && !walletAddress.contains("SeekerPledgeDemo")
                     Surface(
-                        color = if (isConnected) SolanaMint.copy(alpha = 0.12f) else SurfaceDeep,
-                        shape = RoundedCornerShape(10.dp),
-                        border = androidx.compose.foundation.BorderStroke(
-                            1.dp,
-                            if (isConnected) SolanaMint.copy(alpha = 0.35f) else BorderSubtle
-                        ),
+                        color = if (isConnected) AppleGreen.copy(alpha = 0.15f) else SurfaceCard,
+                        shape = RoundedCornerShape(50),
                         modifier = Modifier.clickable {
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                             onConnectWallet()
                         }
                     ) {
                         Row(
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 5.dp),
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            horizontalArrangement = Arrangement.spacedBy(5.dp)
                         ) {
                             Box(
                                 modifier = Modifier
                                     .size(6.dp)
                                     .clip(CircleShape)
-                                    .background(if (isConnected) SolanaMint else CrimsonBurn)
+                                    .background(if (isConnected) AppleGreen else AppleRed)
                             )
                             Text(
                                 text = if (isConnected) "${walletAddress?.take(4)}...${walletAddress?.takeLast(4)}" else "Connect",
                                 fontFamily = PlusJakartaSans,
-                                fontSize = 10.5.sp,
+                                fontSize = 11.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = TextPrimary
+                                color = if (isConnected) AppleGreen else TextPrimary
                             )
                         }
                     }
@@ -517,12 +510,12 @@ fun ActiveTabContent(
             .verticalScroll(scrollState)
             .padding(horizontal = 16.dp, vertical = 10.dp)
     ) {
-        // Helpful Orientation Tip Banner
+        // Helpful Orientation Tip Banner (Apple Tips style)
         if (showTipBanner) {
             Surface(
-                color = SolanaPurple.copy(alpha = 0.12f),
+                color = SurfaceCard,
                 shape = RoundedCornerShape(16.dp),
-                border = androidx.compose.foundation.BorderStroke(1.dp, SolanaPurple.copy(alpha = 0.35f)),
+                border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column(modifier = Modifier.padding(14.dp)) {
@@ -535,12 +528,12 @@ fun ActiveTabContent(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
-                            Text(text = "💡", fontSize = 14.sp)
+                            Text(text = "💡", fontSize = 13.sp)
                             Text(
                                 text = "Quick Orientation Guide",
-                                fontSize = 12.5.sp,
+                                fontSize = 13.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = SolanaMint
+                                color = AppleGreen
                             )
                         }
                         Icon(
@@ -555,75 +548,22 @@ fun ActiveTabContent(
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
                         text = "Active Habit: ${state.rule.title}. Phone hardware sensors monitor your progress without cheating. When today's goal is met, tap the verification button to lock in your day.",
-                        fontSize = 11.5.sp,
+                        fontSize = 12.sp,
                         color = TextSecondary,
                         lineHeight = 17.sp
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.End
-                    ) {
-                        Text(
-                            text = "How it works (interactive 3-step walkthrough) →",
-                            fontSize = 11.5.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = SolanaMint,
-                            modifier = Modifier.clickable { onOpenHowItWorks() }
-                        )
-                    }
+                    Text(
+                        text = "How it works (interactive 3-step walkthrough) →",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = AppleGreen,
+                        modifier = Modifier.clickable { onOpenHowItWorks() }
+                    )
                 }
             }
             Spacer(modifier = Modifier.height(12.dp))
         }
-
-        // Hardware Telemetry Status Bar
-        Surface(
-            color = SurfaceDeep,
-            shape = RoundedCornerShape(14.dp),
-            border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 12.dp, vertical = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(7.dp)
-                            .clip(CircleShape)
-                            .background(SolanaMint)
-                    )
-                    Text(
-                        text = when (state.rule.sensorType) {
-                            SensorType.NETWORK_DATA -> "NetworkStats Active • Synced"
-                            SensorType.WAKE_UP_CLOCK -> "Hardware NTP Clock • Synced"
-                            else -> "Health Connect Sensors • Synced"
-                        },
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = TextSecondary
-                    )
-                }
-
-                Text(
-                    text = "Slot #294025 • 28ms",
-                    fontFamily = FontFamily.Monospace,
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = SolanaTeal
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(12.dp))
 
         // Studio Action Row (Composer & 6 AM Club)
         Row(
@@ -634,7 +574,7 @@ fun ActiveTabContent(
             Surface(
                 color = SurfaceCard,
                 shape = RoundedCornerShape(16.dp),
-                border = androidx.compose.foundation.BorderStroke(1.dp, SolanaTeal.copy(alpha = 0.35f)),
+                border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
                 modifier = Modifier
                     .weight(1f)
                     .clickable {
@@ -642,28 +582,32 @@ fun ActiveTabContent(
                         onCreateNewPledge()
                     }
             ) {
-                Column(modifier = Modifier.padding(12.dp, 12.dp)) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                Column(modifier = Modifier.padding(14.dp)) {
+                    Box(
+                        modifier = Modifier
+                            .size(36.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(SurfaceElevated),
+                        contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Icons.Default.Tune,
                             contentDescription = "Composer",
-                            tint = SolanaTeal,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Text(
-                            text = "Rule Composer",
-                            fontSize = 12.5.sp,
-                            fontWeight = FontWeight.ExtraBold,
-                            color = TextPrimary
+                            tint = AppleTeal,
+                            modifier = Modifier.size(18.dp)
                         )
                     }
-                    Spacer(modifier = Modifier.height(3.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Text(
+                        text = "Rule Composer",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = TextPrimary
+                    )
+                    Spacer(modifier = Modifier.height(2.dp))
                     Text(
                         text = "Build custom sensor rules & stake",
-                        fontSize = 10.5.sp,
+                        fontSize = 11.sp,
                         color = TextSecondary,
                         lineHeight = 14.sp
                     )
@@ -674,7 +618,7 @@ fun ActiveTabContent(
             Surface(
                 color = SurfaceCard,
                 shape = RoundedCornerShape(16.dp),
-                border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle),
+                border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
                 modifier = Modifier
                     .weight(1f)
                     .clickable {
@@ -682,28 +626,32 @@ fun ActiveTabContent(
                         onSelectPreset(early6amRule)
                     }
             ) {
-                Column(modifier = Modifier.padding(12.dp, 12.dp)) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                Column(modifier = Modifier.padding(14.dp)) {
+                    Box(
+                        modifier = Modifier
+                            .size(36.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(SurfaceElevated),
+                        contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Icons.Default.Alarm,
                             contentDescription = "Alarm",
-                            tint = GoldGenesis,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Text(
-                            text = "6 AM Club",
-                            fontSize = 12.5.sp,
-                            fontWeight = FontWeight.ExtraBold,
-                            color = TextPrimary
+                            tint = AppleOrange,
+                            modifier = Modifier.size(18.dp)
                         )
                     }
-                    Spacer(modifier = Modifier.height(3.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Text(
+                        text = "6 AM Club",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = TextPrimary
+                    )
+                    Spacer(modifier = Modifier.height(2.dp))
                     Text(
                         text = "Wake up before 6 AM • 5k stake",
-                        fontSize = 10.5.sp,
+                        fontSize = 11.sp,
                         color = TextSecondary,
                         lineHeight = 14.sp
                     )
@@ -713,7 +661,7 @@ fun ActiveTabContent(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // Horizontal Habit Chips Carousel
+        // Horizontal Habit Chips Carousel (Apple Segmented Pills)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -723,12 +671,9 @@ fun ActiveTabContent(
             chips.forEachIndexed { index, title ->
                 val isSelected = selectedChipIndex == index
                 Surface(
-                    color = if (isSelected) SolanaTeal.copy(alpha = 0.14f) else SurfaceDeep,
+                    color = if (isSelected) AppleGreen else SurfaceCard,
                     shape = RoundedCornerShape(50),
-                    border = androidx.compose.foundation.BorderStroke(
-                        1.dp,
-                        if (isSelected) SolanaTeal else BorderSubtle
-                    ),
+                    border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
                     modifier = Modifier.clickable {
                         haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                         onSelectChipIndex(index)
@@ -741,7 +686,7 @@ fun ActiveTabContent(
                     }
                 ) {
                     Row(
-                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 7.dp),
+                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
@@ -749,22 +694,22 @@ fun ActiveTabContent(
                             Icon(
                                 imageVector = Icons.Default.Language,
                                 contentDescription = null,
-                                tint = if (isSelected) SolanaTeal else TextSecondary,
+                                tint = if (isSelected) Color.Black else TextSecondary,
                                 modifier = Modifier.size(14.dp)
                             )
                         } else if (index == 1) {
                             Icon(
                                 imageVector = Icons.Default.Alarm,
                                 contentDescription = null,
-                                tint = if (isSelected) GoldGenesis else TextSecondary,
+                                tint = if (isSelected) Color.Black else TextSecondary,
                                 modifier = Modifier.size(14.dp)
                             )
                         }
                         Text(
                             text = title,
-                            fontSize = 11.5.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = if (isSelected) Color.White else TextSecondary
+                            fontSize = 12.sp,
+                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                            color = if (isSelected) Color.Black else TextSecondary
                         )
                     }
                 }
@@ -773,11 +718,10 @@ fun ActiveTabContent(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // Urgency Loss Aversion Banner (Daily Window Deadline)
+        // Urgency Loss Aversion Banner (Apple Alert Card)
         Surface(
-            color = CrimsonBurn.copy(alpha = 0.09f),
-            shape = RoundedCornerShape(16.dp),
-            border = androidx.compose.foundation.BorderStroke(1.dp, CrimsonBurn.copy(alpha = 0.25f)),
+            color = AppleRed.copy(alpha = 0.08f),
+            shape = RoundedCornerShape(14.dp),
             modifier = Modifier.fillMaxWidth()
         ) {
             Row(
@@ -795,14 +739,14 @@ fun ActiveTabContent(
                         Icon(
                             imageVector = Icons.Default.LocalFireDepartment,
                             contentDescription = "Fire",
-                            tint = CrimsonBurn,
+                            tint = AppleRed,
                             modifier = Modifier.size(14.dp)
                         )
                         Text(
                             text = "Daily Window Deadline",
                             fontSize = 12.sp,
-                            fontWeight = FontWeight.ExtraBold,
-                            color = CrimsonBurn
+                            fontWeight = FontWeight.Bold,
+                            color = AppleRed
                         )
                     }
                     Text(
@@ -813,16 +757,15 @@ fun ActiveTabContent(
                 }
 
                 Surface(
-                    color = CrimsonBurn.copy(alpha = 0.16f),
-                    shape = RoundedCornerShape(8.dp),
-                    border = androidx.compose.foundation.BorderStroke(1.dp, CrimsonBurn.copy(alpha = 0.35f))
+                    color = AppleRed.copy(alpha = 0.14f),
+                    shape = RoundedCornerShape(8.dp)
                 ) {
                     Text(
                         text = if (countdownStr.isNotEmpty()) countdownStr else "04h 28m 14s",
                         fontFamily = FontFamily.Monospace,
                         fontSize = 11.5.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        color = CrimsonBurn,
+                        fontWeight = FontWeight.Bold,
+                        color = AppleRed,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                     )
                 }
@@ -831,12 +774,11 @@ fun ActiveTabContent(
 
         Spacer(modifier = Modifier.height(14.dp))
 
-        // Hero Commitment Card (Primary Focal Point)
+        // Hero Commitment Card (Apple Fitness Activity Widget)
         Surface(
             color = SurfaceCard,
-            shape = RoundedCornerShape(22.dp),
-            border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle),
-            shadowElevation = 10.dp,
+            shape = RoundedCornerShape(20.dp),
+            border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
             modifier = Modifier.fillMaxWidth()
         ) {
             Column(modifier = Modifier.padding(18.dp)) {
@@ -846,11 +788,9 @@ fun ActiveTabContent(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Badge 1: Sensor & Schedule
                     Surface(
-                        color = SolanaTeal.copy(alpha = 0.12f),
-                        shape = RoundedCornerShape(50),
-                        border = androidx.compose.foundation.BorderStroke(1.dp, SolanaTeal.copy(alpha = 0.3f))
+                        color = SurfaceElevated,
+                        shape = RoundedCornerShape(50)
                     ) {
                         Row(
                             modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
@@ -860,24 +800,22 @@ fun ActiveTabContent(
                             Icon(
                                 imageVector = if (isInternetSensor) Icons.Default.Language else if (isWakeUpSensor) Icons.Default.Alarm else Icons.Default.DirectionsWalk,
                                 contentDescription = null,
-                                tint = SolanaTeal,
+                                tint = AppleTeal,
                                 modifier = Modifier.size(12.dp)
                             )
                             Text(
                                 text = state.rule.title.uppercase(),
                                 fontSize = 9.5.sp,
-                                fontWeight = FontWeight.ExtraBold,
-                                color = SolanaTeal,
+                                fontWeight = FontWeight.Bold,
+                                color = AppleTeal,
                                 letterSpacing = 0.5.sp
                             )
                         }
                     }
 
-                    // Badge 2: Staked Amount
                     Surface(
-                        color = SolanaPurple.copy(alpha = 0.14f),
-                        shape = RoundedCornerShape(50),
-                        border = androidx.compose.foundation.BorderStroke(1.dp, SolanaPurple.copy(alpha = 0.35f))
+                        color = SurfaceElevated,
+                        shape = RoundedCornerShape(50)
                     ) {
                         Row(
                             modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
@@ -887,14 +825,14 @@ fun ActiveTabContent(
                             Icon(
                                 imageVector = Icons.Default.Shield,
                                 contentDescription = null,
-                                tint = SolanaPurple,
+                                tint = ApplePurple,
                                 modifier = Modifier.size(12.dp)
                             )
                             Text(
                                 text = "${state.totalAmountSKR.toInt()} \$SKR STAKED",
-                                fontSize = 10.sp,
-                                fontWeight = FontWeight.ExtraBold,
-                                color = SolanaPurple,
+                                fontSize = 9.5.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = ApplePurple,
                                 letterSpacing = 0.5.sp
                             )
                         }
@@ -903,22 +841,20 @@ fun ActiveTabContent(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Big Metric Display
+                // Big Metric Display (Apple Fitness typography)
                 Row(
                     verticalAlignment = Alignment.Bottom,
                     horizontalArrangement = Arrangement.spacedBy(5.dp)
                 ) {
                     Text(
                         text = "$currentVal",
-                        fontFamily = FontFamily.Monospace,
                         fontSize = 44.sp,
-                        fontWeight = FontWeight.Black,
+                        fontWeight = FontWeight.ExtraBold,
                         color = TextPrimary,
                         lineHeight = 44.sp
                     )
                     Text(
                         text = state.rule.unit,
-                        fontFamily = FontFamily.Monospace,
                         fontSize = 17.sp,
                         fontWeight = FontWeight.Bold,
                         color = TextSecondary,
@@ -936,7 +872,7 @@ fun ActiveTabContent(
                     },
                     fontSize = 12.5.sp,
                     color = TextSecondary,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Normal
                 )
 
                 Spacer(modifier = Modifier.height(14.dp))
@@ -947,8 +883,7 @@ fun ActiveTabContent(
                         .fillMaxWidth()
                         .height(10.dp)
                         .clip(RoundedCornerShape(50))
-                        .background(SurfaceDeep)
-                        .border(1.dp, Color.White.copy(alpha = 0.05f), RoundedCornerShape(50))
+                        .background(SurfaceElevated)
                 ) {
                     Box(
                         modifier = Modifier
@@ -957,7 +892,7 @@ fun ActiveTabContent(
                             .clip(RoundedCornerShape(50))
                             .background(
                                 Brush.horizontalGradient(
-                                    listOf(SolanaPurple, SolanaMint)
+                                    listOf(AppleGreen, AppleTeal)
                                 )
                             )
                     )
@@ -972,55 +907,63 @@ fun ActiveTabContent(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = if (isWithinLimit) "Within Limit • Ready to Check In" else "Limit Exceeded • Burn At Risk",
-                        fontSize = 11.5.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = if (isWithinLimit) SolanaMint else CrimsonBurn
+                        text = if (isWithinLimit) "✓ Within limit • Ready to check in" else "Limit exceeded • Burn at risk",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = if (isWithinLimit) AppleGreen else AppleRed
                     )
                     Text(
                         text = "$progressPercent%",
-                        fontSize = 11.5.sp,
+                        fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
-                        color = if (isWithinLimit) SolanaMint else CrimsonBurn
+                        color = if (isWithinLimit) AppleGreen else AppleRed
                     )
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // Smart Rule Details Box (Attestation Box)
+                // Smart Rule Inset Details Box
                 Surface(
-                    color = SurfaceDeep,
+                    color = SurfaceElevated,
                     shape = RoundedCornerShape(12.dp),
-                    border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(
                         modifier = Modifier.padding(12.dp),
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                        verticalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
-                        Row {
-                            Text(text = "Schedule: ", fontSize = 11.sp, color = TextSecondary)
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(text = "Schedule", fontSize = 11.5.sp, color = TextSecondary)
                             Text(
                                 text = if (isInternetSensor) "Mon, Wed, Fri, Sun (Odd Days)" else "Daily All Days",
-                                fontSize = 11.sp,
+                                fontSize = 11.5.sp,
                                 fontWeight = FontWeight.SemiBold,
                                 color = TextPrimary
                             )
                         }
-                        Row {
-                            Text(text = "Sensor: ", fontSize = 11.sp, color = TextSecondary)
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(text = "Constraint", fontSize = 11.5.sp, color = TextSecondary)
                             Text(
-                                text = state.rule.sensorType.displayName,
-                                fontSize = 11.sp,
+                                text = state.rule.title,
+                                fontSize = 11.5.sp,
                                 fontWeight = FontWeight.SemiBold,
-                                color = SolanaMint
+                                color = TextPrimary
                             )
                         }
-                        Row {
-                            Text(text = "Attestation: ", fontSize = 11.sp, color = TextSecondary)
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(text = "Attestation", fontSize = 11.5.sp, color = TextSecondary)
                             Text(
-                                text = "Seeker Ed25519 Nonce #84201 (Anti-Tamper)",
-                                fontSize = 11.sp,
+                                text = "Hardware Attested Nonce #84201",
+                                fontSize = 11.5.sp,
                                 fontWeight = FontWeight.SemiBold,
                                 color = TextPrimary
                             )
@@ -1036,20 +979,20 @@ fun ActiveTabContent(
         Surface(
             color = SurfaceCard,
             shape = RoundedCornerShape(16.dp),
-            border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle),
+            border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
             modifier = Modifier.fillMaxWidth()
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 14.dp, vertical = 12.dp),
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = "DAY $currentDay OF $totalDays",
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.ExtraBold,
+                    fontSize = 11.5.sp,
+                    fontWeight = FontWeight.Bold,
                     color = TextSecondary,
                     letterSpacing = 0.5.sp
                 )
@@ -1066,21 +1009,11 @@ fun ActiveTabContent(
                                 .clip(CircleShape)
                                 .background(
                                     when {
-                                        isClockedIn -> SolanaMint.copy(alpha = 0.18f)
-                                        isCurrent -> SolanaPurple.copy(alpha = 0.35f)
-                                        isPast -> CrimsonBurn.copy(alpha = 0.2f)
-                                        else -> SurfaceDeep
+                                        isClockedIn -> AppleGreen.copy(alpha = 0.2f)
+                                        isCurrent -> AppleGreen
+                                        isPast -> AppleRed.copy(alpha = 0.2f)
+                                        else -> SurfaceElevated
                                     }
-                                )
-                                .border(
-                                    1.dp,
-                                    when {
-                                        isClockedIn -> SolanaMint
-                                        isCurrent -> SolanaPurple
-                                        isPast -> CrimsonBurn.copy(alpha = 0.5f)
-                                        else -> BorderSubtle
-                                    },
-                                    CircleShape
                                 ),
                             contentAlignment = Alignment.Center
                         ) {
@@ -1088,23 +1021,22 @@ fun ActiveTabContent(
                                 Icon(
                                     imageVector = Icons.Default.Check,
                                     contentDescription = "Done",
-                                    tint = SolanaMint,
+                                    tint = AppleGreen,
                                     modifier = Modifier.size(13.dp)
                                 )
                             } else if (isPast) {
                                 Icon(
                                     imageVector = Icons.Default.Close,
                                     contentDescription = "Failed",
-                                    tint = CrimsonBurn,
+                                    tint = AppleRed,
                                     modifier = Modifier.size(11.dp)
                                 )
                             } else {
                                 Text(
                                     text = "${i + 1}",
-                                    fontFamily = FontFamily.Monospace,
                                     fontSize = 10.sp,
                                     fontWeight = FontWeight.Bold,
-                                    color = if (isCurrent) Color.White else TextMuted
+                                    color = if (isCurrent) Color.Black else TextMuted
                                 )
                             }
                         }
@@ -1115,23 +1047,17 @@ fun ActiveTabContent(
 
         Spacer(modifier = Modifier.height(14.dp))
 
-        // PRIMARY ACTION BUTTON: VERIFY & CHECK-IN
+        // PRIMARY ACTION BUTTON (Solid Apple Fitness Green Capsule)
         Surface(
             color = when {
-                isAlreadyClockedInToday -> SolanaMint.copy(alpha = 0.15f)
-                canClockIn -> SolanaMint
-                else -> SurfaceDeep
+                isAlreadyClockedInToday -> AppleGreen.copy(alpha = 0.15f)
+                canClockIn -> AppleGreen
+                else -> SurfaceElevated
             },
-            shape = RoundedCornerShape(16.dp),
-            border = androidx.compose.foundation.BorderStroke(
-                1.dp,
-                if (isAlreadyClockedInToday) SolanaMint else Color.Transparent
-            ),
-            shadowElevation = if (canClockIn && !isAlreadyClockedInToday) 14.dp else 0.dp,
+            shape = RoundedCornerShape(50),
             modifier = Modifier
                 .fillMaxWidth()
-                .height(60.dp)
-                .scale(if (canClockIn && !isAlreadyClockedInToday) pulseScale else 1f)
+                .height(52.dp)
                 .clickable(enabled = canClockIn && !isAlreadyClockedInToday && !isClockingIn) {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     onClockIn()
@@ -1140,45 +1066,31 @@ fun ActiveTabContent(
             Box(contentAlignment = Alignment.Center) {
                 if (isClockingIn) {
                     CircularProgressIndicator(
-                        color = BgVoid,
+                        color = Color.Black,
                         modifier = Modifier.size(24.dp),
                         strokeWidth = 2.5.dp
                     )
                 } else {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Icon(
-                                imageVector = if (isAlreadyClockedInToday) Icons.Default.CheckCircle else Icons.Default.Lock,
-                                contentDescription = null,
-                                tint = if (canClockIn && !isAlreadyClockedInToday) BgVoid else if (isAlreadyClockedInToday) SolanaMint else TextMuted,
-                                modifier = Modifier.size(18.dp)
-                            )
-                            Text(
-                                text = when {
-                                    isAlreadyClockedInToday -> "TODAY VERIFIED & CHECKED IN"
-                                    canClockIn -> "VERIFY & CHECK IN TODAY"
-                                    else -> "DAILY GOAL NOT MET YET"
-                                },
-                                fontSize = 13.5.sp,
-                                fontWeight = FontWeight.Black,
-                                letterSpacing = 0.3.sp,
-                                color = if (canClockIn && !isAlreadyClockedInToday) BgVoid else if (isAlreadyClockedInToday) SolanaMint else TextMuted
-                            )
-                        }
-                        if (canClockIn && !isAlreadyClockedInToday) {
-                            Text(
-                                text = "Automated sensor proof + Seed Vault Ed25519 signature",
-                                fontSize = 10.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = BgVoid.copy(alpha = 0.85f)
-                            )
-                        }
+                        Icon(
+                            imageVector = if (isAlreadyClockedInToday) Icons.Default.CheckCircle else Icons.Default.Lock,
+                            contentDescription = null,
+                            tint = if (canClockIn && !isAlreadyClockedInToday) Color.Black else if (isAlreadyClockedInToday) AppleGreen else TextMuted,
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Text(
+                            text = when {
+                                isAlreadyClockedInToday -> "Today Verified & Checked In"
+                                canClockIn -> "Verify & Check In Today"
+                                else -> "Daily Goal Not Met Yet"
+                            },
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = if (canClockIn && !isAlreadyClockedInToday) Color.Black else if (isAlreadyClockedInToday) AppleGreen else TextMuted
+                        )
                     }
                 }
             }
@@ -1234,7 +1146,7 @@ fun ActiveTabContent(
 }
 
 // -----------------------------------------------------------------------------
-// TAB 1: EXPLORE / CATALOG CONTENT
+// TAB 1: EXPLORE / CATALOG CONTENT (Apple Inset Grouped)
 // -----------------------------------------------------------------------------
 @Composable
 fun ExploreTabContent(
@@ -1265,125 +1177,113 @@ fun ExploreTabContent(
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = "Commitment Catalog",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Black,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.ExtraBold,
                     color = TextPrimary
                 )
                 Text(
                     text = "Hardware-attested habit blueprints. Pick one to activate.",
-                    fontSize = 11.sp,
+                    fontSize = 11.5.sp,
                     color = TextSecondary
                 )
             }
 
             Surface(
-                color = SolanaTeal.copy(alpha = 0.15f),
-                shape = RoundedCornerShape(10.dp),
-                border = androidx.compose.foundation.BorderStroke(1.dp, SolanaTeal.copy(alpha = 0.4f)),
+                color = SurfaceCard,
+                shape = RoundedCornerShape(50),
                 modifier = Modifier.clickable {
                     haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                     onCreateCustom()
                 }
             ) {
-                Row(
-                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Tune,
-                        contentDescription = null,
-                        tint = SolanaTeal,
-                        modifier = Modifier.size(13.dp)
-                    )
-                    Text(
-                        text = "+ Custom",
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = SolanaTeal
-                    )
-                }
+                Text(
+                    text = "+ Custom",
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = AppleTeal,
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                )
             }
         }
 
         Spacer(modifier = Modifier.height(14.dp))
 
-        // Blueprint 1: Odd-Days Internet Detox
-        ExploreCardItem(
-            title = "Odd-Days Internet Detox (<1h)",
-            subtitle = "NetworkStats • Mon/Wed/Fri/Sun • 2,500 \$SKR",
-            icon = Icons.Default.Language,
-            accentColor = SolanaTeal,
-            isActive = currentRuleId == internetDetoxRule.id,
-            onActionClick = { onSelectRule(internetDetoxRule) }
-        )
+        // Inset Grouped Card Container
+        Surface(
+            color = SurfaceCard,
+            shape = RoundedCornerShape(20.dp),
+            border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column {
+                ExploreCardRow(
+                    title = "Odd-Days Internet Detox (<1h)",
+                    subtitle = "NetworkStats • Mon/Wed/Fri/Sun • 2,500 $SKR",
+                    icon = Icons.Default.Language,
+                    accentColor = AppleTeal,
+                    isActive = currentRuleId == internetDetoxRule.id,
+                    onActionClick = { onSelectRule(internetDetoxRule) }
+                )
+                Divider(color = BorderSubtle, thickness = 0.5.dp)
 
-        Spacer(modifier = Modifier.height(10.dp))
+                ExploreCardRow(
+                    title = "The 6:00 AM Club (High Stakes)",
+                    subtitle = "Hardware NTP Clock • 7 Days • Stake 5,000 $SKR",
+                    icon = Icons.Default.Alarm,
+                    accentColor = AppleOrange,
+                    isActive = currentRuleId == early6amRule.id,
+                    onActionClick = { onSelectRule(early6amRule) }
+                )
+                Divider(color = BorderSubtle, thickness = 0.5.dp)
 
-        // Blueprint 2: The 6:00 AM Club
-        ExploreCardItem(
-            title = "The 6:00 AM Club (High Stakes)",
-            subtitle = "Hardware NTP Clock • 7 Days • Stake 5,000 \$SKR",
-            icon = Icons.Default.Alarm,
-            accentColor = GoldGenesis,
-            isActive = currentRuleId == early6amRule.id,
-            onActionClick = { onSelectRule(early6amRule) }
-        )
+                ExploreCardRow(
+                    title = "10,000 Steps Daily Marathon",
+                    subtitle = "Health Connect Sensors • 7 Days • Stake 1,000 $SKR",
+                    icon = Icons.Default.DirectionsWalk,
+                    accentColor = AppleGreen,
+                    isActive = currentRuleId == stepGoalRule.id,
+                    onActionClick = { onSelectRule(stepGoalRule) }
+                )
+                Divider(color = BorderSubtle, thickness = 0.5.dp)
 
-        Spacer(modifier = Modifier.height(10.dp))
+                ExploreCardRow(
+                    title = "Social Media Detox (<2h)",
+                    subtitle = "Android UsageStats • 14 Days • Stake 1,500 $SKR",
+                    icon = Icons.Default.Tune,
+                    accentColor = ApplePurple,
+                    isActive = currentRuleId == screenDetoxRule.id,
+                    onActionClick = { onSelectRule(screenDetoxRule) }
+                )
+                Divider(color = BorderSubtle, thickness = 0.5.dp)
 
-        // Blueprint 3: 10,000 Steps Marathon
-        ExploreCardItem(
-            title = "10,000 Steps Daily Marathon",
-            subtitle = "Health Connect Sensors • 7 Days • Stake 1,000 \$SKR",
-            icon = Icons.Default.DirectionsWalk,
-            accentColor = SolanaMint,
-            isActive = currentRuleId == stepGoalRule.id,
-            onActionClick = { onSelectRule(stepGoalRule) }
-        )
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        // Blueprint 4: Social Media Detox
-        ExploreCardItem(
-            title = "Social Media Detox (<2h)",
-            subtitle = "Android UsageStats • 14 Days • Stake 1,500 \$SKR",
-            icon = Icons.Default.Tune,
-            accentColor = SolanaPurple,
-            isActive = currentRuleId == screenDetoxRule.id,
-            onActionClick = { onSelectRule(screenDetoxRule) }
-        )
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        // Blueprint 5: Daily 45m Gym Workout
-        ExploreCardItem(
-            title = "Daily 45m Gym Workout",
-            subtitle = "HeartRateRecord Sensors • 7 Days • Stake 750 \$SKR",
-            icon = Icons.Default.LocalFireDepartment,
-            accentColor = SolanaTeal,
-            isActive = currentRuleId == gymWorkoutRule.id,
-            onActionClick = { onSelectRule(gymWorkoutRule) }
-        )
+                ExploreCardRow(
+                    title = "Daily 45m Gym Workout",
+                    subtitle = "HeartRateRecord Sensors • 7 Days • Stake 750 $SKR",
+                    icon = Icons.Default.LocalFireDepartment,
+                    accentColor = AppleTeal,
+                    isActive = currentRuleId == gymWorkoutRule.id,
+                    onActionClick = { onSelectRule(gymWorkoutRule) }
+                )
+            }
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         // Info footnote
         Surface(
             color = SurfaceCard,
-            shape = RoundedCornerShape(12.dp),
-            border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle),
+            shape = RoundedCornerShape(14.dp),
             modifier = Modifier.fillMaxWidth()
         ) {
             Row(
-                modifier = Modifier.padding(12.dp),
+                modifier = Modifier.padding(14.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(text = "💡", fontSize = 14.sp)
                 Text(
                     text = "Tapping 'Activate' immediately syncs the rule with your phone hardware sensors and redirects you to the active commitment view.",
-                    fontSize = 11.sp,
+                    fontSize = 11.5.sp,
                     color = TextSecondary,
                     lineHeight = 16.sp
                 )
@@ -1395,7 +1295,7 @@ fun ExploreTabContent(
 }
 
 @Composable
-fun ExploreCardItem(
+fun ExploreCardRow(
     title: String,
     subtitle: String,
     icon: androidx.compose.ui.graphics.vector.ImageVector,
@@ -1405,87 +1305,72 @@ fun ExploreCardItem(
 ) {
     val haptic = LocalHapticFeedback.current
 
-    Surface(
-        color = SurfaceCard,
-        shape = RoundedCornerShape(16.dp),
-        border = androidx.compose.foundation.BorderStroke(
-            1.dp,
-            if (isActive) accentColor.copy(alpha = 0.5f) else BorderSubtle
-        ),
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
                 haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                 onActionClick()
             }
+            .padding(14.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(14.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier.weight(1f)
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier.weight(1f)
+            Box(
+                modifier = Modifier
+                    .size(42.dp)
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(accentColor.copy(alpha = 0.14f)),
+                contentAlignment = Alignment.Center
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(accentColor.copy(alpha = 0.12f))
-                        .border(1.dp, accentColor.copy(alpha = 0.25f), RoundedCornerShape(12.dp)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = icon,
-                        contentDescription = null,
-                        tint = accentColor,
-                        modifier = Modifier.size(20.dp)
-                    )
-                }
-
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = title,
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = TextPrimary
-                    )
-                    Spacer(modifier = Modifier.height(3.dp))
-                    Text(
-                        text = subtitle,
-                        fontSize = 10.5.sp,
-                        color = TextSecondary,
-                        lineHeight = 14.sp
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.width(8.dp))
-
-            Surface(
-                color = if (isActive) accentColor.copy(alpha = 0.18f) else accentColor.copy(alpha = 0.1f),
-                shape = RoundedCornerShape(8.dp),
-                border = androidx.compose.foundation.BorderStroke(
-                    1.dp,
-                    if (isActive) accentColor else accentColor.copy(alpha = 0.35f)
-                ),
-                modifier = Modifier.clickable {
-                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                    onActionClick()
-                }
-            ) {
-                Text(
-                    text = if (isActive) "ACTIVE" else "ACTIVATE",
-                    fontSize = 10.5.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    color = accentColor,
-                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = accentColor,
+                    modifier = Modifier.size(20.dp)
                 )
             }
+
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = title,
+                    fontSize = 13.5.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = TextPrimary
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = subtitle,
+                    fontSize = 11.sp,
+                    color = TextSecondary,
+                    lineHeight = 14.sp
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.width(8.dp))
+
+        // App Store style Pill Button
+        Surface(
+            color = if (isActive) AppleGreen else SurfaceElevated,
+            shape = RoundedCornerShape(50),
+            modifier = Modifier.clickable {
+                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                onActionClick()
+            }
+        ) {
+            Text(
+                text = if (isActive) "ACTIVE" else "ACTIVATE",
+                fontSize = 11.5.sp,
+                fontWeight = FontWeight.Bold,
+                color = if (isActive) Color.Black else AppleBlue,
+                modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp)
+            )
         }
     }
 }
@@ -1678,11 +1563,11 @@ fun LeaderboardRow(
     isUser: Boolean
 ) {
     Surface(
-        color = if (isUser) SolanaMint.copy(alpha = 0.06f) else SurfaceCard,
+        color = if (isUser) AppleGreen.copy(alpha = 0.08f) else SurfaceCard,
         shape = RoundedCornerShape(14.dp),
         border = androidx.compose.foundation.BorderStroke(
-            1.dp,
-            if (isUser) SolanaMint.copy(alpha = 0.45f) else BorderSubtle
+            0.5.dp,
+            if (isUser) AppleGreen.copy(alpha = 0.35f) else BorderSubtle
         ),
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -1698,67 +1583,62 @@ fun LeaderboardRow(
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
                 modifier = Modifier.weight(1f)
             ) {
-                Text(
-                    text = rank,
-                    fontFamily = SpaceGrotesk,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Black,
-                    color = if (isUser) SolanaMint else if (rank == "1") GoldGenesis else TextSecondary
-                )
-
                 Box(
                     modifier = Modifier
-                        .size(34.dp)
+                        .size(28.dp)
                         .clip(CircleShape)
                         .background(
-                            if (isUser) SolanaMint.copy(alpha = 0.2f) else SurfaceDeep
-                        )
-                        .border(
-                            1.dp,
-                            if (isUser) SolanaMint else BorderSubtle,
-                            CircleShape
+                            when (rank) {
+                                "1" -> AppleYellow.copy(alpha = 0.2f)
+                                "2" -> Color.White.copy(alpha = 0.2f)
+                                "3" -> AppleOrange.copy(alpha = 0.2f)
+                                else -> SurfaceElevated
+                            }
                         ),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(
-                        imageVector = if (isUser) Icons.Default.Check else Icons.Default.Bolt,
-                        contentDescription = null,
-                        tint = if (isUser) SolanaMint else TextSecondary,
-                        modifier = Modifier.size(16.dp)
+                    Text(
+                        text = rank,
+                        fontFamily = PlusJakartaSans,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = when (rank) {
+                            "1" -> AppleYellow
+                            "2" -> Color.White
+                            "3" -> AppleOrange
+                            else -> TextSecondary
+                        }
                     )
                 }
 
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = name,
-                        fontFamily = SpaceGrotesk,
-                        fontSize = 13.sp,
+                        fontFamily = PlusJakartaSans,
+                        fontSize = 13.5.sp,
                         fontWeight = FontWeight.Bold,
-                        color = TextPrimary
+                        color = if (isUser) AppleGreen else TextPrimary
                     )
                     Text(
                         text = subtitle,
                         fontFamily = PlusJakartaSans,
-                        fontSize = 10.5.sp,
+                        fontSize = 11.sp,
                         color = TextSecondary
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.width(8.dp))
-
             Surface(
-                color = streakColor.copy(alpha = 0.14f),
-                shape = RoundedCornerShape(50),
-                border = androidx.compose.foundation.BorderStroke(1.dp, streakColor.copy(alpha = 0.35f))
+                color = if (isUser) AppleGreen else SurfaceElevated,
+                shape = RoundedCornerShape(50)
             ) {
                 Text(
                     text = streak,
                     fontFamily = PlusJakartaSans,
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    color = streakColor,
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                    fontSize = 10.5.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = if (isUser) Color.Black else streakColor,
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
                 )
             }
         }
@@ -1788,7 +1668,7 @@ fun VaultTabContent(
         Surface(
             color = SurfaceCard,
             shape = RoundedCornerShape(20.dp),
-            border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle),
+            border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
             modifier = Modifier.fillMaxWidth()
         ) {
             Column(
@@ -1800,15 +1680,14 @@ fun VaultTabContent(
                 Box(
                     modifier = Modifier
                         .size(56.dp)
-                        .clip(RoundedCornerShape(18.dp))
-                        .background(SolanaMint.copy(alpha = 0.12f))
-                        .border(1.dp, SolanaMint.copy(alpha = 0.35f), RoundedCornerShape(18.dp)),
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(AppleGreen.copy(alpha = 0.14f)),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         imageVector = Icons.Default.Shield,
                         contentDescription = null,
-                        tint = SolanaMint,
+                        tint = AppleGreen,
                         modifier = Modifier.size(28.dp)
                     )
                 }
@@ -1821,23 +1700,22 @@ fun VaultTabContent(
                     } else {
                         "Seeker...7xK2 (Solana Devnet)"
                     },
-                    fontSize = 14.sp,
+                    fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
-                    fontFamily = FontFamily.Monospace,
                     color = TextPrimary
                 )
 
                 Text(
                     text = "${stakedAmount.toInt()} \$SKR Locked in Smart Escrow",
-                    fontSize = 12.sp,
+                    fontSize = 13.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = SolanaMint,
+                    color = AppleGreen,
                     modifier = Modifier.padding(top = 4.dp)
                 )
 
                 Text(
                     text = "Available Wallet Balance: ${String.format("%.1f", skrBalance)} \$SKR",
-                    fontSize = 11.sp,
+                    fontSize = 11.5.sp,
                     color = TextSecondary,
                     modifier = Modifier.padding(top = 2.dp)
                 )
@@ -1846,13 +1724,13 @@ fun VaultTabContent(
 
         Spacer(modifier = Modifier.height(14.dp))
 
-        // Action Button: Settle & Claim
+        // Action Button: Settle & Claim (Apple Solid Capsule)
         Surface(
-            color = SolanaPurple,
-            shape = RoundedCornerShape(14.dp),
+            color = ApplePurple,
+            shape = RoundedCornerShape(50),
             modifier = Modifier
                 .fillMaxWidth()
-                .height(48.dp)
+                .height(50.dp)
                 .clickable {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     onSettle()
@@ -1872,7 +1750,7 @@ fun VaultTabContent(
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(
                     text = "Settle & Claim Vault Escrow",
-                    fontSize = 12.5.sp,
+                    fontSize = 13.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
                 )
@@ -1888,8 +1766,8 @@ fun VaultTabContent(
         ) {
             Surface(
                 color = SurfaceCard,
-                shape = RoundedCornerShape(14.dp),
-                border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle),
+                shape = RoundedCornerShape(16.dp),
+                border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
                 modifier = Modifier.weight(1f)
             ) {
                 Column(modifier = Modifier.padding(14.dp)) {
@@ -1897,18 +1775,17 @@ fun VaultTabContent(
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = "1,450 \$SKR",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Black,
-                        color = SolanaMint,
-                        fontFamily = FontFamily.Monospace
+                        fontSize = 17.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = AppleGreen
                     )
                 }
             }
 
             Surface(
                 color = SurfaceCard,
-                shape = RoundedCornerShape(14.dp),
-                border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle),
+                shape = RoundedCornerShape(16.dp),
+                border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
                 modifier = Modifier.weight(1f)
             ) {
                 Column(modifier = Modifier.padding(14.dp)) {
@@ -1916,10 +1793,9 @@ fun VaultTabContent(
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = "100 \$SKR",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Black,
-                        color = CrimsonBurn,
-                        fontFamily = FontFamily.Monospace
+                        fontSize = 17.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = AppleRed
                     )
                 }
             }
