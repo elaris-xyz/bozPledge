@@ -1218,7 +1218,7 @@ fun ExploreTabContent(
             Column {
                 ExploreCardRow(
                     title = "Odd-Days Internet Detox (<1h)",
-                    subtitle = "NetworkStats • Mon/Wed/Fri/Sun • 2,500 $SKR",
+                    subtitle = "NetworkStats • Mon/Wed/Fri/Sun • 2,500 \$SKR",
                     icon = Icons.Default.Language,
                     accentColor = AppleTeal,
                     isActive = currentRuleId == internetDetoxRule.id,
@@ -1228,7 +1228,7 @@ fun ExploreTabContent(
 
                 ExploreCardRow(
                     title = "The 6:00 AM Club (High Stakes)",
-                    subtitle = "Hardware NTP Clock • 7 Days • Stake 5,000 $SKR",
+                    subtitle = "Hardware NTP Clock • 7 Days • Stake 5,000 \$SKR",
                     icon = Icons.Default.Alarm,
                     accentColor = AppleOrange,
                     isActive = currentRuleId == early6amRule.id,
@@ -1238,7 +1238,7 @@ fun ExploreTabContent(
 
                 ExploreCardRow(
                     title = "10,000 Steps Daily Marathon",
-                    subtitle = "Health Connect Sensors • 7 Days • Stake 1,000 $SKR",
+                    subtitle = "Health Connect Sensors • 7 Days • Stake 1,000 \$SKR",
                     icon = Icons.Default.DirectionsWalk,
                     accentColor = AppleGreen,
                     isActive = currentRuleId == stepGoalRule.id,
@@ -1248,7 +1248,7 @@ fun ExploreTabContent(
 
                 ExploreCardRow(
                     title = "Social Media Detox (<2h)",
-                    subtitle = "Android UsageStats • 14 Days • Stake 1,500 $SKR",
+                    subtitle = "Android UsageStats • 14 Days • Stake 1,500 \$SKR",
                     icon = Icons.Default.Tune,
                     accentColor = ApplePurple,
                     isActive = currentRuleId == screenDetoxRule.id,
@@ -1258,7 +1258,7 @@ fun ExploreTabContent(
 
                 ExploreCardRow(
                     title = "Daily 45m Gym Workout",
-                    subtitle = "HeartRateRecord Sensors • 7 Days • Stake 750 $SKR",
+                    subtitle = "HeartRateRecord Sensors • 7 Days • Stake 750 \$SKR",
                     icon = Icons.Default.LocalFireDepartment,
                     accentColor = AppleTeal,
                     isActive = currentRuleId == gymWorkoutRule.id,
