@@ -217,19 +217,19 @@ fun DashboardScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                    .padding(horizontal = 14.dp, vertical = 10.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 // Brand Logo Mark + Text
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(7.dp)
                 ) {
                     Box(
                         modifier = Modifier
-                            .size(34.dp)
-                            .clip(RoundedCornerShape(10.dp))
+                            .size(30.dp)
+                            .clip(RoundedCornerShape(8.dp))
                             .background(
                                 Brush.linearGradient(
                                     listOf(
@@ -238,28 +238,30 @@ fun DashboardScreen(
                                     )
                                 )
                             )
-                            .border(1.dp, SolanaMint.copy(alpha = 0.45f), RoundedCornerShape(10.dp)),
+                            .border(1.dp, SolanaMint.copy(alpha = 0.45f), RoundedCornerShape(8.dp)),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Icons.Default.Lock,
                             contentDescription = "Logo",
                             tint = SolanaMint,
-                            modifier = Modifier.size(17.dp)
+                            modifier = Modifier.size(15.dp)
                         )
                     }
 
                     Row {
                         Text(
                             text = "boz",
-                            fontSize = 20.sp,
+                            fontFamily = SpaceGrotesk,
+                            fontSize = 18.sp,
                             fontWeight = FontWeight.Black,
                             color = TextPrimary,
                             letterSpacing = (-0.5).sp
                         )
                         Text(
                             text = "PLEDGE",
-                            fontSize = 20.sp,
+                            fontFamily = SpaceGrotesk,
+                            fontSize = 18.sp,
                             fontWeight = FontWeight.Black,
                             color = SolanaMint,
                             letterSpacing = (-0.5).sp
@@ -270,12 +272,12 @@ fun DashboardScreen(
                 // Header Actions: "Guide" + "Judge" + "Connect"
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    horizontalArrangement = Arrangement.spacedBy(5.dp)
                 ) {
                     // Guide Pill Button
                     Surface(
                         color = GoldGenesis.copy(alpha = 0.14f),
-                        shape = RoundedCornerShape(12.dp),
+                        shape = RoundedCornerShape(10.dp),
                         border = androidx.compose.foundation.BorderStroke(1.dp, GoldGenesis.copy(alpha = 0.35f)),
                         modifier = Modifier.clickable {
                             haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
@@ -283,17 +285,18 @@ fun DashboardScreen(
                         }
                     ) {
                         Row(
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
+                            modifier = Modifier.padding(horizontal = 7.dp, vertical = 5.dp),
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            horizontalArrangement = Arrangement.spacedBy(3.dp)
                         ) {
                             Text(
                                 text = "💡",
-                                fontSize = 11.sp
+                                fontSize = 10.sp
                             )
                             Text(
                                 text = "Guide",
-                                fontSize = 11.sp,
+                                fontFamily = PlusJakartaSans,
+                                fontSize = 10.5.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = GoldGenesis
                             )
@@ -303,7 +306,7 @@ fun DashboardScreen(
                     // Judge Button
                     Surface(
                         color = SurfaceDeep,
-                        shape = RoundedCornerShape(12.dp),
+                        shape = RoundedCornerShape(10.dp),
                         border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle),
                         modifier = Modifier.clickable {
                             haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
@@ -311,19 +314,20 @@ fun DashboardScreen(
                         }
                     ) {
                         Row(
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
+                            modifier = Modifier.padding(horizontal = 7.dp, vertical = 5.dp),
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            horizontalArrangement = Arrangement.spacedBy(3.dp)
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Gavel,
                                 contentDescription = "Judge",
                                 tint = TextSecondary,
-                                modifier = Modifier.size(12.dp)
+                                modifier = Modifier.size(11.dp)
                             )
                             Text(
                                 text = "Judge",
-                                fontSize = 11.sp,
+                                fontFamily = PlusJakartaSans,
+                                fontSize = 10.5.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = TextSecondary
                             )
@@ -334,7 +338,7 @@ fun DashboardScreen(
                     val isConnected = walletAddress != null && !walletAddress.contains("SeekerPledgeDemo")
                     Surface(
                         color = if (isConnected) SolanaMint.copy(alpha = 0.12f) else SurfaceDeep,
-                        shape = RoundedCornerShape(12.dp),
+                        shape = RoundedCornerShape(10.dp),
                         border = androidx.compose.foundation.BorderStroke(
                             1.dp,
                             if (isConnected) SolanaMint.copy(alpha = 0.35f) else BorderSubtle
@@ -345,19 +349,20 @@ fun DashboardScreen(
                         }
                     ) {
                         Row(
-                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 5.dp),
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(5.dp)
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
                             Box(
                                 modifier = Modifier
-                                    .size(7.dp)
+                                    .size(6.dp)
                                     .clip(CircleShape)
                                     .background(if (isConnected) SolanaMint else CrimsonBurn)
                             )
                             Text(
                                 text = if (isConnected) "${walletAddress?.take(4)}...${walletAddress?.takeLast(4)}" else "Connect",
-                                fontSize = 11.sp,
+                                fontFamily = PlusJakartaSans,
+                                fontSize = 10.5.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = TextPrimary
                             )
@@ -1690,11 +1695,12 @@ fun LeaderboardRow(
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                modifier = Modifier.weight(1f)
             ) {
                 Text(
                     text = rank,
-                    fontFamily = FontFamily.Monospace,
+                    fontFamily = SpaceGrotesk,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Black,
                     color = if (isUser) SolanaMint else if (rank == "1") GoldGenesis else TextSecondary
@@ -1722,20 +1728,24 @@ fun LeaderboardRow(
                     )
                 }
 
-                Column {
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = name,
+                        fontFamily = SpaceGrotesk,
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Bold,
                         color = TextPrimary
                     )
                     Text(
                         text = subtitle,
+                        fontFamily = PlusJakartaSans,
                         fontSize = 10.5.sp,
                         color = TextSecondary
                     )
                 }
             }
+
+            Spacer(modifier = Modifier.width(8.dp))
 
             Surface(
                 color = streakColor.copy(alpha = 0.14f),
@@ -1744,6 +1754,7 @@ fun LeaderboardRow(
             ) {
                 Text(
                     text = streak,
+                    fontFamily = PlusJakartaSans,
                     fontSize = 10.sp,
                     fontWeight = FontWeight.ExtraBold,
                     color = streakColor,
@@ -2346,9 +2357,9 @@ fun JudgeModalBottomSheet(
                         .weight(1f)
                         .height(46.dp)
                 ) {
-                    Icon(imageVector = Icons.Default.FastForward, contentDescription = null, modifier = Modifier.size(16.dp))
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Text(text = "Fast-Forward Day", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                    Icon(imageVector = Icons.Default.FastForward, contentDescription = null, modifier = Modifier.size(15.dp))
+                    Spacer(modifier = Modifier.width(5.dp))
+                    Text(text = "Next Day (+1d)", fontFamily = PlusJakartaSans, fontSize = 11.5.sp, fontWeight = FontWeight.Bold)
                 }
 
                 OutlinedButton(
@@ -2362,9 +2373,9 @@ fun JudgeModalBottomSheet(
                         .weight(1f)
                         .height(46.dp)
                 ) {
-                    Icon(imageVector = Icons.Default.Refresh, contentDescription = null, tint = TextSecondary, modifier = Modifier.size(16.dp))
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Text(text = "Reset / Fresh State", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
+                    Icon(imageVector = Icons.Default.Refresh, contentDescription = null, tint = TextSecondary, modifier = Modifier.size(15.dp))
+                    Spacer(modifier = Modifier.width(5.dp))
+                    Text(text = "Reset Demo", fontFamily = PlusJakartaSans, fontSize = 11.5.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
                 }
             }
 

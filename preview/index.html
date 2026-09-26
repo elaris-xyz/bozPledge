@@ -6,7 +6,7 @@
     <title>bozPledge — Hardware-Attested Sovereign Habit Escrow</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-void: #06080E;
@@ -36,6 +36,7 @@
             --radius-pill: 9999px;
             
             --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-heading: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
             --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
         }
@@ -180,10 +181,26 @@
             overflow-x: hidden;
             display: flex;
             flex-direction: column;
-            padding: 54px 18px 84px 18px;
+            padding: 50px 16px 104px 16px;
             position: relative;
         }
         .phone-screen::-webkit-scrollbar { display: none; }
+
+        /* Typography System: Headings (Space Grotesk) & UI (Plus Jakarta Sans) */
+        h1, h2, h3, h4, h5, h6,
+        .brand-title,
+        .modal-title,
+        .catalog-main-title,
+        .urgency-title,
+        .metric-primary-val,
+        .card-btn-header span,
+        .timeline-label,
+        .composer-section-title,
+        .leader-rank,
+        .mini-stat-title {
+            font-family: var(--font-heading);
+            letter-spacing: -0.3px;
+        }
 
         /* Top Tier App Header */
         .app-header {
@@ -191,11 +208,13 @@
             align-items: center;
             justify-content: space-between;
             margin-bottom: 12px;
+            gap: 6px;
         }
         .brand-wrap {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 7px;
+            flex-shrink: 0;
         }
         .brand-logo-mark {
             width: 28px;
@@ -209,9 +228,9 @@
             color: var(--solana-mint);
         }
         .brand-title {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 800;
-            letter-spacing: -0.6px;
+            letter-spacing: -0.5px;
             color: var(--text-primary);
         }
         .brand-title span {
@@ -234,20 +253,22 @@
         .header-actions {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 5px;
+            flex-shrink: 0;
         }
         .btn-ghost-action {
             background: var(--surface-deep);
             border: 1px solid var(--border-subtle);
-            border-radius: 12px;
-            padding: 6px 10px;
-            font-size: 11px;
+            border-radius: 10px;
+            padding: 5px 8px;
+            font-size: 10.5px;
             font-weight: 700;
             color: var(--text-secondary);
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
+            white-space: nowrap;
             transition: all 0.2s var(--ease-spring);
         }
         .btn-ghost-action:hover {
@@ -267,15 +288,16 @@
         .btn-wallet {
             background: var(--surface-deep);
             border: 1px solid var(--border-subtle);
-            border-radius: 12px;
-            padding: 6px 12px;
-            font-size: 12px;
+            border-radius: 10px;
+            padding: 5px 9px;
+            font-size: 11px;
             font-weight: 700;
             color: var(--text-primary);
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 7px;
+            gap: 5px;
+            white-space: nowrap;
             transition: all 0.2s var(--ease-spring);
         }
         .btn-wallet:hover {
@@ -859,6 +881,7 @@
             justify-content: space-between;
             margin-bottom: 10px;
             cursor: pointer;
+            gap: 10px;
             transition: all 0.2s var(--ease-spring);
         }
         .catalog-card-item:hover {
@@ -867,6 +890,12 @@
         }
         .catalog-card-item:active {
             transform: scale(0.98);
+        }
+        .catalog-card-item > div:first-child {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            min-width: 0;
         }
         .catalog-icon-box {
             width: 42px;
@@ -881,21 +910,36 @@
             flex-shrink: 0;
             color: var(--solana-teal);
         }
+        .catalog-info {
+            flex: 1;
+            min-width: 0;
+        }
         .catalog-info h4 {
-            font-size: 14px;
+            font-size: 13.5px;
             font-weight: 800;
             color: var(--text-primary);
             margin-bottom: 3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .catalog-info p {
             font-size: 11px;
             color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .catalog-status-badge {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 800;
-            padding: 4px 8px;
-            border-radius: 6px;
+            padding: 5px 10px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid currentColor;
+            letter-spacing: 0.5px;
+            flex-shrink: 0;
+            white-space: nowrap;
         }
 
         /* Leaderboard Items (View 3) */
@@ -908,12 +952,14 @@
             align-items: center;
             justify-content: space-between;
             margin-bottom: 8px;
+            gap: 10px;
         }
         .leader-rank {
-            font-family: var(--font-mono);
+            font-family: var(--font-heading);
             font-size: 14px;
             font-weight: 800;
-            width: 24px;
+            width: 22px;
+            flex-shrink: 0;
             color: var(--text-muted);
         }
         .leader-user-box {
@@ -921,6 +967,16 @@
             align-items: center;
             gap: 10px;
             flex: 1;
+            min-width: 0;
+        }
+        .leader-user-box > div {
+            flex: 1;
+            min-width: 0;
+        }
+        .leader-user-box > div > div {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .leader-avatar {
             width: 32px;
@@ -931,6 +987,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-shrink: 0;
             color: var(--solana-mint);
         }
 
