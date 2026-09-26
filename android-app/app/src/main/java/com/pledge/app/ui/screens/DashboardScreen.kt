@@ -147,7 +147,7 @@ fun DashboardScreen(
     Scaffold(
         containerColor = BgVoid,
         bottomBar = {
-            // Bottom Navigation Dock with 4 fully functional tabs
+            // Bottom Navigation Dock with 4 functional tabs
             Surface(
                 color = SurfaceDeep.copy(alpha = 0.96f),
                 border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle),
@@ -267,12 +267,12 @@ fun DashboardScreen(
                     }
                 }
 
-                // Header Actions: "How It Works" + "Judge" + "Connect"
+                // Header Actions: "Guide" + "Judge" + "Connect"
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    // How It Works Pill Button
+                    // Guide Pill Button
                     Surface(
                         color = GoldGenesis.copy(alpha = 0.14f),
                         shape = RoundedCornerShape(12.dp),
@@ -292,7 +292,7 @@ fun DashboardScreen(
                                 fontSize = 11.sp
                             )
                             Text(
-                                text = "راهنما",
+                                text = "Guide",
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = GoldGenesis
@@ -512,7 +512,7 @@ fun ActiveTabContent(
             .verticalScroll(scrollState)
             .padding(horizontal = 16.dp, vertical = 10.dp)
     ) {
-        // Helpful Orientation Tip Banner for new users
+        // Helpful Orientation Tip Banner
         if (showTipBanner) {
             Surface(
                 color = SolanaPurple.copy(alpha = 0.12f),
@@ -532,7 +532,7 @@ fun ActiveTabContent(
                         ) {
                             Text(text = "💡", fontSize = 14.sp)
                             Text(
-                                text = "راهنمای سریع این صفحه",
+                                text = "Quick Orientation Guide",
                                 fontSize = 12.5.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = SolanaMint
@@ -549,7 +549,7 @@ fun ActiveTabContent(
                     }
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
-                        text = "هدف فعال شما: ${state.rule.title} است. سنسور گوشی عملکرد شما را می‌سنجد. اگر هدف روزانه رعایت شده باشد، دکمه تایید سبز می‌شود و با یک لمس امتیاز روز را ثبت می‌کنید.",
+                        text = "Active Habit: ${state.rule.title}. Phone hardware sensors monitor your progress without cheating. When today's goal is met, tap the verification button to lock in your day.",
                         fontSize = 11.5.sp,
                         color = TextSecondary,
                         lineHeight = 17.sp
@@ -560,7 +560,7 @@ fun ActiveTabContent(
                         horizontalArrangement = Arrangement.End
                     ) {
                         Text(
-                            text = "چطور کار می‌کنه؟ (مشاهده ویدیویی/گرافیکی) →",
+                            text = "How it works (interactive 3-step walkthrough) →",
                             fontSize = 11.5.sp,
                             fontWeight = FontWeight.Bold,
                             color = SolanaMint,
@@ -598,9 +598,9 @@ fun ActiveTabContent(
                     )
                     Text(
                         text = when (state.rule.sensorType) {
-                            SensorType.NETWORK_DATA -> "سنسور دیتای شبکه • فعال و متصل"
-                            SensorType.WAKE_UP_CLOCK -> "ساعت سخت‌افزاری • متصل"
-                            else -> "سنسور گام‌شمار • متصل"
+                            SensorType.NETWORK_DATA -> "NetworkStats Active • Synced"
+                            SensorType.WAKE_UP_CLOCK -> "Hardware NTP Clock • Synced"
+                            else -> "Health Connect Sensors • Synced"
                         },
                         fontSize = 11.sp,
                         fontWeight = FontWeight.SemiBold,
@@ -649,7 +649,7 @@ fun ActiveTabContent(
                             modifier = Modifier.size(16.dp)
                         )
                         Text(
-                            text = "طراحی چالش دلخواه",
+                            text = "Rule Composer",
                             fontSize = 12.5.sp,
                             fontWeight = FontWeight.ExtraBold,
                             color = TextPrimary
@@ -657,7 +657,7 @@ fun ActiveTabContent(
                     }
                     Spacer(modifier = Modifier.height(3.dp))
                     Text(
-                        text = "تنظیم سنسور و وثیقه شخصی",
+                        text = "Build custom sensor rules & stake",
                         fontSize = 10.5.sp,
                         color = TextSecondary,
                         lineHeight = 14.sp
@@ -689,7 +689,7 @@ fun ActiveTabContent(
                             modifier = Modifier.size(16.dp)
                         )
                         Text(
-                            text = "باشگاه سحرخیزی",
+                            text = "6 AM Club",
                             fontSize = 12.5.sp,
                             fontWeight = FontWeight.ExtraBold,
                             color = TextPrimary
@@ -697,7 +697,7 @@ fun ActiveTabContent(
                     }
                     Spacer(modifier = Modifier.height(3.dp))
                     Text(
-                        text = "بیداری قبل از ۶ صبح با ۵k وثیقه",
+                        text = "Wake up before 6 AM • 5k stake",
                         fontSize = 10.5.sp,
                         color = TextSecondary,
                         lineHeight = 14.sp
@@ -794,14 +794,14 @@ fun ActiveTabContent(
                             modifier = Modifier.size(14.dp)
                         )
                         Text(
-                            text = "مهلت ثبت امروز / Daily Deadline",
+                            text = "Daily Window Deadline",
                             fontSize = 12.sp,
                             fontWeight = FontWeight.ExtraBold,
                             color = CrimsonBurn
                         )
                     }
                     Text(
-                        text = "در صورت نقض: ${String.format("%.1f", dailyBurn)} \$SKR سوزانده می‌شود",
+                        text = "If missed: ${String.format("%.1f", dailyBurn)} \$SKR burned",
                         fontSize = 11.sp,
                         color = TextSecondary
                     )
@@ -886,7 +886,7 @@ fun ActiveTabContent(
                                 modifier = Modifier.size(12.dp)
                             )
                             Text(
-                                text = "${state.totalAmountSKR.toInt()} \$SKR وثیقه",
+                                text = "${state.totalAmountSKR.toInt()} \$SKR STAKED",
                                 fontSize = 10.sp,
                                 fontWeight = FontWeight.ExtraBold,
                                 color = SolanaPurple,
@@ -923,11 +923,11 @@ fun ActiveTabContent(
 
                 Text(
                     text = if (isInternetSensor) {
-                        "مصرف شده از سقف مجاز $limitVal دقیقه برای امروز"
+                        "used of $limitVal mins max allowed today"
                     } else if (isWakeUpSensor) {
-                        "ساعت بیداری ثبت‌شده (سقف مجاز: قبل از 06:00 AM)"
+                        "Wake-up time recorded (Target: before 06:00 AM)"
                     } else {
-                        "ثبت‌شده از هدف روزانه $limitVal قدم"
+                        "steps achieved of $limitVal daily target"
                     },
                     fontSize = 12.5.sp,
                     color = TextSecondary,
@@ -967,7 +967,7 @@ fun ActiveTabContent(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = if (isWithinLimit) "✓ در محدوده مجاز • آماده ثبت وضعیت" else "⚠️ فراتر از حد مجاز • در معرض جریمه",
+                        text = if (isWithinLimit) "Within Limit • Ready to Check In" else "Limit Exceeded • Burn At Risk",
                         fontSize = 11.5.sp,
                         fontWeight = FontWeight.Bold,
                         color = if (isWithinLimit) SolanaMint else CrimsonBurn
@@ -994,16 +994,16 @@ fun ActiveTabContent(
                         verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Row {
-                            Text(text = "زمان‌بندی: ", fontSize = 11.sp, color = TextSecondary)
+                            Text(text = "Schedule: ", fontSize = 11.sp, color = TextSecondary)
                             Text(
-                                text = if (isInternetSensor) "روزهای فرد (دوشنبه، چهارشنبه، جمعه، یکشنبه)" else "همه روزها (روزانه)",
+                                text = if (isInternetSensor) "Mon, Wed, Fri, Sun (Odd Days)" else "Daily All Days",
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.SemiBold,
                                 color = TextPrimary
                             )
                         }
                         Row {
-                            Text(text = "سنسور: ", fontSize = 11.sp, color = TextSecondary)
+                            Text(text = "Sensor: ", fontSize = 11.sp, color = TextSecondary)
                             Text(
                                 text = state.rule.sensorType.displayName,
                                 fontSize = 11.sp,
@@ -1012,9 +1012,9 @@ fun ActiveTabContent(
                             )
                         }
                         Row {
-                            Text(text = "تایید سخت‌افزاری: ", fontSize = 11.sp, color = TextSecondary)
+                            Text(text = "Attestation: ", fontSize = 11.sp, color = TextSecondary)
                             Text(
-                                text = "Seeker Ed25519 Nonce #84201 (ضد تقلب)",
+                                text = "Seeker Ed25519 Nonce #84201 (Anti-Tamper)",
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.SemiBold,
                                 color = TextPrimary
@@ -1042,7 +1042,7 @@ fun ActiveTabContent(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "روز $currentDay از $totalDays",
+                    text = "DAY $currentDay OF $totalDays",
                     fontSize = 11.sp,
                     fontWeight = FontWeight.ExtraBold,
                     color = TextSecondary,
@@ -1156,9 +1156,9 @@ fun ActiveTabContent(
                             )
                             Text(
                                 text = when {
-                                    isAlreadyClockedInToday -> "وضعیت امروز تایید و ثبت شد (VERIFIED)"
-                                    canClockIn -> "ثبت و تایید موفقیت امروز (VERIFY & CHECK-IN)"
-                                    else -> "هدف امروز هنوز رعایت نشده است"
+                                    isAlreadyClockedInToday -> "TODAY VERIFIED & CHECKED IN"
+                                    canClockIn -> "VERIFY & CHECK IN TODAY"
+                                    else -> "DAILY GOAL NOT MET YET"
                                 },
                                 fontSize = 13.5.sp,
                                 fontWeight = FontWeight.Black,
@@ -1168,7 +1168,7 @@ fun ActiveTabContent(
                         }
                         if (canClockIn && !isAlreadyClockedInToday) {
                             Text(
-                                text = "تایید سنسور سخت‌افزاری با امضای امن Seed Vault بدون کارمزد",
+                                text = "Automated sensor proof + Seed Vault Ed25519 signature",
                                 fontSize = 10.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = BgVoid.copy(alpha = 0.85f)
@@ -1216,7 +1216,7 @@ fun ActiveTabContent(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "اشتراک‌گذاری به عنوان Solana Blink در توییتر/ایکس",
+                    text = "Share Custom Plan as Solana Blink on X",
                     fontSize = 11.5.sp,
                     fontWeight = FontWeight.Bold,
                     color = TextSecondary
@@ -1259,13 +1259,13 @@ fun ExploreTabContent(
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "کاتالوگ چالش‌های اثبات‌شده",
+                    text = "Commitment Catalog",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Black,
                     color = TextPrimary
                 )
                 Text(
-                    text = "عادات هوشمند متصل به سنسورهای واقعی سخت‌افزار Seeker",
+                    text = "Hardware-attested habit blueprints. Pick one to activate.",
                     fontSize = 11.sp,
                     color = TextSecondary
                 )
@@ -1292,7 +1292,7 @@ fun ExploreTabContent(
                         modifier = Modifier.size(13.dp)
                     )
                     Text(
-                        text = "+ دلخواه",
+                        text = "+ Custom",
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Bold,
                         color = SolanaTeal
@@ -1305,8 +1305,8 @@ fun ExploreTabContent(
 
         // Blueprint 1: Odd-Days Internet Detox
         ExploreCardItem(
-            title = "سم‌زدایی اینترنت روزهای فرد (<1h)",
-            subtitle = "NetworkStats • دوشنبه/چهارشنبه/جمعه/یکشنبه • ۲,۵۰۰ \$SKR",
+            title = "Odd-Days Internet Detox (<1h)",
+            subtitle = "NetworkStats • Mon/Wed/Fri/Sun • 2,500 \$SKR",
             icon = Icons.Default.Language,
             accentColor = SolanaTeal,
             isActive = currentRuleId == internetDetoxRule.id,
@@ -1317,8 +1317,8 @@ fun ExploreTabContent(
 
         // Blueprint 2: The 6:00 AM Club
         ExploreCardItem(
-            title = "باشگاه سحرخیزی ۶:۰۰ صبح (High Stakes)",
-            subtitle = "ساعت سخت‌افزاری سیستم NTP • ۷ روز • ۵,۰۰۰ \$SKR وثیقه",
+            title = "The 6:00 AM Club (High Stakes)",
+            subtitle = "Hardware NTP Clock • 7 Days • Stake 5,000 \$SKR",
             icon = Icons.Default.Alarm,
             accentColor = GoldGenesis,
             isActive = currentRuleId == early6amRule.id,
@@ -1329,8 +1329,8 @@ fun ExploreTabContent(
 
         // Blueprint 3: 10,000 Steps Marathon
         ExploreCardItem(
-            title = "ماراتن ۱۰,۰۰۰ قدم روزانه",
-            subtitle = "سنسور گام‌شمار Health Connect • ۷ روز • ۱,۰۰۰ \$SKR وثیقه",
+            title = "10,000 Steps Daily Marathon",
+            subtitle = "Health Connect Sensors • 7 Days • Stake 1,000 \$SKR",
             icon = Icons.Default.DirectionsWalk,
             accentColor = SolanaMint,
             isActive = currentRuleId == stepGoalRule.id,
@@ -1341,8 +1341,8 @@ fun ExploreTabContent(
 
         // Blueprint 4: Social Media Detox
         ExploreCardItem(
-            title = "ترک و محدودیت شبکه‌های اجتماعی (<2h)",
-            subtitle = "سنسور زمان برنامه UsageStats • ۱۴ روز • ۱,۵۰۰ \$SKR وثیقه",
+            title = "Social Media Detox (<2h)",
+            subtitle = "Android UsageStats • 14 Days • Stake 1,500 \$SKR",
             icon = Icons.Default.Tune,
             accentColor = SolanaPurple,
             isActive = currentRuleId == screenDetoxRule.id,
@@ -1353,8 +1353,8 @@ fun ExploreTabContent(
 
         // Blueprint 5: Daily 45m Gym Workout
         ExploreCardItem(
-            title = "ورزش روزانه باشگاه ۴۵ دقیقه‌ای",
-            subtitle = "سنسور ضربان قلب و کالری • ۷ روز • ۷۵۰ \$SKR وثیقه",
+            title = "Daily 45m Gym Workout",
+            subtitle = "HeartRateRecord Sensors • 7 Days • Stake 750 \$SKR",
             icon = Icons.Default.LocalFireDepartment,
             accentColor = SolanaTeal,
             isActive = currentRuleId == gymWorkoutRule.id,
@@ -1363,7 +1363,7 @@ fun ExploreTabContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Info foot note
+        // Info footnote
         Surface(
             color = SurfaceCard,
             shape = RoundedCornerShape(12.dp),
@@ -1377,7 +1377,7 @@ fun ExploreTabContent(
             ) {
                 Text(text = "💡", fontSize = 14.sp)
                 Text(
-                    text = "با لمس دکمه «فعال‌سازی»، چالش بلافاصله روی سنسورهای گوشی شما فعال شده و به تب تعهد فعال منتقل می‌شوید.",
+                    text = "Tapping 'Activate' immediately syncs the rule with your phone hardware sensors and redirects you to the active commitment view.",
                     fontSize = 11.sp,
                     color = TextSecondary,
                     lineHeight = 16.sp
@@ -1474,7 +1474,7 @@ fun ExploreCardItem(
                 }
             ) {
                 Text(
-                    text = if (isActive) "فعال (ACTIVE)" else "فعال‌سازی",
+                    text = if (isActive) "ACTIVE" else "ACTIVATE",
                     fontSize = 10.5.sp,
                     fontWeight = FontWeight.ExtraBold,
                     color = accentColor,
@@ -1501,13 +1501,13 @@ fun RanksTabContent() {
         // Title Row
         Column(modifier = Modifier.fillMaxWidth()) {
             Text(
-                text = "رتبه‌بندی پروتکل Seeker (Protocol Ranks)",
+                text = "Seeker Protocol Ranks",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Black,
                 color = TextPrimary
             )
             Text(
-                text = "اثبات پایبندی جامعه کاربران بدون امکان تقلب",
+                text = "Proof-of-Action sovereign community leaderboard",
                 fontSize = 11.sp,
                 color = TextSecondary
             )
@@ -1527,7 +1527,7 @@ fun RanksTabContent() {
                 modifier = Modifier.weight(1f)
             ) {
                 Column(modifier = Modifier.padding(14.dp)) {
-                    Text(text = "مجموع سوخت پروتکل", fontSize = 11.sp, color = TextSecondary)
+                    Text(text = "Total Protocol Burned", fontSize = 11.sp, color = TextSecondary)
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = "48,250 \$SKR",
@@ -1536,7 +1536,7 @@ fun RanksTabContent() {
                         color = CrimsonBurn,
                         fontFamily = FontFamily.Monospace
                     )
-                    Text(text = "جریمه افراد بدقول 🔥", fontSize = 10.sp, color = TextMuted)
+                    Text(text = "Forfeited by non-compliers 🔥", fontSize = 10.sp, color = TextMuted)
                 }
             }
 
@@ -1547,7 +1547,7 @@ fun RanksTabContent() {
                 modifier = Modifier.weight(1f)
             ) {
                 Column(modifier = Modifier.padding(14.dp)) {
-                    Text(text = "نرخ پایبندی جامعه", fontSize = 11.sp, color = TextSecondary)
+                    Text(text = "Community Success Rate", fontSize = 11.sp, color = TextSecondary)
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = "92.4%",
@@ -1556,7 +1556,7 @@ fun RanksTabContent() {
                         color = SolanaMint,
                         fontFamily = FontFamily.Monospace
                     )
-                    Text(text = "موفقیت در تعهدات ✨", fontSize = 10.sp, color = TextMuted)
+                    Text(text = "Active commitments kept ✨", fontSize = 10.sp, color = TextMuted)
                 }
             }
         }
@@ -1564,7 +1564,7 @@ fun RanksTabContent() {
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "برترین‌های تعهد و استقامت",
+            text = "Proof-of-Action Champions",
             fontSize = 13.sp,
             fontWeight = FontWeight.ExtraBold,
             color = TextSecondary
@@ -1576,7 +1576,7 @@ fun RanksTabContent() {
         LeaderboardRow(
             rank = "1",
             name = "Toly.sol",
-            subtitle = "میانگین ۱۴,۲۰۰ قدم • ۰ سوختگی",
+            subtitle = "14,200 avg steps • 0 burns",
             streak = "28d STREAK",
             streakColor = GoldGenesis,
             isUser = false
@@ -1588,7 +1588,7 @@ fun RanksTabContent() {
         LeaderboardRow(
             rank = "2",
             name = "Mert_Helius",
-            subtitle = "میانگین ۱۱,۸۰۰ قدم • ۰ سوختگی",
+            subtitle = "11,800 avg steps • 0 burns",
             streak = "21d STREAK",
             streakColor = GoldGenesis,
             isUser = false
@@ -1599,8 +1599,8 @@ fun RanksTabContent() {
         // Rank 3 (You)
         LeaderboardRow(
             rank = "3",
-            name = "شما (Seeker Genesis)",
-            subtitle = "۲,۵۰۰ \$SKR وثیقه • سم‌زدایی اینترنت",
+            name = "You (Seeker Genesis)",
+            subtitle = "2,500 \$SKR Staked • Net Detox",
             streak = "4d STREAK",
             streakColor = SolanaMint,
             isUser = true
@@ -1612,7 +1612,7 @@ fun RanksTabContent() {
         LeaderboardRow(
             rank = "4",
             name = "Raj_Gokal",
-            subtitle = "سحرخیزی ۶:۰۰ صبح • ۵,۰۰۰ \$SKR وثیقه",
+            subtitle = "6:00 AM Wake-Up • 5,000 \$SKR",
             streak = "12d STREAK",
             streakColor = SolanaTeal,
             isUser = false
@@ -1624,7 +1624,7 @@ fun RanksTabContent() {
         LeaderboardRow(
             rank = "5",
             name = "Austin_Federa",
-            subtitle = "سم‌زدایی اینترنت • ۰ سوختگی",
+            subtitle = "Net Detox • 0 burns",
             streak = "9d STREAK",
             streakColor = SolanaTeal,
             isUser = false
@@ -1651,7 +1651,7 @@ fun RanksTabContent() {
                     modifier = Modifier.size(16.dp)
                 )
                 Text(
-                    text = "کلیه رتبه‌ها بر اساس امضاهای رمزنگاری‌شده سخت‌افزار Seeker ثبت شده و قابل دستکاری نیستند.",
+                    text = "All ranks are cryptographically proven via Seeker hardware signatures and verifiable on Solana.",
                     fontSize = 11.sp,
                     color = TextSecondary,
                     lineHeight = 16.sp
@@ -1808,7 +1808,7 @@ fun VaultTabContent(
                     text = if (walletAddress != null && !walletAddress.contains("SeekerPledgeDemo")) {
                         "${walletAddress.take(8)}...${walletAddress.takeLast(6)}"
                     } else {
-                        "Seeker...7xK2 (متصل به Devnet)"
+                        "Seeker...7xK2 (Solana Devnet)"
                     },
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
@@ -1817,7 +1817,7 @@ fun VaultTabContent(
                 )
 
                 Text(
-                    text = "${stakedAmount.toInt()} \$SKR در گاوصندوق هوشمند وثیقه شده",
+                    text = "${stakedAmount.toInt()} \$SKR Locked in Smart Escrow",
                     fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = SolanaMint,
@@ -1825,7 +1825,7 @@ fun VaultTabContent(
                 )
 
                 Text(
-                    text = "موجودی آزاد کیف‌پول: ${String.format("%.1f", skrBalance)} \$SKR",
+                    text = "Available Wallet Balance: ${String.format("%.1f", skrBalance)} \$SKR",
                     fontSize = 11.sp,
                     color = TextSecondary,
                     modifier = Modifier.padding(top = 2.dp)
@@ -1860,7 +1860,7 @@ fun VaultTabContent(
                 )
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(
-                    text = "برداشت و تسویه تعهدات (Settle & Claim)",
+                    text = "Settle & Claim Vault Escrow",
                     fontSize = 12.5.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
@@ -1882,7 +1882,7 @@ fun VaultTabContent(
                 modifier = Modifier.weight(1f)
             ) {
                 Column(modifier = Modifier.padding(14.dp)) {
-                    Text(text = "کل وثیقه بازگشته", fontSize = 11.sp, color = TextSecondary)
+                    Text(text = "Total Returned", fontSize = 11.sp, color = TextSecondary)
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = "1,450 \$SKR",
@@ -1901,7 +1901,7 @@ fun VaultTabContent(
                 modifier = Modifier.weight(1f)
             ) {
                 Column(modifier = Modifier.padding(14.dp)) {
-                    Text(text = "کل مبالغ جریمه‌شده", fontSize = 11.sp, color = TextSecondary)
+                    Text(text = "Total Burned", fontSize = 11.sp, color = TextSecondary)
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = "100 \$SKR",
@@ -1918,7 +1918,7 @@ fun VaultTabContent(
 
         // Soulbound cNFTs Header
         Text(
-            text = "نشان‌های افتخار غیرقابل انتقال (Soulbound cNFTs)",
+            text = "Soulbound Proof-of-Action cNFTs",
             fontSize = 12.sp,
             fontWeight = FontWeight.ExtraBold,
             color = TextSecondary,
@@ -1935,7 +1935,7 @@ fun VaultTabContent(
             // Badge 1: Data Master
             BadgeCard(
                 title = "Data Master",
-                subtitle = "سم‌زدایی موفق اینترنت",
+                subtitle = "Mobile Internet Detox",
                 tag = "cNFT Verified ✓",
                 icon = Icons.Default.Language,
                 color = SolanaTeal,
@@ -1945,7 +1945,7 @@ fun VaultTabContent(
             // Badge 2: 6 AM Club
             BadgeCard(
                 title = "6 AM Club Hero",
-                subtitle = "سحرخیزی پیوسته",
+                subtitle = "Consistent Early Riser",
                 tag = "cNFT Verified ✓",
                 icon = Icons.Default.Alarm,
                 color = GoldGenesis,
@@ -1962,7 +1962,7 @@ fun VaultTabContent(
             // Badge 3: 10k Steps Pioneer
             BadgeCard(
                 title = "10k Pioneer",
-                subtitle = "ماراتن ۱۰ هزار قدم",
+                subtitle = "10k Steps Marathon",
                 tag = "cNFT Verified ✓",
                 icon = Icons.Default.DirectionsWalk,
                 color = SolanaMint,
@@ -1972,7 +1972,7 @@ fun VaultTabContent(
             // Badge 4: Iron Will
             BadgeCard(
                 title = "Iron Will Genesis",
-                subtitle = "اراده آهنین بدون نقض",
+                subtitle = "Zero Violations Streak",
                 tag = "Genesis cNFT ✓",
                 icon = Icons.Default.Shield,
                 color = SolanaPurple,
@@ -2081,13 +2081,13 @@ fun HowItWorksModal(
             ) {
                 Column {
                     Text(
-                        text = "💡 bozPLEDGE چطور کار می‌کنه؟",
+                        text = "💡 How bozPLEDGE Works",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Black,
                         color = TextPrimary
                     )
                     Text(
-                        text = "راهنمای ۳۰ ثانیه‌ای برای موفقیت در اهداف و مسابقه",
+                        text = "A 30-second guide to building iron habits & winning",
                         fontSize = 11.5.sp,
                         color = TextSecondary
                     )
@@ -2098,7 +2098,7 @@ fun HowItWorksModal(
                     shape = RoundedCornerShape(50)
                 ) {
                     Text(
-                        text = "۳ مرحله ساده",
+                        text = "3 Simple Steps",
                         fontSize = 10.5.sp,
                         fontWeight = FontWeight.Bold,
                         color = SolanaMint,
@@ -2111,9 +2111,9 @@ fun HowItWorksModal(
 
             // Step 1
             HowItWorksStepCard(
-                stepNumber = "۱",
-                stepTitle = "شرط‌بندی روی اراده خودت (Stake Deposit)",
-                stepDesc = "برای هر عادت (ترک اینترنت، ورزش یا سحرخیزی)، مقداری توکن \$SKR در گاوصندوق قرارداد هوشمند وثیقه می‌گذاری تا انگیزه قطعی داشته باشی و بهانه‌تراشی نکنی.",
+                stepNumber = "1",
+                stepTitle = "Stake Collateral for Motivation",
+                stepDesc = "Lock $SKR tokens in the smart contract escrow as collateral. Having skin-in-the-game destroys rationalization and procrastination.",
                 badgeColor = SolanaPurple,
                 icon = Icons.Default.Lock
             )
@@ -2122,9 +2122,9 @@ fun HowItWorksModal(
 
             // Step 2
             HowItWorksStepCard(
-                stepNumber = "۲",
-                stepTitle = "راستی‌آزمایی با سنسور گوشی (Hardware Proof)",
-                stepDesc = "نیازی به ثبت دستی نیست و امکان دروغ گفتن وجود نداره! سنسورهای واقعی گوشی (مصرف اینترنت، گام‌شمار، ساعت بیداری) عملکردت رو اتوماتیک و ضد تقلب تایید می‌کنن.",
+                stepNumber = "2",
+                stepTitle = "Zero-Cheat Hardware Attestation",
+                stepDesc = "No manual honesty logs. Real phone hardware sensors (mobile data counters, step sensors, system clock) verify completion automatically.",
                 badgeColor = SolanaTeal,
                 icon = Icons.Default.Bolt
             )
@@ -2133,9 +2133,9 @@ fun HowItWorksModal(
 
             // Step 3
             HowItWorksStepCard(
-                stepNumber = "۳",
-                stepTitle = "پاداش و نشان یا جریمه (Win or Burn)",
-                stepDesc = "اگر به قولت عمل کنی، کل پولت به همراه نشان افتخار Soulbound cNFT برمی‌گرده. اما اگر بدقولی کنی، بخشی از توکن‌های وثیقه سوزانده میشه!",
+                stepNumber = "3",
+                stepTitle = "Reclaim with Badges or Burn",
+                stepDesc = "Fulfill your commitments to reclaim 100% of your collateral plus earn permanent Soulbound cNFT medals. Miss a day and tokens are burned on-chain.",
                 badgeColor = SolanaMint,
                 icon = Icons.Default.EmojiEvents
             )
@@ -2155,7 +2155,7 @@ fun HowItWorksModal(
                     .height(50.dp)
             ) {
                 Text(
-                    text = "متوجه شدم، شروع کنیم! (Got It, Let's Start)",
+                    text = "Got It, Let's Start!",
                     fontSize = 13.5.sp,
                     fontWeight = FontWeight.Black,
                     color = BgVoid

@@ -153,7 +153,7 @@ class MainActivity : ComponentActivity() {
                             clockedInBitmap = 0L,
                             startTimestamp = System.currentTimeMillis() / 1000L
                         )
-                        Toast.makeText(this@MainActivity, "چالش «${preset.title}» با موفقیت فعال شد!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@MainActivity, "Activated: ${preset.title}", Toast.LENGTH_SHORT).show()
                     },
                     onSettle = {
                         currentScreen = Screen.SETTLE
