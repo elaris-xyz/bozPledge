@@ -1271,6 +1271,9 @@
                     <span class="genesis-badge" id="genesis-pill">SEEKER GENESIS</span>
                 </div>
                 <div class="header-actions">
+                    <div class="btn-ghost-action" id="guide-toggle-btn" style="color: var(--gold-genesis); border-color: rgba(245, 158, 11, 0.4); background: rgba(245, 158, 11, 0.12);" onclick="openHowItWorksModal()">
+                        <span>💡 راهنما</span>
+                    </div>
                     <div class="btn-ghost-action" id="judge-toggle-btn" onclick="toggleSandboxDrawer()">
                         <svg class="icon sm" viewBox="0 0 24 24"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/></svg>
                         <span id="judge-btn-label">Judge</span>
@@ -1310,6 +1313,23 @@
 
                 <!-- ACTIVE DASHBOARD CONTENT WRAPPER -->
                 <div id="active-dashboard-content">
+
+                <!-- Quick Orientation Tip Banner -->
+                <div id="quick-guide-banner" style="background: rgba(153, 69, 255, 0.12); border: 1px solid rgba(153, 69, 255, 0.35); border-radius: 16px; padding: 14px; margin-bottom: 14px; position: relative;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <span style="font-size: 14px;">💡</span>
+                            <span style="font-size: 12.5px; font-weight: 800; color: var(--solana-mint);">راهنمای سریع این صفحه</span>
+                        </div>
+                        <div style="cursor: pointer; color: var(--text-muted); font-size: 14px;" onclick="document.getElementById('quick-guide-banner').style.display = 'none';">✕</div>
+                    </div>
+                    <div style="font-size: 11.5px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 8px;">
+                        هدف فعال شما: <strong>سم‌زدایی اینترنت روزهای فرد</strong> است. سنسور گوشی عملکرد شما را می‌سنجد. اگر هدف روزانه رعایت شده باشد، دکمه تایید سبز می‌شود و با یک لمس امتیاز روز را ثبت می‌کنید.
+                    </div>
+                    <div style="text-align: right;">
+                        <span style="font-size: 11.5px; font-weight: 800; color: var(--solana-mint); cursor: pointer;" onclick="openHowItWorksModal()">چطور کار می‌کنه؟ (مشاهده راهنمای گرافیکی) →</span>
+                    </div>
+                </div>
 
                 <!-- Action Row: Rule Composer & Custom Studio -->
                 <div class="studio-action-grid">
@@ -1423,9 +1443,12 @@
                 </div>
 
                 <!-- Hero Clock-In Button -->
-                <button class="btn-clock-in active" id="hero-clockin-btn" onclick="openBiometricSheet()">
+                <button class="btn-clock-in active" id="hero-clockin-btn" onclick="openBiometricSheet()" style="height: 60px;">
                     <svg class="icon md" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                    <span id="clockin-btn-text">CLOCK IN (SEED VAULT)</span>
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 2px;">
+                        <span id="clockin-btn-text" style="font-size: 13.5px; font-weight: 900; letter-spacing: 0.3px;">ثبت و تایید موفقیت امروز (VERIFY & CHECK-IN)</span>
+                        <span style="font-size: 10px; font-weight: 700; opacity: 0.85;">تایید خودکار سنسور + امضای امن در Seed Vault بدون کارمزد</span>
+                    </div>
                 </button>
 
                 <!-- Share as Blink Button -->
@@ -1457,78 +1480,78 @@
             <div class="tab-panel" id="view-explore">
                 <div class="catalog-title-row">
                     <div>
-                        <div class="catalog-main-title">Commitment Catalog</div>
-                        <div class="catalog-sub-title">Hardware-attested habit blueprints.</div>
+                        <div class="catalog-main-title">کاتالوگ چالش‌های اثبات‌شده (Commitment Catalog)</div>
+                        <div class="catalog-sub-title">عادت‌های هوشمند متصل به سنسورهای واقعی گوشی • برای شروع، یکی را انتخاب کنید</div>
                     </div>
                     <button onclick="openComposerModal()" style="background: rgba(0, 229, 255, 0.15); color: var(--solana-teal); border: 1px solid var(--solana-teal); padding: 6px 12px; border-radius: 10px; font-weight: 800; font-size: 11px; cursor: pointer; display: flex; align-items: center; gap: 5px;">
                         <svg class="icon sm" viewBox="0 0 24 24"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/></svg>
-                        <span>Composer</span>
+                        <span>+ دلخواه</span>
                     </button>
                 </div>
 
-                <div class="catalog-card-item" onclick="switchCategory('oddInternet', document.querySelectorAll('.habit-chip')[0]); switchNavTab('dashboard', document.querySelectorAll('.nav-dock-item')[0]);">
+                <div class="catalog-card-item" onclick="switchCategory('oddInternet', document.querySelectorAll('.habit-chip')[0]); switchNavTab('dashboard', document.querySelectorAll('.nav-dock-item')[0]); showToast('چالش «سم‌زدایی اینترنت روزهای فرد» فعال شد!');">
                     <div style="display: flex; align-items: center;">
                         <div class="catalog-icon-box" style="color: var(--solana-teal);">
                             <svg class="icon md" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20M2 12h20"/></svg>
                         </div>
                         <div class="catalog-info">
-                            <h4>Odd-Days Internet Limit (&lt;1h)</h4>
-                            <p>NetworkStats • Mon/Wed/Fri/Sun • 2,500 $SKR</p>
+                            <h4>سم‌زدایی اینترنت روزهای فرد (&lt;1h)</h4>
+                            <p>NetworkStats • دوشنبه/چهارشنبه/جمعه/یکشنبه • ۲,۵۰۰ $SKR</p>
                         </div>
                     </div>
-                    <span class="catalog-status-badge" style="color: var(--solana-teal)">ACTIVE</span>
+                    <span class="catalog-status-badge" style="color: var(--solana-teal)">فعال (ACTIVE)</span>
                 </div>
 
-                <div class="catalog-card-item" onclick="switchCategory('early6am', document.querySelectorAll('.habit-chip')[1]); switchNavTab('dashboard', document.querySelectorAll('.nav-dock-item')[0]);">
+                <div class="catalog-card-item" onclick="switchCategory('early6am', document.querySelectorAll('.habit-chip')[1]); switchNavTab('dashboard', document.querySelectorAll('.nav-dock-item')[0]); showToast('چالش «باشگاه سحرخیزی ۶ صبح» فعال شد!');">
                     <div style="display: flex; align-items: center;">
                         <div class="catalog-icon-box" style="color: var(--gold-genesis);">
                             <svg class="icon md" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><polyline points="12 9 12 12 13.5 13.5"/></svg>
                         </div>
                         <div class="catalog-info">
-                            <h4>The 6:00 AM Club (High Roller)</h4>
-                            <p>System Clock NTP • 7 Days • Stake 5,000 $SKR</p>
+                            <h4>باشگاه سحرخیزی ۶:۰۰ صبح (High Stakes)</h4>
+                            <p>ساعت سخت‌افزاری سیستم NTP • ۷ روز • ۵,۰۰۰ $SKR وثیقه</p>
                         </div>
                     </div>
-                    <span class="catalog-status-badge" style="color: var(--gold-genesis)">JOIN</span>
+                    <span class="catalog-status-badge" style="color: var(--gold-genesis)">فعال‌سازی</span>
                 </div>
 
-                <div class="catalog-card-item" onclick="switchCategory('steps', document.querySelectorAll('.habit-chip')[2]); switchNavTab('dashboard', document.querySelectorAll('.nav-dock-item')[0]);">
+                <div class="catalog-card-item" onclick="switchCategory('steps', document.querySelectorAll('.habit-chip')[2]); switchNavTab('dashboard', document.querySelectorAll('.nav-dock-item')[0]); showToast('چالش «ماراتن ۱۰,۰۰۰ قدم روزانه» فعال شد!');">
                     <div style="display: flex; align-items: center;">
                         <div class="catalog-icon-box" style="color: var(--solana-mint);">
                             <svg class="icon md" viewBox="0 0 24 24"><path d="M13 4v16M17 8l-4-4-4 4"/><circle cx="12" cy="4" r="1.5"/></svg>
                         </div>
                         <div class="catalog-info">
-                            <h4>10,000 Steps Marathon</h4>
-                            <p>Health Connect • 7 Days • Stake 500 $SKR</p>
+                            <h4>ماراتن ۱۰,۰۰۰ قدم روزانه</h4>
+                            <p>سنسور سلامت Health Connect • ۷ روز • ۱,۰۰۰ $SKR وثیقه</p>
                         </div>
                     </div>
-                    <span class="catalog-status-badge" style="color: var(--solana-mint)">JOIN</span>
+                    <span class="catalog-status-badge" style="color: var(--solana-mint)">فعال‌سازی</span>
                 </div>
 
-                <div class="catalog-card-item" onclick="switchCategory('screentime', document.querySelectorAll('.habit-chip')[3]); switchNavTab('dashboard', document.querySelectorAll('.nav-dock-item')[0]);">
+                <div class="catalog-card-item" onclick="switchCategory('screentime', document.querySelectorAll('.habit-chip')[3]); switchNavTab('dashboard', document.querySelectorAll('.nav-dock-item')[0]); showToast('چالش «ترک شبکه‌های اجتماعی» فعال شد!');">
                     <div style="display: flex; align-items: center;">
                         <div class="catalog-icon-box" style="color: var(--solana-purple);">
                             <svg class="icon md" viewBox="0 0 24 24"><rect width="14" height="20" x="5" y="2" rx="3"/><line x1="12" x2="12.01" y1="18" y2="18"/></svg>
                         </div>
                         <div class="catalog-info">
-                            <h4>Social Media Detox (&lt;2h)</h4>
-                            <p>Android UsageStats • 14 Days • Stake 1,000 $SKR</p>
+                            <h4>ترک و محدودیت شبکه‌های اجتماعی (&lt;2h)</h4>
+                            <p>سنسور زمان برنامه UsageStats • ۱۴ روز • ۱,۵۰۰ $SKR وثیقه</p>
                         </div>
                     </div>
-                    <span class="catalog-status-badge" style="color: var(--solana-purple)">JOIN</span>
+                    <span class="catalog-status-badge" style="color: var(--solana-purple)">فعال‌سازی</span>
                 </div>
 
-                <div class="catalog-card-item" onclick="switchCategory('gym', document.querySelectorAll('.habit-chip')[4]); switchNavTab('dashboard', document.querySelectorAll('.nav-dock-item')[0]);">
+                <div class="catalog-card-item" onclick="switchCategory('gym', document.querySelectorAll('.habit-chip')[4]); switchNavTab('dashboard', document.querySelectorAll('.nav-dock-item')[0]); showToast('چالش «ورزش روزانه باشگاه» فعال شد!');">
                     <div style="display: flex; align-items: center;">
                         <div class="catalog-icon-box" style="color: var(--solana-teal);">
                             <svg class="icon md" viewBox="0 0 24 24"><path d="m6.5 6.5 11 11M21 21l-1-1a2 2 0 0 0-2.8 0L16 21M3 3l1 1a2 2 0 0 0 2.8 0L8 3"/></svg>
                         </div>
                         <div class="catalog-info">
-                            <h4>Daily 45m Gym Workout</h4>
-                            <p>HeartRateRecord • 7 Days • Stake 750 $SKR</p>
+                            <h4>ورزش روزانه باشگاه ۴۵ دقیقه‌ای</h4>
+                            <p>سنسور ضربان قلب و کالری • ۷ روز • ۷۵۰ $SKR وثیقه</p>
                         </div>
                     </div>
-                    <span class="catalog-status-badge" style="color: var(--solana-teal)">JOIN</span>
+                    <span class="catalog-status-badge" style="color: var(--solana-teal)">فعال‌سازی</span>
                 </div>
             </div>
 
@@ -1536,8 +1559,19 @@
             <div class="tab-panel" id="view-squads">
                 <div class="catalog-title-row">
                     <div>
-                        <div class="catalog-main-title">Seeker Protocol Ranks</div>
-                        <div class="catalog-sub-title">Proof-of-Action sovereign community.</div>
+                        <div class="catalog-main-title">رتبه‌بندی پروتکل Seeker (Protocol Ranks)</div>
+                        <div class="catalog-sub-title">اثبات پایبندی جامعه کاربران بدون امکان تقلب</div>
+                    </div>
+                </div>
+
+                <div class="stats-2-col" style="margin-bottom: 12px;">
+                    <div class="mini-stat-card" style="border-color: rgba(255, 59, 48, 0.3);">
+                        <div class="mini-stat-title">مجموع سوخت پروتکل</div>
+                        <div class="mini-stat-val" style="color: var(--crimson-burn); font-size: 15px;">48,250 $SKR</div>
+                    </div>
+                    <div class="mini-stat-card" style="border-color: rgba(20, 241, 149, 0.3);">
+                        <div class="mini-stat-title">نرخ پایبندی جامعه</div>
+                        <div class="mini-stat-val" style="color: var(--solana-mint); font-size: 15px;">92.4%</div>
                     </div>
                 </div>
 
@@ -1549,10 +1583,10 @@
                         </div>
                         <div>
                             <div style="font-weight: 800; font-size: 14px;">Toly.sol</div>
-                            <div style="font-size: 11px; color: var(--text-secondary);">14,200 avg steps • 0 burns</div>
+                            <div style="font-size: 11px; color: var(--text-secondary);">میانگین ۱۴,۲۰۰ قدم • ۰ سوختگی</div>
                         </div>
                     </div>
-                    <span class="pill-badge amber">28d STREAK</span>
+                    <span class="pill-badge amber">28d STREAK 🔥</span>
                 </div>
 
                 <div class="leader-row">
@@ -1563,24 +1597,24 @@
                         </div>
                         <div>
                             <div style="font-weight: 800; font-size: 14px;">Mert_Helius</div>
-                            <div style="font-size: 11px; color: var(--text-secondary);">11,800 avg steps • 0 burns</div>
+                            <div style="font-size: 11px; color: var(--text-secondary);">میانگین ۱۱,۸۰۰ قدم • ۰ سوختگی</div>
                         </div>
                     </div>
-                    <span class="pill-badge amber">21d STREAK</span>
+                    <span class="pill-badge amber">21d STREAK 🔥</span>
                 </div>
 
-                <div class="leader-row" style="border-color: rgba(20, 241, 149, 0.3); background: rgba(20, 241, 149, 0.04);">
+                <div class="leader-row" style="border-color: rgba(20, 241, 149, 0.4); background: rgba(20, 241, 149, 0.06);">
                     <div class="leader-rank" style="color: var(--solana-mint);">3</div>
                     <div class="leader-user-box">
                         <div class="leader-avatar" style="border-color: var(--solana-mint); color: var(--solana-mint);">
                             <svg class="icon sm" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                         </div>
                         <div>
-                            <div style="font-weight: 800; font-size: 14px;">You (Seeker Genesis)</div>
-                            <div style="font-size: 11px; color: var(--text-secondary);">2,500 $SKR Staked • Net Detox</div>
+                            <div style="font-weight: 800; font-size: 14px;">شما (Seeker Genesis)</div>
+                            <div style="font-size: 11px; color: var(--text-secondary);">۲,۵۰۰ $SKR وثیقه • سم‌زدایی اینترنت</div>
                         </div>
                     </div>
-                    <span class="pill-badge mint">4d STREAK</span>
+                    <span class="pill-badge mint">4d STREAK ✨</span>
                 </div>
             </div>
 
@@ -1590,34 +1624,48 @@
                     <div style="width: 54px; height: 54px; border-radius: 18px; background: rgba(20, 241, 149, 0.1); border: 1px solid rgba(20, 241, 149, 0.3); display: inline-flex; align-items: center; justify-content: center; color: var(--solana-mint); margin-bottom: 10px;">
                         <svg class="icon lg" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
                     </div>
-                    <h3 style="font-weight: 800; font-size: 17px;" id="profile-address-text">Not Connected</h3>
-                    <p style="font-size: 12px; color: var(--solana-mint); font-family: var(--font-mono); margin-top: 4px;" id="profile-skr-text">0 $SKR in Escrow</p>
+                    <h3 style="font-weight: 800; font-size: 17px;" id="profile-address-text">Seeker...7xK2 (متصل به Devnet)</h3>
+                    <p style="font-size: 12px; color: var(--solana-mint); font-family: var(--font-mono); margin-top: 4px;" id="profile-skr-text">2,500 $SKR در گاوصندوق هوشمند</p>
                 </div>
+
+                <button onclick="showToast('درخواست تسویه نهایی به Seed Vault ارسال شد'); playSuccessChime();" style="width: 100%; height: 46px; background: var(--solana-purple); border: none; border-radius: var(--radius-inner); font-size: 12.5px; font-weight: 800; color: #fff; cursor: pointer; margin-bottom: 14px; font-family: var(--font-sans);">
+                    برداشت و تسویه تعهدات (Settle & Claim)
+                </button>
 
                 <div class="stats-2-col">
                     <div class="mini-stat-card">
-                        <div class="mini-stat-title">Total Returned</div>
+                        <div class="mini-stat-title">کل وثیقه بازگشته</div>
                         <div class="mini-stat-val" style="color: var(--solana-mint)">1,450 $SKR</div>
                     </div>
                     <div class="mini-stat-card">
-                        <div class="mini-stat-title">Total Burned</div>
+                        <div class="mini-stat-title">کل مبالغ جریمه‌شده</div>
                         <div class="mini-stat-val" style="color: var(--crimson-burn)">100 $SKR</div>
                     </div>
                 </div>
 
-                <div style="font-weight: 800; font-size: 13px; margin: 14px 0 8px 0; color: var(--text-secondary); letter-spacing: 0.5px; text-transform: uppercase;">
-                    Soulbound Proof-of-Action cNFTs
+                <div style="font-weight: 800; font-size: 12px; margin: 14px 0 8px 0; color: var(--text-secondary); letter-spacing: 0.5px;">
+                    نشان‌های افتخار غیرقابل انتقال (Soulbound cNFTs)
                 </div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                     <div style="background: var(--surface-card); border: 1px solid var(--border-subtle); border-radius: 14px; padding: 12px; text-align: center;">
                         <svg class="icon md" style="color: var(--solana-teal); margin-bottom: 6px;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20M2 12h20"/></svg>
                         <div style="font-weight: 800; font-size: 12px;">Data Master</div>
-                        <div style="font-size: 10px; color: var(--text-muted);">cNFT Verified</div>
+                        <div style="font-size: 10px; color: var(--solana-teal);">cNFT Verified ✓</div>
                     </div>
                     <div style="background: var(--surface-card); border: 1px solid var(--border-subtle); border-radius: 14px; padding: 12px; text-align: center;">
                         <svg class="icon md" style="color: var(--gold-genesis); margin-bottom: 6px;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><polyline points="12 9 12 12 13.5 13.5"/></svg>
-                        <div style="font-weight: 800; font-size: 12px;">6 AM Club</div>
-                        <div style="font-size: 10px; color: var(--text-muted);">cNFT Verified</div>
+                        <div style="font-weight: 800; font-size: 12px;">6 AM Club Hero</div>
+                        <div style="font-size: 10px; color: var(--gold-genesis);">cNFT Verified ✓</div>
+                    </div>
+                    <div style="background: var(--surface-card); border: 1px solid var(--border-subtle); border-radius: 14px; padding: 12px; text-align: center;">
+                        <svg class="icon md" style="color: var(--solana-mint); margin-bottom: 6px;" viewBox="0 0 24 24"><path d="M13 4v16M17 8l-4-4-4 4"/><circle cx="12" cy="4" r="1.5"/></svg>
+                        <div style="font-weight: 800; font-size: 12px;">10k Pioneer</div>
+                        <div style="font-size: 10px; color: var(--solana-mint);">cNFT Verified ✓</div>
+                    </div>
+                    <div style="background: var(--surface-card); border: 1px solid var(--border-subtle); border-radius: 14px; padding: 12px; text-align: center;">
+                        <svg class="icon md" style="color: var(--solana-purple); margin-bottom: 6px;" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        <div style="font-weight: 800; font-size: 12px;">Iron Will Genesis</div>
+                        <div style="font-size: 10px; color: var(--solana-purple);">Genesis cNFT ✓</div>
                     </div>
                 </div>
             </div>
@@ -1775,6 +1823,56 @@
 
                 <button onclick="deployStudioGoal()" style="width: 100%; height: 56px; background: linear-gradient(135deg, var(--gold-genesis) 0%, var(--warning-amber) 100%); border: none; border-radius: var(--radius-inner); font-size: 14px; font-weight: 800; color: #030407; cursor: pointer; font-family: var(--font-sans); box-shadow: 0 10px 28px rgba(245, 158, 11, 0.25);">
                     LOCK 5,000 $SKR IN ESCROW
+                </button>
+            </div>
+        </div>
+
+        <!-- 💡 30-SECOND INTERACTIVE HOW IT WORKS MODAL -->
+        <div class="modal-scrim" id="howitworks-modal">
+            <div class="modal-panel-content" style="max-height: 85vh; overflow-y: auto;">
+                <div class="modal-header-row">
+                    <div>
+                        <div class="modal-title" style="color: var(--solana-mint);">
+                            <span>💡 bozPLEDGE چطور کار می‌کنه؟</span>
+                        </div>
+                        <div style="font-size: 11.5px; color: var(--text-secondary); margin-top: 2px;">
+                            راهنمای ۳۰ ثانیه‌ای برای درک سریع و موفقیت در اهداف
+                        </div>
+                    </div>
+                    <div class="modal-close-btn" onclick="closeHowItWorksModal()">
+                        <svg class="icon sm" viewBox="0 0 24 24"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
+                    </div>
+                </div>
+
+                <!-- Step 1 -->
+                <div style="background: var(--surface-deep); border: 1px solid var(--border-subtle); border-radius: 14px; padding: 14px; display: flex; gap: 12px; margin-top: 14px; align-items: flex-start;">
+                    <div style="width: 34px; height: 34px; border-radius: 50%; background: rgba(153, 69, 255, 0.16); border: 1px solid rgba(153, 69, 255, 0.4); display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--solana-purple); font-size: 14px; flex-shrink: 0;">۱</div>
+                    <div>
+                        <div style="font-size: 13px; font-weight: 800; color: #fff; margin-bottom: 3px;">۱. شرط‌بندی روی اراده خودت (Stake Deposit)</div>
+                        <div style="font-size: 11px; color: var(--text-secondary); line-height: 1.5;">برای هر عادت (ترک اینترنت، ورزش یا سحرخیزی)، مقداری توکن $SKR در گاوصندوق قرارداد هوشمند وثیقه می‌گذاری تا انگیزه قطعی داشته باشی و بهانه‌تراشی نکنی.</div>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div style="background: var(--surface-deep); border: 1px solid var(--border-subtle); border-radius: 14px; padding: 14px; display: flex; gap: 12px; margin-top: 10px; align-items: flex-start;">
+                    <div style="width: 34px; height: 34px; border-radius: 50%; background: rgba(0, 229, 255, 0.16); border: 1px solid rgba(0, 229, 255, 0.4); display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--solana-teal); font-size: 14px; flex-shrink: 0;">۲</div>
+                    <div>
+                        <div style="font-size: 13px; font-weight: 800; color: #fff; margin-bottom: 3px;">۲. راستی‌آزمایی با سنسور گوشی (Hardware Proof)</div>
+                        <div style="font-size: 11px; color: var(--text-secondary); line-height: 1.5;">نیازی به ثبت دستی نیست و امکان دروغ گفتن وجود نداره! سنسورهای واقعی گوشی (مصرف اینترنت، گام‌شمار، ساعت بیداری) عملکردت رو اتوماتیک و ضد تقلب تایید می‌کنن.</div>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div style="background: var(--surface-deep); border: 1px solid var(--border-subtle); border-radius: 14px; padding: 14px; display: flex; gap: 12px; margin-top: 10px; align-items: flex-start;">
+                    <div style="width: 34px; height: 34px; border-radius: 50%; background: rgba(20, 241, 149, 0.16); border: 1px solid rgba(20, 241, 149, 0.4); display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--solana-mint); font-size: 14px; flex-shrink: 0;">۳</div>
+                    <div>
+                        <div style="font-size: 13px; font-weight: 800; color: #fff; margin-bottom: 3px;">۳. پاداش و نشان یا جریمه (Win or Burn)</div>
+                        <div style="font-size: 11px; color: var(--text-secondary); line-height: 1.5;">اگر به قولت عمل کنی، کل پولت به همراه نشان افتخار Soulbound cNFT برمی‌گرده. اما اگر بدقولی کنی، بخشی از توکن‌های وثیقه سوزانده میشه!</div>
+                    </div>
+                </div>
+
+                <button onclick="closeHowItWorksModal()" style="width: 100%; height: 50px; background: var(--solana-mint); border: none; border-radius: var(--radius-inner); font-size: 13.5px; font-weight: 900; color: #030407; cursor: pointer; margin-top: 18px; font-family: var(--font-sans); box-shadow: 0 8px 24px rgba(20, 241, 149, 0.25);">
+                    متوجه شدم، شروع کنیم! (Got It, Let's Start)
                 </button>
             </div>
         </div>
@@ -2168,18 +2266,18 @@
 
             if (isTodayClockedIn) {
                 btn.className = 'btn-clock-in done';
-                btn.innerHTML = '<svg class="icon sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>CLOCKED IN ON-CHAIN</span>';
-                status.innerText = 'Verified On-Chain! See you tomorrow.';
+                btn.innerHTML = '<svg class="icon sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><div style="display:flex;flex-direction:column;align-items:center;"><span style="font-size:13px;font-weight:900;">وضعیت امروز تایید و ثبت شد (VERIFIED)</span><span style="font-size:9.5px;opacity:0.85;">تایید سنسور سخت‌افزاری در بلاکچین ثبت شد</span></div>';
+                status.innerText = '✓ تایید شد! وضعیت در بلاکچین ثبت شد.';
                 status.style.color = 'var(--solana-mint)';
             } else if (isPassing) {
                 btn.className = 'btn-clock-in active';
-                btn.innerHTML = '<svg class="icon sm" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span>CLOCK IN (SEED VAULT)</span>';
-                status.innerText = (activeCategory === 'oddInternet') ? 'Within Limit! Ready to Clock In' : 'Condition Met! Ready to Clock In';
+                btn.innerHTML = '<svg class="icon sm" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><div style="display:flex;flex-direction:column;align-items:center;"><span style="font-size:13px;font-weight:900;">ثبت و تایید موفقیت امروز (VERIFY & CHECK-IN)</span><span style="font-size:9.5px;opacity:0.85;">تایید خودکار سنسور + امضای امن Seed Vault بدون کارمزد</span></div>';
+                status.innerText = (activeCategory === 'oddInternet') ? '✓ در محدوده مجاز • آماده ثبت وضعیت روزانه' : '✓ شرایط محقق شد • آماده ثبت وضعیت';
                 status.style.color = 'var(--solana-mint)';
             } else {
                 btn.className = 'btn-clock-in disabled';
-                btn.innerHTML = '<svg class="icon sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg><span>CONDITION BREACHED</span>';
-                status.innerText = (activeCategory === 'oddInternet') ? 'Exceeded 60 mins internet quota!' : 'Target not satisfied yet';
+                btn.innerHTML = '<svg class="icon sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg><div style="display:flex;flex-direction:column;align-items:center;"><span style="font-size:13px;font-weight:900;">هدف امروز هنوز رعایت نشده است</span><span style="font-size:9.5px;opacity:0.85;">لطفاً مصرف را کاهش دهید یا به حد مجاز برسید</span></div>';
+                status.innerText = (activeCategory === 'oddInternet') ? '⚠️ فراتر از حد مجاز ۶۰ دقیقه اینترنت!' : '⚠️ هدف سنسور هنوز محقق نشده است';
                 status.style.color = 'var(--crimson-burn)';
             }
 
@@ -2319,6 +2417,16 @@
             isTodayClockedIn = false;
             showToast(`6:00 AM Club Deployed: 5,000 $SKR Staked!`);
             switchCategory('early6am', document.querySelectorAll('.habit-chip')[1]);
+        }
+
+        // How It Works Modal Logic
+        function openHowItWorksModal() {
+            playMechanicalClick();
+            document.getElementById('howitworks-modal').classList.add('active');
+        }
+        function closeHowItWorksModal() {
+            playMechanicalClick();
+            document.getElementById('howitworks-modal').classList.remove('active');
         }
 
         // Biometric Sheet Controls
