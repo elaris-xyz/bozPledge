@@ -2113,7 +2113,7 @@ fun HowItWorksModal(
             HowItWorksStepCard(
                 stepNumber = "1",
                 stepTitle = "Stake Collateral for Motivation",
-                stepDesc = "Lock $SKR tokens in the smart contract escrow as collateral. Having skin-in-the-game destroys rationalization and procrastination.",
+                stepDesc = "Lock \$SKR tokens in the smart contract escrow as collateral. Having skin-in-the-game destroys rationalization and procrastination.",
                 badgeColor = SolanaPurple,
                 icon = Icons.Default.Lock
             )

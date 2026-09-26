@@ -25,3 +25,5 @@ dist/
 *.pem
 *.key
 id.json
+scripts/
+
