@@ -1287,8 +1287,8 @@
                     <span class="genesis-badge" id="genesis-pill" style="display:none">SEEKER GENESIS</span>
                 </div>
                 <div class="header-actions">
-                    <div class="btn-ios-pill demo-pill" id="demo-mode-pill" onclick="toggleDemoModeSwitch()">
-                        <span id="demo-pill-label">⚡ Live Demo</span>
+                    <div class="btn-ios-pill demo-pill fresh" id="demo-mode-pill" onclick="toggleDemoModeSwitch()">
+                        <span id="demo-pill-label">⚡ Load Demo</span>
                     </div>
                     <div class="btn-ios-pill" id="guide-toggle-btn" onclick="openHowItWorksModal()">
                         <span>💡 Guide</span>
@@ -1307,7 +1307,7 @@
             <div class="tab-panel active" id="view-dashboard">
                 
                 <!-- DAY 0 / FRESH USER ONBOARDING -->
-                <div id="empty-state-container" style="display: none;">
+                <div id="empty-state-container" style="display: block;">
                     <div class="day0-welcome-card">
                         <div class="day0-badge">
                             <svg class="icon sm" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
@@ -1379,7 +1379,7 @@
                 </div>
 
                 <!-- ACTIVE DASHBOARD CONTENT WRAPPER -->
-                <div id="active-dashboard-content">
+                <div id="active-dashboard-content" style="display: none;">
 
                     <!-- Quick Orientation Tip Banner -->
                     <div id="quick-guide-banner" class="ios-tip-banner">
@@ -2237,7 +2237,7 @@
         let currentStakeSKR = 2500;
         let connectedAddress = null;
         let isDemoDrawerOpen = false;
-        let isFreshMode = false;
+        let isFreshMode = true;
         let pendingBlueprint = null;
 
         // Smart Composer State
@@ -2723,9 +2723,9 @@
             const demoPill = document.getElementById('demo-mode-pill');
             if (demoPill) {
                 demoPill.classList.add('fresh');
-                document.getElementById('demo-pill-label').innerText = '🌱 Fresh Day 0';
+                document.getElementById('demo-pill-label').innerText = '⚡ Load Demo';
             }
-            showToast("Switched to Fresh Day 0 (Pledge Onboarding)");
+            showToast("Switched to Fresh Day 0 Onboarding");
         }
 
         function simulateActiveUser() {
@@ -2737,13 +2737,13 @@
             const demoPill = document.getElementById('demo-mode-pill');
             if (demoPill) {
                 demoPill.classList.remove('fresh');
-                document.getElementById('demo-pill-label').innerText = '⚡ Live Demo';
+                document.getElementById('demo-pill-label').innerText = '🌱 Day 0';
             }
             currentDay = 2;
             isTodayClockedIn = false;
             updateProgress();
             updateExplorePills(activeCategory);
-            showToast("Resumed Live Demo (Day 2 of 7 Active Escrow)");
+            showToast("Loaded Live Demo (Day 2 of 7 Active Escrow)");
         }
 
         function activateBlueprintFromDay0(cat, title, stake, chipIdx) {
@@ -2755,7 +2755,7 @@
             const demoPill = document.getElementById('demo-mode-pill');
             if (demoPill) {
                 demoPill.classList.remove('fresh');
-                document.getElementById('demo-pill-label').innerText = '⚡ Live Demo';
+                document.getElementById('demo-pill-label').innerText = '🌱 Day 0';
             }
             currentDay = 1;
             isTodayClockedIn = false;

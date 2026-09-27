@@ -67,7 +67,7 @@ class MainActivity : ComponentActivity() {
         var isSettling by remember { mutableStateOf(false) }
         var isDemoMode by remember { mutableStateOf(true) }
 
-        // Initial default commitment matching Preview (Odd Days Internet Detox, Day 2 of 7, 2,500 SKR)
+        // Initial default commitment: Fresh Day 0 onboarding state
         var commitmentState by remember {
             mutableStateOf(
                 CommitmentState(
@@ -76,12 +76,12 @@ class MainActivity : ComponentActivity() {
                     clockInAuthority = sessionKeyManager.getPublicKeyBase58(),
                     targetSteps = 8000,
                     totalDays = 7,
-                    completedDays = 1,
-                    dayDurationSec = 30L, // 30s day in demo mode
-                    startTimestamp = (System.currentTimeMillis() / 1000L) - 30L,
-                    totalAmountSKR = 2500.0,
+                    completedDays = 0,
+                    dayDurationSec = 86400L,
+                    startTimestamp = 0L, // Fresh Day 0 Onboarding by default
+                    totalAmountSKR = 0.0,
                     settled = false,
-                    clockedInBitmap = 0b00001L,
+                    clockedInBitmap = 0L,
                     rule = HabitRule(
                         id = "odd_internet",
                         title = "Odd Days Internet Detox",
@@ -178,15 +178,22 @@ class MainActivity : ComponentActivity() {
                     },
                     onToggleFreshState = {
                         if (commitmentState.startTimestamp > 0) {
-                            commitmentState = commitmentState.copy(startTimestamp = 0L)
-                            Toast.makeText(this@MainActivity, "Switched to Fresh Day 0 State", Toast.LENGTH_SHORT).show()
+                            commitmentState = commitmentState.copy(
+                                startTimestamp = 0L,
+                                totalAmountSKR = 0.0,
+                                completedDays = 0,
+                                clockedInBitmap = 0L
+                            )
+                            Toast.makeText(this@MainActivity, "Reset to Fresh Day 0 Onboarding", Toast.LENGTH_SHORT).show()
                         } else {
                             commitmentState = commitmentState.copy(
                                 startTimestamp = (System.currentTimeMillis() / 1000L) - 30L,
+                                totalAmountSKR = 2500.0,
                                 completedDays = 1,
-                                clockedInBitmap = 0b00001L
+                                clockedInBitmap = 0b00001L,
+                                dayDurationSec = 30L
                             )
-                            Toast.makeText(this@MainActivity, "Restored Active Plan", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@MainActivity, "Loaded Active Day 2 Escrow for Judges", Toast.LENGTH_SHORT).show()
                         }
                     }
                 )

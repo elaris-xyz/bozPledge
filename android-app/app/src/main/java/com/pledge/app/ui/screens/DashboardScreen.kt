@@ -279,8 +279,8 @@ fun DashboardScreen(
                     // Segmented Demo Mode Pill Button (Live Demo vs Fresh Day 0)
                     val isFreshState = state.startTimestamp == 0L
                     Surface(
-                        color = if (isFreshState) AppleOrange.copy(alpha = 0.15f) else AppleTeal.copy(alpha = 0.15f),
-                        border = androidx.compose.foundation.BorderStroke(0.5.dp, if (isFreshState) AppleOrange.copy(alpha = 0.35f) else AppleTeal.copy(alpha = 0.35f)),
+                        color = if (isFreshState) AppleTeal.copy(alpha = 0.15f) else AppleOrange.copy(alpha = 0.15f),
+                        border = androidx.compose.foundation.BorderStroke(0.5.dp, if (isFreshState) AppleTeal.copy(alpha = 0.35f) else AppleOrange.copy(alpha = 0.35f)),
                         shape = RoundedCornerShape(50),
                         modifier = Modifier.clickable {
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
@@ -293,11 +293,11 @@ fun DashboardScreen(
                             horizontalArrangement = Arrangement.spacedBy(3.dp)
                         ) {
                             Text(
-                                text = if (isFreshState) "🌱 Day 0" else "⚡ Demo",
+                                text = if (isFreshState) "⚡ Load Demo" else "🌱 Day 0",
                                 fontFamily = PlusJakartaSans,
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = if (isFreshState) AppleOrange else AppleTeal
+                                color = if (isFreshState) AppleTeal else AppleOrange
                             )
                         }
                     }
