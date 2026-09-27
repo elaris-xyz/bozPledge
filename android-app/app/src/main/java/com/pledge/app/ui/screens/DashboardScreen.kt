@@ -271,11 +271,37 @@ fun DashboardScreen(
                     }
                 }
 
-                // Header Actions: "Guide" + "Judge" + "Connect" (Apple Translucent Capsules)
+                // Header Actions: "Demo" + "Guide" + "Judge" + "Connect" (Apple Translucent Capsules)
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
+                    // Segmented Demo Mode Pill Button (Live Demo vs Fresh Day 0)
+                    val isFreshState = state.startTimestamp == 0L
+                    Surface(
+                        color = if (isFreshState) AppleOrange.copy(alpha = 0.15f) else AppleTeal.copy(alpha = 0.15f),
+                        border = androidx.compose.foundation.BorderStroke(0.5.dp, if (isFreshState) AppleOrange.copy(alpha = 0.35f) else AppleTeal.copy(alpha = 0.35f)),
+                        shape = RoundedCornerShape(50),
+                        modifier = Modifier.clickable {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            onToggleFreshState()
+                        }
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 9.dp, vertical = 6.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(3.dp)
+                        ) {
+                            Text(
+                                text = if (isFreshState) "🌱 Day 0" else "⚡ Demo",
+                                fontFamily = PlusJakartaSans,
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = if (isFreshState) AppleOrange else AppleTeal
+                            )
+                        }
+                    }
+
                     // Guide Pill Button
                     Surface(
                         color = SurfaceCard,
@@ -381,6 +407,7 @@ fun DashboardScreen(
                             onClockIn = onClockIn,
                             onCreateNewPledge = onCreateNewPledge,
                             onSelectPreset = onSelectPreset,
+                            onToggleFreshState = onToggleFreshState,
                             internetDetoxRule = internetDetoxRule,
                             early6amRule = early6amRule,
                             stepGoalRule = stepGoalRule,
@@ -393,7 +420,7 @@ fun DashboardScreen(
                     1 -> {
                         // TAB 1: EXPLORE / CATALOG OF BLUEPRINTS
                         ExploreTabContent(
-                            currentRuleId = state.rule.id,
+                            state = state,
                             onCreateCustom = onCreateNewPledge,
                             onSelectRule = { rule ->
                                 onSelectPreset(rule)
@@ -447,6 +474,262 @@ fun DashboardScreen(
 }
 
 // -----------------------------------------------------------------------------
+// DAY 0 ONBOARDING COMPONENTS
+// -----------------------------------------------------------------------------
+@Composable
+fun Day0BlueprintCard(
+    title: String,
+    subtitle: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    accentColor: Color,
+    onClick: () -> Unit
+) {
+    Surface(
+        color = SurfaceElevated,
+        shape = RoundedCornerShape(14.dp),
+        border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() }
+    ) {
+        Row(
+            modifier = Modifier.padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                modifier = Modifier.weight(1f)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(38.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(accentColor.copy(alpha = 0.15f)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = null,
+                        tint = accentColor,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+                Column {
+                    Text(
+                        text = title,
+                        fontSize = 13.5.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = TextPrimary
+                    )
+                    Text(
+                        text = subtitle,
+                        fontSize = 11.sp,
+                        color = TextSecondary
+                    )
+                }
+            }
+
+            Surface(
+                color = AppleGreen,
+                shape = RoundedCornerShape(50)
+            ) {
+                Text(
+                    text = "Stake & Start",
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = Color.Black,
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun Day0OnboardingContent(
+    onCreateCustom: () -> Unit,
+    onSelectPreset: (HabitRule) -> Unit,
+    onToggleDemo: () -> Unit,
+    internetDetoxRule: HabitRule,
+    early6amRule: HabitRule,
+    stepGoalRule: HabitRule
+) {
+    val haptic = LocalHapticFeedback.current
+    val scrollState = rememberScrollState()
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(scrollState)
+            .padding(horizontal = 16.dp, vertical = 10.dp)
+    ) {
+        Surface(
+            color = SurfaceCard,
+            shape = RoundedCornerShape(20.dp),
+            border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(modifier = Modifier.padding(20.dp)) {
+                // Badge
+                Surface(
+                    color = AppleGreen.copy(alpha = 0.15f),
+                    shape = RoundedCornerShape(50)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Bolt,
+                            contentDescription = null,
+                            tint = AppleGreen,
+                            modifier = Modifier.size(12.dp)
+                        )
+                        Text(
+                            text = "HARDWARE-ATTESTED ESCROW",
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = AppleGreen,
+                            letterSpacing = 0.5.sp
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Text(
+                    text = "Lock Collateral.\nBuild Unstoppable Habits.",
+                    fontFamily = PlusJakartaSans,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = TextPrimary,
+                    lineHeight = 26.sp
+                )
+
+                Spacer(modifier = Modifier.height(6.dp))
+
+                Text(
+                    text = "Seeker phone sensors continuously certify your physical discipline. Miss a day, and your staked \$SKR burns forever on Solana. Choose a verified blueprint below to start Day 1:",
+                    fontSize = 12.5.sp,
+                    color = TextSecondary,
+                    lineHeight = 18.sp
+                )
+
+                Spacer(modifier = Modifier.height(18.dp))
+
+                // Blueprint 1: Odd-Days Internet Detox
+                Day0BlueprintCard(
+                    title = "Odd-Days Internet Detox",
+                    subtitle = "NetworkStats • <1h on Mon/Wed/Fri/Sun • 2,500 \$SKR",
+                    icon = Icons.Default.Language,
+                    accentColor = AppleTeal,
+                    onClick = {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        onSelectPreset(internetDetoxRule)
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                // Blueprint 2: The 6:00 AM Club
+                Day0BlueprintCard(
+                    title = "The 6:00 AM Club",
+                    subtitle = "Hardware NTP Clock • Wake up <06:00 AM • 5,000 \$SKR",
+                    icon = Icons.Default.Alarm,
+                    accentColor = AppleOrange,
+                    onClick = {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        onSelectPreset(early6amRule)
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                // Blueprint 3: 10,000 Steps Daily
+                Day0BlueprintCard(
+                    title = "10,000 Steps Daily",
+                    subtitle = "Health Connect • Daily Step Goal • 1,000 \$SKR",
+                    icon = Icons.Default.DirectionsRun,
+                    accentColor = AppleGreen,
+                    onClick = {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        onSelectPreset(stepGoalRule)
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(14.dp))
+
+                // Compose Custom Rule Button
+                Surface(
+                    color = SurfaceElevated,
+                    shape = RoundedCornerShape(12.dp),
+                    border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(46.dp)
+                        .clickable {
+                            haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                            onCreateCustom()
+                        }
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Text(
+                            text = "+ Compose Custom Smart Rule",
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = TextPrimary
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // Judge Demo Mode Switcher Shortcut
+                Surface(
+                    color = AppleTeal.copy(alpha = 0.08f),
+                    shape = RoundedCornerShape(12.dp),
+                    border = androidx.compose.foundation.BorderStroke(0.5.dp, AppleTeal.copy(alpha = 0.25f)),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            onToggleDemo()
+                        }
+                ) {
+                    Row(
+                        modifier = Modifier.padding(12.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Text(text = "⚡", fontSize = 15.sp)
+                            Text(
+                                text = "Judge Demo Mode: Switch to Active Day 2",
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = AppleTeal
+                            )
+                        }
+                        Icon(
+                            imageVector = Icons.Default.ChevronRight,
+                            contentDescription = null,
+                            tint = AppleTeal,
+                            modifier = Modifier.size(16.dp)
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+// -----------------------------------------------------------------------------
 // TAB 0: ACTIVE DASHBOARD CONTENT
 // -----------------------------------------------------------------------------
 @Composable
@@ -462,6 +745,7 @@ fun ActiveTabContent(
     onClockIn: () -> Unit,
     onCreateNewPledge: () -> Unit,
     onSelectPreset: (HabitRule) -> Unit,
+    onToggleFreshState: () -> Unit = {},
     internetDetoxRule: HabitRule,
     early6amRule: HabitRule,
     stepGoalRule: HabitRule,
@@ -470,6 +754,18 @@ fun ActiveTabContent(
     selectedChipIndex: Int,
     onSelectChipIndex: (Int) -> Unit
 ) {
+    if (state.startTimestamp == 0L) {
+        Day0OnboardingContent(
+            onCreateCustom = onCreateNewPledge,
+            onSelectPreset = onSelectPreset,
+            onToggleDemo = onToggleFreshState,
+            internetDetoxRule = internetDetoxRule,
+            early6amRule = early6amRule,
+            stepGoalRule = stepGoalRule
+        )
+        return
+    }
+
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
     val scrollState = rememberScrollState()
@@ -907,7 +1203,7 @@ fun ActiveTabContent(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = if (isWithinLimit) "✓ Within limit • Ready to check in" else "Limit exceeded • Burn at risk",
+                        text = if (isWithinLimit) "✓ Daily Sensor Goal Achieved • Proof Ready" else "⚠️ Limit Exceeded • Forfeit at Midnight",
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = if (isWithinLimit) AppleGreen else AppleRed
@@ -962,7 +1258,7 @@ fun ActiveTabContent(
                         ) {
                             Text(text = "Attestation", fontSize = 11.5.sp, color = TextSecondary)
                             Text(
-                                text = "Hardware Attested Nonce #84201",
+                                text = "Seed Vault Enclave • SHA-256 Digest #84201",
                                 fontSize = 11.5.sp,
                                 fontWeight = FontWeight.SemiBold,
                                 color = TextPrimary
@@ -1057,7 +1353,7 @@ fun ActiveTabContent(
             shape = RoundedCornerShape(50),
             modifier = Modifier
                 .fillMaxWidth()
-                .height(52.dp)
+                .height(56.dp)
                 .clickable(enabled = canClockIn && !isAlreadyClockedInToday && !isClockingIn) {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     onClockIn()
@@ -1079,20 +1375,60 @@ fun ActiveTabContent(
                             imageVector = if (isAlreadyClockedInToday) Icons.Default.CheckCircle else Icons.Default.Lock,
                             contentDescription = null,
                             tint = if (canClockIn && !isAlreadyClockedInToday) Color.Black else if (isAlreadyClockedInToday) AppleGreen else TextMuted,
-                            modifier = Modifier.size(18.dp)
+                            modifier = Modifier.size(20.dp)
                         )
-                        Text(
-                            text = when {
-                                isAlreadyClockedInToday -> "Today Verified & Checked In"
-                                canClockIn -> "Verify & Check In Today"
-                                else -> "Daily Goal Not Met Yet"
-                            },
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = if (canClockIn && !isAlreadyClockedInToday) Color.Black else if (isAlreadyClockedInToday) AppleGreen else TextMuted
-                        )
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(
+                                text = when {
+                                    isAlreadyClockedInToday -> "✓ Daily Proof Anchored on Solana"
+                                    canClockIn -> "Sign & Anchor Daily Proof"
+                                    else -> "Monitoring in Progress"
+                                },
+                                fontSize = 13.5.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = if (canClockIn && !isAlreadyClockedInToday) Color.Black else if (isAlreadyClockedInToday) AppleGreen else TextMuted
+                            )
+                            Text(
+                                text = when {
+                                    isAlreadyClockedInToday -> "Escrow milestone unlocked • Seed Vault Sig #5Kz8..."
+                                    canClockIn -> "Seed Vault Ed25519 Claim • Records sensor hash"
+                                    else -> "Maintain limit to unlock daily milestone signature"
+                                },
+                                fontSize = 9.5.sp,
+                                color = if (canClockIn && !isAlreadyClockedInToday) Color.Black.copy(alpha = 0.75f) else TextSecondary
+                            )
+                        }
                     }
                 }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        // Cryptographic Proof Explanation Note
+        Surface(
+            color = SurfaceCard.copy(alpha = 0.7f),
+            shape = RoundedCornerShape(12.dp),
+            border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Row(
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
+                verticalAlignment = Alignment.Top,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Shield,
+                    contentDescription = null,
+                    tint = AppleTeal,
+                    modifier = Modifier.size(16.dp).padding(top = 1.dp)
+                )
+                Text(
+                    text = "Hardware sensors track telemetry automatically. Your Seed Vault key cryptographically signs the attestation digest to release your daily escrow milestone without centralized oracles.",
+                    fontSize = 11.sp,
+                    color = TextSecondary,
+                    lineHeight = 15.sp
+                )
             }
         }
 
@@ -1148,9 +1484,10 @@ fun ActiveTabContent(
 // -----------------------------------------------------------------------------
 // TAB 1: EXPLORE / CATALOG CONTENT (Apple Inset Grouped)
 // -----------------------------------------------------------------------------
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExploreTabContent(
-    currentRuleId: String,
+    state: CommitmentState,
     onCreateCustom: () -> Unit,
     onSelectRule: (HabitRule) -> Unit,
     internetDetoxRule: HabitRule,
@@ -1161,6 +1498,16 @@ fun ExploreTabContent(
 ) {
     val haptic = LocalHapticFeedback.current
     val scrollState = rememberScrollState()
+    var pendingSwitchRule by remember { mutableStateOf<HabitRule?>(null) }
+
+    val handleBlueprintClick: (HabitRule) -> Unit = { rule ->
+        haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+        if (state.startTimestamp == 0L || state.rule.id == rule.id) {
+            onSelectRule(rule)
+        } else {
+            pendingSwitchRule = rule
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -1221,8 +1568,8 @@ fun ExploreTabContent(
                     subtitle = "NetworkStats • Mon/Wed/Fri/Sun • 2,500 \$SKR",
                     icon = Icons.Default.Language,
                     accentColor = AppleTeal,
-                    isActive = currentRuleId == internetDetoxRule.id,
-                    onActionClick = { onSelectRule(internetDetoxRule) }
+                    isActive = state.rule.id == internetDetoxRule.id,
+                    onActionClick = { handleBlueprintClick(internetDetoxRule) }
                 )
                 Divider(color = BorderSubtle, thickness = 0.5.dp)
 
@@ -1231,8 +1578,8 @@ fun ExploreTabContent(
                     subtitle = "Hardware NTP Clock • 7 Days • Stake 5,000 \$SKR",
                     icon = Icons.Default.Alarm,
                     accentColor = AppleOrange,
-                    isActive = currentRuleId == early6amRule.id,
-                    onActionClick = { onSelectRule(early6amRule) }
+                    isActive = state.rule.id == early6amRule.id,
+                    onActionClick = { handleBlueprintClick(early6amRule) }
                 )
                 Divider(color = BorderSubtle, thickness = 0.5.dp)
 
@@ -1241,8 +1588,8 @@ fun ExploreTabContent(
                     subtitle = "Health Connect Sensors • 7 Days • Stake 1,000 \$SKR",
                     icon = Icons.Default.DirectionsWalk,
                     accentColor = AppleGreen,
-                    isActive = currentRuleId == stepGoalRule.id,
-                    onActionClick = { onSelectRule(stepGoalRule) }
+                    isActive = state.rule.id == stepGoalRule.id,
+                    onActionClick = { handleBlueprintClick(stepGoalRule) }
                 )
                 Divider(color = BorderSubtle, thickness = 0.5.dp)
 
@@ -1251,8 +1598,8 @@ fun ExploreTabContent(
                     subtitle = "Android UsageStats • 14 Days • Stake 1,500 \$SKR",
                     icon = Icons.Default.Tune,
                     accentColor = ApplePurple,
-                    isActive = currentRuleId == screenDetoxRule.id,
-                    onActionClick = { onSelectRule(screenDetoxRule) }
+                    isActive = state.rule.id == screenDetoxRule.id,
+                    onActionClick = { handleBlueprintClick(screenDetoxRule) }
                 )
                 Divider(color = BorderSubtle, thickness = 0.5.dp)
 
@@ -1261,8 +1608,8 @@ fun ExploreTabContent(
                     subtitle = "HeartRateRecord Sensors • 7 Days • Stake 750 \$SKR",
                     icon = Icons.Default.LocalFireDepartment,
                     accentColor = AppleTeal,
-                    isActive = currentRuleId == gymWorkoutRule.id,
-                    onActionClick = { onSelectRule(gymWorkoutRule) }
+                    isActive = state.rule.id == gymWorkoutRule.id,
+                    onActionClick = { handleBlueprintClick(gymWorkoutRule) }
                 )
             }
         }
@@ -1291,6 +1638,102 @@ fun ExploreTabContent(
         }
 
         Spacer(modifier = Modifier.height(20.dp))
+    }
+
+    // Active Escrow Protection Confirmation Sheet
+    if (pendingSwitchRule != null) {
+        val targetRule = pendingSwitchRule!!
+        ModalBottomSheet(
+            onDismissRequest = { pendingSwitchRule = null },
+            containerColor = SurfaceCard,
+            dragHandle = { BottomSheetDefaults.DragHandle(color = BorderMedium) },
+            shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 22.dp, vertical = 12.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Shield,
+                        contentDescription = null,
+                        tint = AppleOrange,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Text(
+                        text = "Active Escrow In Progress",
+                        fontSize = 17.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = AppleOrange
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Surface(
+                    color = SurfaceElevated,
+                    shape = RoundedCornerShape(14.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "You currently have ${state.totalAmountSKR.toInt()} \$SKR staked in \"${state.rule.title}\" (Day ${state.currentDayIndex + 1} of ${state.totalDays}).\n\nActivating \"${targetRule.title}\" will switch your active tracking track for this session.",
+                        fontSize = 13.sp,
+                        color = TextPrimary,
+                        lineHeight = 18.sp,
+                        modifier = Modifier.padding(14.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Button(
+                    onClick = {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        val r = targetRule
+                        pendingSwitchRule = null
+                        onSelectRule(r)
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = AppleTeal),
+                    shape = RoundedCornerShape(14.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp)
+                ) {
+                    Text(
+                        text = "Switch Active Track",
+                        fontSize = 13.5.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                OutlinedButton(
+                    onClick = {
+                        haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                        pendingSwitchRule = null
+                    },
+                    shape = RoundedCornerShape(14.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(44.dp)
+                ) {
+                    Text(
+                        text = "Keep Current Escrow",
+                        fontSize = 13.sp,
+                        color = TextSecondary
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+        }
     }
 }
 
@@ -1974,60 +2417,122 @@ fun HowItWorksModal(
                         color = TextPrimary
                     )
                     Text(
-                        text = "A 30-second guide to building iron habits & winning",
+                        text = "Hardware-attested cryptographic habit accountability",
                         fontSize = 11.5.sp,
                         color = TextSecondary
                     )
                 }
 
                 Surface(
-                    color = SolanaMint.copy(alpha = 0.15f),
+                    color = AppleTeal.copy(alpha = 0.15f),
                     shape = RoundedCornerShape(50)
                 ) {
                     Text(
-                        text = "3 Simple Steps",
+                        text = "Seeker Enclave",
                         fontSize = 10.5.sp,
                         fontWeight = FontWeight.Bold,
-                        color = SolanaMint,
+                        color = AppleTeal,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(14.dp))
 
-            // Step 1
-            HowItWorksStepCard(
-                stepNumber = "1",
-                stepTitle = "Stake Collateral for Motivation",
-                stepDesc = "Lock \$SKR tokens in the smart contract escrow as collateral. Having skin-in-the-game destroys rationalization and procrastination.",
-                badgeColor = SolanaPurple,
-                icon = Icons.Default.Lock
+            Text(
+                text = "3-LAYER SEEKER SECURITY ARCHITECTURE",
+                fontSize = 10.5.sp,
+                fontWeight = FontWeight.ExtraBold,
+                color = TextSecondary,
+                letterSpacing = 0.5.sp
             )
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-            // Step 2
+            // Layer 1
             HowItWorksStepCard(
-                stepNumber = "2",
-                stepTitle = "Zero-Cheat Hardware Attestation",
-                stepDesc = "No manual honesty logs. Real phone hardware sensors (mobile data counters, step sensors, system clock) verify completion automatically.",
-                badgeColor = SolanaTeal,
+                stepNumber = "L1",
+                stepTitle = "Android Kernel & Sensor Telemetry",
+                stepDesc = "Direct integration with Android OS NetworkStatsManager and Health Connect sensor pipelines. Telemetry runs isolated in hardware-backed services without manual reporting.",
+                badgeColor = AppleTeal,
                 icon = Icons.Default.Bolt
             )
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-            // Step 3
+            // Layer 2
             HowItWorksStepCard(
-                stepNumber = "3",
-                stepTitle = "Reclaim with Badges or Burn",
-                stepDesc = "Fulfill your commitments to reclaim 100% of your collateral plus earn permanent Soulbound cNFT medals. Miss a day and tokens are burned on-chain.",
-                badgeColor = SolanaMint,
-                icon = Icons.Default.EmojiEvents
+                stepNumber = "L2",
+                stepTitle = "Local SHA-256 Digest & Session Nonce",
+                stepDesc = "Daily metrics are sealed into an immutable digest: SHA-256(EpochDay + SensorMetric + Nonce + PDA). Protects against replay attacks and spoofed timestamps.",
+                badgeColor = AppleOrange,
+                icon = Icons.Default.Lock
             )
 
-            Spacer(modifier = Modifier.height(18.dp))
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Layer 3
+            HowItWorksStepCard(
+                stepNumber = "L3",
+                stepTitle = "Seed Vault Ed25519 Hardware Enclave",
+                stepDesc = "Private keys never leave the secure hardware enclave. Biometric signing authorizes the milestone claim instruction directly to the Solana smart contract escrow.",
+                badgeColor = AppleGreen,
+                icon = Icons.Default.Shield
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Text(
+                text = "ECONOMIC RULES & ESCROW LOGIC",
+                fontSize = 10.5.sp,
+                fontWeight = FontWeight.ExtraBold,
+                color = TextSecondary,
+                letterSpacing = 0.5.sp
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Rule 1: 100% returned
+            Surface(
+                color = SurfaceElevated,
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Row(
+                    modifier = Modifier.padding(12.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = AppleGreen, modifier = Modifier.size(18.dp))
+                    Column {
+                        Text(text = "100% Collateral Returned", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
+                        Text(text = "Complete all days to withdraw 100% of your staked \$SKR + earn Soulbound cNFTs.", fontSize = 11.sp, color = TextSecondary)
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(6.dp))
+
+            // Rule 2: Deflationary burn
+            Surface(
+                color = SurfaceElevated,
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Row(
+                    modifier = Modifier.padding(12.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Icon(imageVector = Icons.Default.LocalFireDepartment, contentDescription = null, tint = AppleRed, modifier = Modifier.size(18.dp))
+                    Column {
+                        Text(text = "Deflationary On-Chain Burn", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
+                        Text(text = "Miss a daily milestone deadline, and that day's proportional collateral is burned forever.", fontSize = 11.sp, color = TextSecondary)
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
 
             // CTA Button: Got it!
             Button(
@@ -2035,17 +2540,17 @@ fun HowItWorksModal(
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     onDismiss()
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = SolanaMint),
+                colors = ButtonDefaults.buttonColors(containerColor = AppleGreen),
                 shape = RoundedCornerShape(14.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(50.dp)
+                    .height(48.dp)
             ) {
                 Text(
-                    text = "Got It, Let's Start!",
+                    text = "Understood, Continue",
                     fontSize = 13.5.sp,
-                    fontWeight = FontWeight.Black,
-                    color = BgVoid
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
                 )
             }
 
