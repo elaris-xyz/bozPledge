@@ -250,6 +250,15 @@
             color: var(--ios-green);
             font-weight: 700;
         }
+        .btn-ios-pill.judge-pill {
+            background: rgba(100, 210, 255, 0.14);
+            color: var(--ios-teal);
+            border: 0.5px solid rgba(100, 210, 255, 0.35);
+            font-weight: 700;
+        }
+        .btn-ios-pill.judge-pill:active {
+            background: rgba(100, 210, 255, 0.25);
+        }
         .btn-ios-pill .status-dot {
             width: 6px;
             height: 6px;
@@ -501,26 +510,64 @@
         .timeline-card {
             background: #1C1C1E;
             border-radius: 16px;
-            padding: 12px 16px;
+            padding: 12px 14px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            gap: 10px;
             margin-bottom: 12px;
+            border: 0.5px solid var(--ios-separator);
+        }
+        .timeline-header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
         .timeline-label {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
             color: var(--text-secondary);
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
+        .timeline-sim-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-timeline-action {
+            padding: 3px 8px;
+            border-radius: 8px;
+            font-size: 10.5px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            transition: all 0.15s ease;
+        }
+        .btn-timeline-action.next-day {
+            background: rgba(48, 209, 88, 0.15);
+            color: var(--ios-green);
+            border: 0.5px solid rgba(48, 209, 88, 0.3);
+        }
+        .btn-timeline-action.slash-day {
+            background: rgba(255, 69, 58, 0.15);
+            color: var(--ios-red);
+            border: 0.5px solid rgba(255, 69, 58, 0.3);
+        }
+        .btn-timeline-action:active {
+            transform: scale(0.95);
+        }
         .dots-row {
             display: flex;
-            gap: 8px;
+            justify-content: space-between;
+            gap: 6px;
         }
         .day-dot {
-            width: 26px;
-            height: 26px;
+            flex: 1;
+            height: 28px;
+            max-width: 28px;
             border-radius: 50%;
             background: #2C2C2E;
             color: var(--text-muted);
@@ -529,6 +576,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.2s ease;
         }
         .day-dot.completed {
             background: rgba(48, 209, 88, 0.2);
@@ -539,6 +587,75 @@
             color: #000000;
             font-weight: 800;
         }
+        .day-dot.failed {
+            background: rgba(255, 69, 58, 0.2);
+            color: var(--ios-red);
+            border: 1px solid var(--ios-red);
+            font-weight: 800;
+        }
+
+        /* Post-Clockin Lifecycle Card */
+        .post-clockin-card {
+            background: #1C1C1E;
+            border: 0.5px solid rgba(48, 209, 88, 0.4);
+            border-radius: 16px;
+            padding: 12px 14px;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+            animation: fadeIn 0.25s ease-out;
+        }
+        .post-clockin-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+        .badge-success {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--ios-green);
+            background: rgba(48, 209, 88, 0.15);
+            padding: 3px 8px;
+            border-radius: 6px;
+        }
+        .escrow-safe-tag {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+        .post-clockin-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #FFFFFF;
+            margin-bottom: 10px;
+        }
+        .post-clockin-btns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        .btn-post-action {
+            padding: 9px 10px;
+            border-radius: 10px;
+            font-size: 11.5px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            transition: transform 0.15s ease;
+        }
+        .btn-post-action.primary {
+            background: var(--ios-green);
+            color: #000000;
+        }
+        .btn-post-action.danger {
+            background: rgba(255, 69, 58, 0.18);
+            color: var(--ios-red);
+            border: 0.5px solid var(--ios-red);
+        }
+        .btn-post-action:active { transform: scale(0.96); }
 
         /* Primary Action: Solid Apple Fitness Green Capsule CTA */
         .btn-clock-in {
@@ -1729,11 +1846,11 @@
                             <span id="sync-status-text">Seeker Enclave • Active</span>
                         </div>
                     </div>
-                    <span class="genesis-badge" id="genesis-pill" style="display:none">SEEKER GENESIS</span>
                 </div>
                 <div class="header-actions">
-                    <button class="btn-ios-pill icon-only" id="guide-toggle-btn" onclick="openHowItWorksModal()" title="Architecture Guide">
-                        <span>💡</span>
+                    <button class="btn-ios-pill judge-pill" id="judge-lab-btn" onclick="openJudgeLabModal()" title="Hackathon Evaluation Sandbox">
+                        <span style="font-size: 11px;">⚡</span>
+                        <span>Judge Lab</span>
                     </button>
                     <button class="btn-ios-pill connect-pill" id="wallet-btn" onclick="openWalletModal()">
                         <div class="status-dot"></div>
@@ -1817,27 +1934,6 @@
 
                 <!-- ACTIVE DASHBOARD CONTENT WRAPPER -->
                 <div id="active-dashboard-content" style="display: none;">
-
-                    <!-- Quick Orientation Tip Banner -->
-                    <div id="quick-guide-banner" class="ios-tip-banner">
-                        <div class="ios-tip-header">
-                            <div class="ios-tip-title">
-                                <span>💡</span>
-                                <span>Quick Orientation Guide</span>
-                            </div>
-                            <div class="ios-tip-close" onclick="document.getElementById('quick-guide-banner').style.display = 'none';">✕</div>
-                        </div>
-                        <div class="ios-tip-text">
-                            Active Habit: <strong>Odd-Days Internet Detox</strong>. Hardware sensors track your habit without cheating. When your limit is met, tap the verification button to lock in your daily progress.
-                        </div>
-                        <div class="ios-tip-action" onclick="openHowItWorksModal()">How it works (interactive 3-step walkthrough) →</div>
-                    </div>
-
-                    <!-- Dev Mode Bar in Active Dashboard -->
-                    <div class="dev-mode-bar" onclick="simulateFreshUser()">
-                        <span>⚡ Simulated Day 2 Active Escrow (Demo Mode)</span>
-                        <span class="dev-mode-action">Reset to Fresh Day 0 ↺</span>
-                    </div>
 
                     <!-- Action Row: Rule Composer & 6 AM Club -->
                     <div class="studio-action-grid">
@@ -1939,8 +2035,18 @@
 
                     <!-- Timeline 7-Day Dots Card -->
                     <div class="timeline-card">
-                        <div class="timeline-label">
-                            Day <span id="current-day-label" style="color: #fff;">2</span> of 7
+                        <div class="timeline-header-row">
+                            <div class="timeline-label">
+                                Day <span id="current-day-label" style="color: #fff;">2</span> of 7
+                            </div>
+                            <div class="timeline-sim-actions">
+                                <button class="btn-timeline-action next-day" onclick="advanceTimelineDay(true)" title="Simulate passing next day">
+                                    <span>⏩ Next Day</span>
+                                </button>
+                                <button class="btn-timeline-action slash-day" onclick="simulateSlashingBreach()" title="Simulate missed day and token burn">
+                                    <span>🔴 Slash &amp; Burn</span>
+                                </button>
+                            </div>
                         </div>
                         <div class="dots-row" id="timeline-dots-row">
                             <div class="day-dot completed">✓</div>
@@ -1961,6 +2067,23 @@
                             <span class="btn-clockin-sub" id="clockin-btn-sub">Seed Vault Ed25519 Claim • Records sensor attestation hash to Solana escrow</span>
                         </div>
                     </button>
+
+                    <!-- Post-Clockin Judge Simulation Card (Appears dynamically when Day is attested) -->
+                    <div id="post-clockin-card" class="post-clockin-card" style="display: none;">
+                        <div class="post-clockin-header">
+                            <span class="badge-success">✓ Day <span id="post-day-num">2</span> Certified</span>
+                            <span class="escrow-safe-tag">Escrow Balance: <strong id="post-escrow-val">2,500</strong> $SKR</span>
+                        </div>
+                        <div class="post-clockin-title">Seed Vault Proof Anchored! Test next scenario:</div>
+                        <div class="post-clockin-btns">
+                            <button class="btn-post-action primary" onclick="advanceTimelineDay(true)">
+                                <span>⏩ Simulate Day <span id="post-next-day-num">3</span> (Pass)</span>
+                            </button>
+                            <button class="btn-post-action danger" onclick="simulateSlashingBreach()">
+                                <span>🔴 Test Day <span id="post-breach-day-num">3</span> Breach &amp; Burn</span>
+                            </button>
+                        </div>
+                    </div>
 
                     <!-- Cryptographic Proof Explanation Note -->
                     <div class="proof-architecture-note">
@@ -2769,6 +2892,217 @@
             </div>
         </div>
 
+        <!-- 🔴 SLASHING PENALTY BREACH MODAL -->
+        <div class="modal-scrim" id="slashing-modal">
+            <div class="modal-panel-content">
+                <div class="ios-sheet-handle"></div>
+                
+                <div style="text-align: center; margin: 10px 0 16px 0;">
+                    <div style="width: 52px; height: 52px; border-radius: 50%; background: rgba(255, 69, 58, 0.16); color: var(--ios-red); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 10px; border: 1px solid rgba(255, 69, 58, 0.3);">
+                        <svg class="icon md" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+                    </div>
+                    <div style="font-size: 11px; font-weight: 800; color: var(--ios-red); text-transform: uppercase; letter-spacing: 0.8px;">On-Chain Slashing Executed</div>
+                    <h3 style="font-size: 20px; font-weight: 800; color: #FFFFFF; margin-top: 4px;">Daily Commitment Breached</h3>
+                    <p style="font-size: 12px; color: var(--text-secondary); margin-top: 6px; line-height: 1.4;">
+                        The daily verification window expired without hardware proof attestation. In accordance with the immutable Solana escrow program, that day's collateral was burned permanently.
+                    </p>
+                </div>
+
+                <div class="executive-contract-card" style="border-color: rgba(255, 69, 58, 0.35); margin-bottom: 16px;">
+                    <div class="executive-contract-header" style="color: var(--ios-red);">
+                        <svg class="icon sm" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                        <span>Solana Devnet Slashing Receipt</span>
+                    </div>
+                    <div class="contract-spec-table">
+                        <div class="contract-row">
+                            <span class="contract-key">Penalty Burned</span>
+                            <span class="contract-val" id="slashing-burn-amount" style="color: var(--ios-red); font-weight: 800;">357.14 $SKR</span>
+                        </div>
+                        <div class="contract-row">
+                            <span class="contract-key">Escrow Remaining</span>
+                            <span class="contract-val" id="slashing-escrow-remaining" style="color: #FFFFFF; font-weight: 700;">2,142.86 $SKR</span>
+                        </div>
+                        <div class="contract-row">
+                            <span class="contract-key">Milestone Breach</span>
+                            <span class="contract-val" id="slashing-day-label">Day 3 of 7</span>
+                        </div>
+                        <div class="contract-row">
+                            <span class="contract-key">SolScan Signature</span>
+                            <span class="contract-val" id="slashing-tx-hash" style="font-family: var(--font-mono); font-size: 11px; color: var(--ios-teal);">4Jz8k...Devnet</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 8px;">
+                    <button onclick="closeSlashingModal()" class="btn-clock-in" style="flex: 2; height: 46px; background: var(--ios-red); color: #FFFFFF;">
+                        Continue Evaluation →
+                    </button>
+                    <button onclick="closeSlashingModal(); switchNavTab('vault', document.querySelectorAll('.nav-dock-item')[3]);" class="btn-ios-pill" style="flex: 1; height: 46px; justify-content: center; font-size: 11px; font-weight: 700; background: #2C2C2E; color: #FFFFFF; border: 0.5px solid var(--ios-separator); border-radius: 12px;">
+                        View Audit Log
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 🏆 SETTLEMENT & SOULBOUND cNFT CLAIM MODAL -->
+        <div class="modal-scrim" id="settlement-modal">
+            <div class="modal-panel-content">
+                <div class="ios-sheet-handle"></div>
+                
+                <div style="text-align: center; margin: 10px 0 16px 0;">
+                    <div style="width: 56px; height: 56px; border-radius: 50%; background: rgba(48, 209, 88, 0.16); color: var(--ios-green); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 10px; border: 1px solid rgba(48, 209, 88, 0.35);">
+                        <svg class="icon md" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    </div>
+                    <div style="font-size: 11px; font-weight: 800; color: var(--ios-green); text-transform: uppercase; letter-spacing: 0.8px;">Commitment Completed</div>
+                    <h3 style="font-size: 20px; font-weight: 800; color: #FFFFFF; margin-top: 4px;">Collateral Claimed &amp; cNFT Minted!</h3>
+                    <p style="font-size: 12px; color: var(--text-secondary); margin-top: 6px; line-height: 1.4;">
+                        Congratulations! Your 7-day commitment has matured. Remaining collateral has been released to your wallet and a Soulbound Compressed NFT proof has been minted.
+                    </p>
+                </div>
+
+                <div class="executive-contract-card" style="border-color: rgba(48, 209, 88, 0.35); margin-bottom: 16px;">
+                    <div class="executive-contract-header" style="color: var(--ios-green);">
+                        <svg class="icon sm" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        <span>Settlement Distribution Receipt</span>
+                    </div>
+                    <div class="contract-spec-table">
+                        <div class="contract-row">
+                            <span class="contract-key">Returned to Wallet</span>
+                            <span class="contract-val" id="settle-return-val" style="color: var(--ios-green); font-weight: 800;">2,142.86 $SKR</span>
+                        </div>
+                        <div class="contract-row">
+                            <span class="contract-key">Total Burned (Breaches)</span>
+                            <span class="contract-val" id="settle-burned-val" style="color: var(--ios-red);">357.14 $SKR</span>
+                        </div>
+                        <div class="contract-row">
+                            <span class="contract-key">Soulbound cNFT</span>
+                            <span class="contract-val" style="color: var(--ios-purple); font-weight: 700;">Pledge Pioneer #042</span>
+                        </div>
+                        <div class="contract-row">
+                            <span class="contract-key">Merkle Tree Leaf</span>
+                            <span class="contract-val" style="font-family: var(--font-mono); font-size: 11px; color: var(--ios-teal);">Leaf #8410 • Bubblegum</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="closeSettlementModal(); switchNavTab('vault', document.querySelectorAll('.nav-dock-item')[3]);" class="btn-clock-in" style="height: 48px; background: var(--ios-green); color: #000000; margin-bottom: 8px;">
+                    View cNFT in Vault
+                </button>
+                <button onclick="closeSettlementModal(); simulateFreshUser();" class="btn-ios-pill" style="width: 100%; justify-content: center; height: 42px; font-size: 12px; font-weight: 700; background: #2C2C2E; color: #FFFFFF; border: 0.5px solid var(--ios-separator); border-radius: 12px;">
+                    Start New Commitment (Day 0)
+                </button>
+            </div>
+        </div>
+
+        <!-- ⚡ HACKATHON JUDGE LAB MODAL -->
+        <div class="modal-scrim" id="judge-lab-modal">
+            <div class="modal-panel-content">
+                <div class="ios-sheet-handle"></div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 18px;">⚡</span>
+                        <div>
+                            <h3 style="font-size: 17px; font-weight: 800; color: #FFFFFF;">Judge Evaluation Lab</h3>
+                            <p style="font-size: 11px; color: var(--text-secondary); margin-top: 1px;">Instant state simulation for Solana Seeker hackathon review</p>
+                        </div>
+                    </div>
+                    <div style="font-size: 10px; font-weight: 800; color: var(--ios-teal); background: rgba(100, 210, 255, 0.15); padding: 4px 8px; border-radius: 6px;">
+                        DEVNET MODE
+                    </div>
+                </div>
+
+                <!-- 1-Click Test Scenarios -->
+                <div style="font-size: 11px; font-weight: 800; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.6px; margin: 12px 0 8px 0;">
+                    1-Click Evaluation Scenarios
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px;">
+                    <div class="ios-list-row" style="background: #2C2C2E; border-radius: 12px; padding: 10px 12px; cursor: pointer;" onclick="closeJudgeLabModal(); openBiometricSheet();">
+                        <div class="ios-icon-box" style="background: rgba(48, 209, 88, 0.16); color: var(--ios-green);">✓</div>
+                        <div class="ios-row-content">
+                            <h4 style="font-size: 13px; font-weight: 700;">1. Clock In Today (Goal Met / Pass)</h4>
+                            <p style="font-size: 11px; color: var(--text-secondary);">Test Seed Vault Ed25519 biometric attestation</p>
+                        </div>
+                        <span style="font-size: 11px; font-weight: 700; color: var(--ios-green);">Run →</span>
+                    </div>
+
+                    <div class="ios-list-row" style="background: #2C2C2E; border-radius: 12px; padding: 10px 12px; cursor: pointer;" onclick="closeJudgeLabModal(); simulateSlashingBreach();">
+                        <div class="ios-icon-box" style="background: rgba(255, 69, 58, 0.16); color: var(--ios-red);">🔴</div>
+                        <div class="ios-row-content">
+                            <h4 style="font-size: 13px; font-weight: 700;">2. Trigger Slashing Breach (Missed Day)</h4>
+                            <p style="font-size: 11px; color: var(--text-secondary);">Burn 357.14 $SKR on-chain and record failure dot</p>
+                        </div>
+                        <span style="font-size: 11px; font-weight: 700; color: var(--ios-red);">Burn →</span>
+                    </div>
+
+                    <div class="ios-list-row" style="background: #2C2C2E; border-radius: 12px; padding: 10px 12px; cursor: pointer;" onclick="closeJudgeLabModal(); advanceTimelineDay(true);">
+                        <div class="ios-icon-box" style="background: rgba(100, 210, 255, 0.16); color: var(--ios-teal);">⏩</div>
+                        <div class="ios-row-content">
+                            <h4 style="font-size: 13px; font-weight: 700;">3. Step Forward 1 Day (Time Machine)</h4>
+                            <p style="font-size: 11px; color: var(--text-secondary);">Advance from Day 2 to Day 3 with fresh telemetry</p>
+                        </div>
+                        <span style="font-size: 11px; font-weight: 700; color: var(--ios-teal);">Next →</span>
+                    </div>
+
+                    <div class="ios-list-row" style="background: #2C2C2E; border-radius: 12px; padding: 10px 12px; cursor: pointer;" onclick="closeJudgeLabModal(); claimFinalSettlement();">
+                        <div class="ios-icon-box" style="background: rgba(191, 90, 242, 0.16); color: var(--ios-purple);">🏆</div>
+                        <div class="ios-row-content">
+                            <h4 style="font-size: 13px; font-weight: 700;">4. Settle Day 7 &amp; Mint Soulbound cNFT</h4>
+                            <p style="font-size: 11px; color: var(--text-secondary);">Return remaining collateral &amp; issue Bubblegum cNFT</p>
+                        </div>
+                        <span style="font-size: 11px; font-weight: 700; color: var(--ios-purple);">Settle →</span>
+                    </div>
+
+                    <div class="ios-list-row" style="background: #2C2C2E; border-radius: 12px; padding: 10px 12px; cursor: pointer;" onclick="closeJudgeLabModal(); simulateFreshUser();">
+                        <div class="ios-icon-box" style="background: rgba(255, 255, 255, 0.1); color: #FFFFFF;">↺</div>
+                        <div class="ios-row-content">
+                            <h4 style="font-size: 13px; font-weight: 700;">5. Reset to Fresh Day 0 Onboarding</h4>
+                            <p style="font-size: 11px; color: var(--text-secondary);">Test first-time user pledge creation &amp; catalog</p>
+                        </div>
+                        <span style="font-size: 11px; font-weight: 700; color: #FFFFFF;">Reset →</span>
+                    </div>
+                </div>
+
+                <!-- Hardware Sensor Telemetry Slider -->
+                <div style="font-size: 11px; font-weight: 800; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.6px; margin: 12px 0 6px 0;">
+                    Live Hardware Telemetry Override
+                </div>
+                <div style="background: #2C2C2E; border-radius: 12px; padding: 12px; margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                        <span style="font-size: 12px; font-weight: 700; color: #FFFFFF;">Sensor Reading: <span id="lab-slider-val" style="color: var(--ios-teal);">38 mins</span></span>
+                        <span id="lab-slider-status" style="font-size: 10px; font-weight: 800; color: var(--ios-green); background: rgba(48, 209, 88, 0.15); padding: 2px 7px; border-radius: 6px;">PASS (&lt;60m Limit)</span>
+                    </div>
+                    <input type="range" min="10" max="100" value="38" style="width: 100%; accent-color: var(--ios-teal);" id="lab-telemetry-slider" oninput="handleJudgeLabSlider(this.value)">
+                </div>
+
+                <!-- PDA Status -->
+                <div class="executive-contract-card" style="margin-bottom: 14px;">
+                    <div class="executive-contract-header">
+                        <svg class="icon sm" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        <span>Active Escrow PDA Status</span>
+                    </div>
+                    <div class="contract-spec-table">
+                        <div class="contract-row">
+                            <span class="contract-key">PDA Balance</span>
+                            <span class="contract-val" id="lab-pda-balance" style="color: var(--ios-green);">2,500.00 $SKR</span>
+                        </div>
+                        <div class="contract-row">
+                            <span class="contract-key">Slashed Collateral</span>
+                            <span class="contract-val" id="lab-pda-slashed" style="color: var(--ios-red);">0.00 $SKR</span>
+                        </div>
+                        <div class="contract-row">
+                            <span class="contract-key">Hardware Enclave</span>
+                            <span class="contract-val" style="color: var(--ios-teal);">Seed Vault Active</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="closeJudgeLabModal()" class="btn-clock-in" style="height: 44px; background: #2C2C2E; color: #FFFFFF; border: 0.5px solid var(--ios-separator);">
+                    Dismiss Judge Lab
+                </button>
+            </div>
+        </div>
+
     </div>
 
 <script>
@@ -2872,6 +3206,9 @@
         let currentTarget = 60;
         let currentValue = 38;
         let currentStakeSKR = 2500;
+        let currentEscrowSKR = 2500;
+        let currentSlashedSKR = 0;
+        let dayStatus = { 1: 'completed', 2: 'pending', 3: 'pending', 4: 'pending', 5: 'pending', 6: 'pending', 7: 'pending' };
         let connectedAddress = null;
         let isDemoDrawerOpen = false;
         let isFreshMode = true;
@@ -3031,18 +3368,35 @@
             const btn = document.getElementById('hero-clockin-btn');
             const status = document.getElementById('metric-status');
 
-            if (isTodayClockedIn) {
+            if (currentDay >= totalDays && isTodayClockedIn) {
+                btn.className = 'btn-clock-in';
+                btn.style.background = 'var(--ios-purple)';
+                btn.style.color = '#FFFFFF';
+                btn.onclick = claimFinalSettlement;
+                btn.innerHTML = '<svg class="icon sm" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><div style="display:flex;flex-direction:column;align-items:center;"><span style="font-size:13px;font-weight:900;">🏆 CLAIM ESCROW &amp; MINT cNFT</span><span style="font-size:9.5px;opacity:0.85;">7-Day Cycle Finished • Withdraw collateral &amp; claim NFT</span></div>';
+                status.innerText = '🎉 Commitment Matured! Escrow ready to claim.';
+                status.style.color = 'var(--ios-purple)';
+            } else if (isTodayClockedIn) {
                 btn.className = 'btn-clock-in done';
-                btn.innerHTML = '<svg class="icon sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><div style="display:flex;flex-direction:column;align-items:center;"><span style="font-size:13px;font-weight:900;">✓ DAILY PROOF ANCHORED ON SOLANA</span><span style="font-size:9.5px;opacity:0.85;">Escrow milestone unlocked • Seed Vault Sig: #5Kz89b</span></div>';
-                status.innerText = '✓ Verified! Daily record anchored on Solana.';
+                btn.style.background = '';
+                btn.style.color = '';
+                btn.onclick = null;
+                btn.innerHTML = '<svg class="icon sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><div style="display:flex;flex-direction:column;align-items:center;"><span style="font-size:13px;font-weight:900;">✓ DAY ' + currentDay + ' PROOF CERTIFIED ON SOLANA</span><span style="font-size:9.5px;opacity:0.85;">Escrow milestone unlocked • Seed Vault Sig: #5Kz89b</span></div>';
+                status.innerText = '✓ Verified! Day ' + currentDay + ' record anchored on Solana.';
                 status.style.color = 'var(--solana-mint)';
             } else if (isPassing) {
                 btn.className = 'btn-clock-in active';
+                btn.style.background = '';
+                btn.style.color = '';
+                btn.onclick = openBiometricSheet;
                 btn.innerHTML = '<svg class="icon sm" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 12 15 16 10"/></svg><div style="display:flex;flex-direction:column;align-items:center;"><span style="font-size:13px;font-weight:900;">SIGN & ANCHOR DAILY PROOF</span><span style="font-size:9.5px;opacity:0.85;">Seed Vault Ed25519 Claim • Records sensor attestation hash</span></div>';
                 status.innerText = (activeCategory === 'oddInternet') ? '✓ Within daily limit • Ready to anchor proof' : '✓ Goal achieved • Ready to anchor proof';
                 status.style.color = 'var(--solana-mint)';
             } else {
                 btn.className = 'btn-clock-in disabled';
+                btn.style.background = '';
+                btn.style.color = '';
+                btn.onclick = openBiometricSheet;
                 btn.innerHTML = '<svg class="icon sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg><div style="display:flex;flex-direction:column;align-items:center;"><span style="font-size:13px;font-weight:900;">MONITORING IN PROGRESS</span><span style="font-size:9.5px;opacity:0.85;">Maintain limit to unlock daily milestone signature</span></div>';
                 status.innerText = (activeCategory === 'oddInternet') ? '⚠️ Exceeded 60-min daily limit!' : '⚠️ Sensor target not met yet';
                 status.style.color = 'var(--crimson-burn)';
@@ -3057,14 +3411,19 @@
             row.innerHTML = '';
             for (let i = 1; i <= totalDays; i++) {
                 const dot = document.createElement('div');
-                dot.className = 'day-dot';
-                if (i < currentDay) {
+                const status = dayStatus[i] || 'pending';
+                if (status === 'completed' || (i === currentDay && isTodayClockedIn)) {
                     dot.className = 'day-dot completed';
                     dot.innerText = '✓';
+                } else if (status === 'failed') {
+                    dot.className = 'day-dot failed';
+                    dot.innerText = '✕';
+                    dot.title = 'Day breached - collateral burned';
                 } else if (i === currentDay) {
-                    dot.className = isTodayClockedIn ? 'day-dot completed' : 'day-dot current';
-                    dot.innerText = isTodayClockedIn ? '✓' : i;
+                    dot.className = 'day-dot current';
+                    dot.innerText = i;
                 } else {
+                    dot.className = 'day-dot';
                     dot.innerText = i;
                 }
                 row.appendChild(dot);
@@ -3270,8 +3629,182 @@
             triggerConfetti();
 
             isTodayClockedIn = true;
+            dayStatus[currentDay] = 'completed';
+
+            // Show post-clockin card for judge simulation
+            const postCard = document.getElementById('post-clockin-card');
+            if (postCard) {
+                const dayNum = document.getElementById('post-day-num');
+                const nextDayNum = document.getElementById('post-next-day-num');
+                const breachDayNum = document.getElementById('post-breach-day-num');
+                const escrowVal = document.getElementById('post-escrow-val');
+                if (dayNum) dayNum.innerText = currentDay;
+                if (nextDayNum) nextDayNum.innerText = Math.min(currentDay + 1, totalDays);
+                if (breachDayNum) breachDayNum.innerText = Math.min(currentDay + 1, totalDays);
+                if (escrowVal) escrowVal.innerText = currentEscrowSKR.toLocaleString();
+                postCard.style.display = 'block';
+            }
+
+            addVaultAuditRecord(`Seed Vault Proof Attestation: Day ${currentDay} Certified`, `Slot #298092681 • Tx: ${mockTxHash}`);
             updateProgress();
+            updateVaultUI();
             showToast(`Clocked In via Seed Vault! Tx: ${mockTxHash}`);
+        }
+
+        function advanceTimelineDay(didPass) {
+            playMechanicalClick();
+            if (currentDay >= totalDays) {
+                claimFinalSettlement();
+                return;
+            }
+
+            if (didPass) {
+                dayStatus[currentDay] = 'completed';
+                currentDay++;
+                isTodayClockedIn = false;
+                // Realistic reading below ceiling
+                if (activeCategory === 'oddInternet') {
+                    currentValue = 26;
+                } else if (activeCategory === 'steps') {
+                    currentValue = 10840;
+                } else {
+                    currentValue = 35;
+                }
+                const postCard = document.getElementById('post-clockin-card');
+                if (postCard) postCard.style.display = 'none';
+                showToast(`Advanced to Day ${currentDay}/${totalDays}! Hardware sensor active.`);
+            } else {
+                simulateSlashingBreach();
+                return;
+            }
+            updateProgress();
+            updateVaultUI();
+        }
+
+        function simulateSlashingBreach() {
+            playMechanicalClick();
+            const dailyBurn = +(currentStakeSKR / totalDays).toFixed(2);
+            currentSlashedSKR += dailyBurn;
+            currentEscrowSKR = Math.max(0, +(currentEscrowSKR - dailyBurn).toFixed(2));
+            dayStatus[currentDay] = 'failed';
+
+            const postCard = document.getElementById('post-clockin-card');
+            if (postCard) postCard.style.display = 'none';
+
+            addVaultAuditRecord(`Slashing Penalty Executed: ${dailyBurn.toFixed(2)} $SKR Burned`, `Day ${currentDay} Breach • SolScan Slot #298092520 • Confirmed ✓`);
+
+            const burnAmountEl = document.getElementById('slashing-burn-amount');
+            const escrowRemEl = document.getElementById('slashing-escrow-remaining');
+            const dayLabelEl = document.getElementById('slashing-day-label');
+            const txHashEl = document.getElementById('slashing-tx-hash');
+            if (burnAmountEl) burnAmountEl.innerText = `${dailyBurn.toFixed(2)} $SKR`;
+            if (escrowRemEl) escrowRemEl.innerText = `${currentEscrowSKR.toFixed(2)} $SKR`;
+            if (dayLabelEl) dayLabelEl.innerText = `Day ${currentDay} of ${totalDays}`;
+            if (txHashEl) txHashEl.innerText = `4Jz${Math.random().toString(36).substring(2, 7)}...Devnet`;
+
+            document.getElementById('slashing-modal').classList.add('active');
+
+            if (currentDay < totalDays) {
+                currentDay++;
+                isTodayClockedIn = false;
+            }
+            updateProgress();
+            updateVaultUI();
+            showToast(`⚠️ Breach: ${dailyBurn.toFixed(2)} $SKR Burned from Escrow!`);
+        }
+
+        function closeSlashingModal() {
+            playMechanicalClick();
+            document.getElementById('slashing-modal').classList.remove('active');
+        }
+
+        function claimFinalSettlement() {
+            playSuccessChime();
+            triggerConfetti();
+            const retEl = document.getElementById('settle-return-val');
+            const burnEl = document.getElementById('settle-burned-val');
+            if (retEl) retEl.innerText = `${currentEscrowSKR.toFixed(2)} $SKR`;
+            if (burnEl) burnEl.innerText = `${currentSlashedSKR.toFixed(2)} $SKR`;
+            document.getElementById('settlement-modal').classList.add('active');
+        }
+
+        function closeSettlementModal() {
+            playMechanicalClick();
+            document.getElementById('settlement-modal').classList.remove('active');
+        }
+
+        function openJudgeLabModal() {
+            playMechanicalClick();
+            updateJudgeLabUI();
+            document.getElementById('judge-lab-modal').classList.add('active');
+        }
+
+        function closeJudgeLabModal() {
+            playMechanicalClick();
+            document.getElementById('judge-lab-modal').classList.remove('active');
+        }
+
+        function updateJudgeLabUI() {
+            const pdaBal = document.getElementById('lab-pda-balance');
+            const pdaSlash = document.getElementById('lab-pda-slashed');
+            if (pdaBal) pdaBal.innerText = `${currentEscrowSKR.toFixed(2)} $SKR`;
+            if (pdaSlash) pdaSlash.innerText = `${currentSlashedSKR.toFixed(2)} $SKR`;
+        }
+
+        function handleJudgeLabSlider(val) {
+            currentValue = parseFloat(val);
+            const sliderVal = document.getElementById('lab-slider-val');
+            const sliderStatus = document.getElementById('lab-slider-status');
+            const unit = activeCategory === 'oddInternet' ? 'mins' : (activeCategory === 'steps' ? 'steps' : 'm');
+            if (sliderVal) sliderVal.innerText = `${val} ${unit}`;
+            
+            let isPassing = false;
+            if (activeCategory === 'oddInternet') {
+                isPassing = currentValue <= currentTarget;
+            } else {
+                isPassing = currentValue >= currentTarget;
+            }
+
+            if (sliderStatus) {
+                if (isPassing) {
+                    sliderStatus.innerText = 'PASS (Within Limit)';
+                    sliderStatus.style.color = 'var(--ios-green)';
+                    sliderStatus.style.background = 'rgba(48, 209, 88, 0.15)';
+                } else {
+                    sliderStatus.innerText = 'BREACH (Exceeds Limit)';
+                    sliderStatus.style.color = 'var(--ios-red)';
+                    sliderStatus.style.background = 'rgba(255, 69, 58, 0.15)';
+                }
+            }
+            updateProgress();
+        }
+
+        function addVaultAuditRecord(title, meta) {
+            const container = document.querySelector('.onchain-audit-card');
+            if (!container) return;
+            const row = document.createElement('div');
+            row.className = 'audit-tx-row';
+            const isSlashing = title.includes('Slashing');
+            row.innerHTML = `
+                <div>
+                    <div class="audit-tx-hash">${title}</div>
+                    <div class="audit-tx-meta">${meta}</div>
+                </div>
+                <div class="audit-tx-status" style="${isSlashing ? 'color:var(--ios-red);background:rgba(255,69,58,0.15);' : ''}">${isSlashing ? 'BURNED' : 'CONFIRMED'}</div>
+            `;
+            const header = container.querySelector('.activity-stream-header');
+            if (header && header.nextSibling) {
+                container.insertBefore(row, header.nextSibling);
+            } else {
+                container.appendChild(row);
+            }
+        }
+
+        function updateVaultUI() {
+            const skrText = document.getElementById('profile-skr-text');
+            if (skrText) skrText.innerText = `${currentEscrowSKR.toFixed(2)} $SKR`;
+            const totalBurnEl = document.querySelectorAll('.mini-stat-card .mini-stat-val')[1];
+            if (totalBurnEl) totalBurnEl.innerText = `${currentSlashedSKR.toFixed(2)} $SKR`;
         }
 
         function closeBiometricSheet() {
@@ -3290,43 +3823,11 @@
         // Judge Sandbox Drawer
         function toggleSandboxDrawer() {
             playMechanicalClick();
-            isDemoDrawerOpen = !isDemoDrawerOpen;
-            const drawer = document.getElementById('sandbox-drawer');
-            const btn = document.getElementById('judge-toggle-btn');
-            if (isDemoDrawerOpen) {
-                drawer.classList.add('active');
-                btn.classList.add('active');
-            } else {
-                drawer.classList.remove('active');
-                btn.classList.remove('active');
-            }
-        }
-
-        function handleDrawerSlider(val) {
-            currentValue = parseFloat(val);
-            if (activeCategory === 'oddInternet') {
-                document.getElementById('metric-integer').innerText = parseInt(val);
-                document.getElementById('drawer-slider-val').innerText = parseInt(val) + ' mins';
-            } else if (activeCategory === 'steps') {
-                document.getElementById('metric-integer').innerText = parseInt(val).toLocaleString();
-                document.getElementById('drawer-slider-val').innerText = parseInt(val).toLocaleString() + ' steps';
-            } else {
-                document.getElementById('metric-integer').innerText = val;
-                document.getElementById('drawer-slider-val').innerText = val;
-            }
-            updateProgress();
+            openJudgeLabModal();
         }
 
         function handleFastForwardDay() {
-            playMechanicalClick();
-            if (currentDay < totalDays) {
-                currentDay++;
-                isTodayClockedIn = false;
-                showToast(`Day advanced to Day ${currentDay}/${totalDays}`);
-                updateProgress();
-            } else {
-                showToast(`7-Day Pledge Completed! Ready to Settle`);
-            }
+            advanceTimelineDay(true);
         }
 
         // Wallet Modal
@@ -3344,8 +3845,7 @@
             document.getElementById('wallet-btn-label').innerText = connectedAddress.substring(0, 8);
             document.getElementById('wallet-btn').classList.add('connected');
             document.getElementById('profile-address-text').innerText = connectedAddress;
-            document.getElementById('profile-skr-text').innerText = '12,500 $SKR in Vault';
-            document.getElementById('genesis-pill').style.display = 'block';
+            document.getElementById('profile-skr-text').innerText = `${currentEscrowSKR.toFixed(2)} $SKR in Vault`;
             document.getElementById('disconnect-btn-wrap').style.display = 'block';
             closeWalletModal();
             showToast(`Connected to ${name} via MWA 2.0!`);
@@ -3357,7 +3857,6 @@
             document.getElementById('wallet-btn').classList.remove('connected');
             document.getElementById('profile-address-text').innerText = 'Not Connected';
             document.getElementById('profile-skr-text').innerText = '0 $SKR in Vault';
-            document.getElementById('genesis-pill').style.display = 'none';
             document.getElementById('disconnect-btn-wrap').style.display = 'none';
             closeWalletModal();
             showToast("Wallet Disconnected");
@@ -3378,11 +3877,14 @@
             disconnectWallet();
             document.getElementById('empty-state-container').style.display = 'block';
             document.getElementById('active-dashboard-content').style.display = 'none';
-            const demoPill = document.getElementById('demo-mode-pill');
-            if (demoPill) {
-                demoPill.classList.add('fresh');
-                document.getElementById('demo-pill-label').innerText = '⚡ Load Demo';
-            }
+            currentDay = 1;
+            totalDays = 7;
+            currentEscrowSKR = 2500;
+            currentSlashedSKR = 0;
+            dayStatus = { 1: 'pending', 2: 'pending', 3: 'pending', 4: 'pending', 5: 'pending', 6: 'pending', 7: 'pending' };
+            isTodayClockedIn = false;
+            const postCard = document.getElementById('post-clockin-card');
+            if (postCard) postCard.style.display = 'none';
             showToast("Switched to Fresh Day 0 Onboarding");
         }
 
@@ -3392,14 +3894,17 @@
             selectWallet('Seeker Seed Vault');
             document.getElementById('empty-state-container').style.display = 'none';
             document.getElementById('active-dashboard-content').style.display = 'block';
-            const demoPill = document.getElementById('demo-mode-pill');
-            if (demoPill) {
-                demoPill.classList.remove('fresh');
-                document.getElementById('demo-pill-label').innerText = '🌱 Day 0';
-            }
             currentDay = 2;
+            totalDays = 7;
+            currentStakeSKR = 2500;
+            currentEscrowSKR = 2500;
+            currentSlashedSKR = 0;
+            dayStatus = { 1: 'completed', 2: 'pending', 3: 'pending', 4: 'pending', 5: 'pending', 6: 'pending', 7: 'pending' };
             isTodayClockedIn = false;
+            const postCard = document.getElementById('post-clockin-card');
+            if (postCard) postCard.style.display = 'none';
             updateProgress();
+            updateVaultUI();
             updateExplorePills(activeCategory);
             showToast("Loaded Live Demo (Day 2 of 7 Active Escrow)");
         }

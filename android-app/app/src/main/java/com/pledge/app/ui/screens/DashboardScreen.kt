@@ -62,9 +62,14 @@ fun DashboardScreen(
     val haptic = LocalHapticFeedback.current
     var isJudgeSheetOpen by remember { mutableStateOf(false) }
     var isHowItWorksOpen by remember { mutableStateOf(false) }
-    var showTipBanner by remember { mutableStateOf(true) }
+    var showTipBanner by remember { mutableStateOf(false) }
     var selectedNavTab by remember { mutableIntStateOf(0) } // 0: Active, 1: Explore, 2: Ranks, 3: Vault
     var selectedChipIndex by remember { mutableIntStateOf(0) }
+    var slashedSKR by remember { mutableDoubleStateOf(0.0) }
+    var failedDaysSet by remember { mutableStateOf(setOf<Int>()) }
+    var showSlashingDialog by remember { mutableStateOf(false) }
+    var showSettlementDialog by remember { mutableStateOf(false) }
+    var lastSlashingAmount by remember { mutableDoubleStateOf(357.14) }
 
     // Habit Presets
     val internetDetoxRule = remember {
@@ -276,20 +281,29 @@ fun DashboardScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    // Guide Icon Button (36x36 circular button)
+                    // Judge Lab Pill Button
                     Surface(
-                        color = SurfaceCard,
-                        shape = CircleShape,
-                        border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
-                        modifier = Modifier
-                            .size(36.dp)
-                            .clickable {
-                                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                                isHowItWorksOpen = true
-                            }
+                        color = SolanaTeal.copy(alpha = 0.15f),
+                        shape = RoundedCornerShape(50),
+                        border = androidx.compose.foundation.BorderStroke(0.5.dp, SolanaTeal.copy(alpha = 0.35f)),
+                        modifier = Modifier.clickable {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            isJudgeSheetOpen = true
+                        }
                     ) {
-                        Box(contentAlignment = Alignment.Center) {
-                            Text(text = "💡", fontSize = 15.sp)
+                        Row(
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 7.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Text(text = "⚡", fontSize = 12.sp)
+                            Text(
+                                text = "Judge Lab",
+                                fontFamily = PlusJakartaSans,
+                                fontSize = 11.5.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = SolanaTeal
+                            )
                         }
                     }
 
@@ -404,11 +418,48 @@ fun DashboardScreen(
             currentInternetMins = currentInternetMins,
             currentSteps = currentSteps,
             isDemoMode = isDemoMode,
+            stakedAmount = state.totalAmountSKR,
+            slashedAmount = slashedSKR,
+            currentDayIndex = state.currentDayIndex,
+            totalDays = state.totalDays,
             onManualInternetChange = onManualInternetChange,
             onManualStepsChange = onManualStepsChange,
+            onClockInToday = {
+                onClockIn()
+            },
+            onTriggerSlashing = {
+                lastSlashingAmount = state.totalAmountSKR / state.totalDays
+                slashedSKR += lastSlashingAmount
+                failedDaysSet = failedDaysSet + state.currentDayIndex
+                showSlashingDialog = true
+                onFastForwardDay()
+            },
             onFastForwardDay = onFastForwardDay,
+            onClaimSettlement = {
+                showSettlementDialog = true
+            },
             onToggleFreshState = onToggleFreshState,
             onDismiss = { isJudgeSheetOpen = false }
+        )
+    }
+
+    // Modal 3: Slashing Breach Event Dialog
+    if (showSlashingDialog) {
+        SlashingBreachDialog(
+            slashedAmount = lastSlashingAmount,
+            remainingEscrow = (state.totalAmountSKR - slashedSKR).coerceAtLeast(0.0),
+            dayIndex = state.currentDayIndex,
+            totalDays = state.totalDays,
+            onDismiss = { showSlashingDialog = false }
+        )
+    }
+
+    // Modal 4: Settlement & cNFT Award Dialog
+    if (showSettlementDialog) {
+        SettlementCompletionDialog(
+            returnedAmount = (state.totalAmountSKR - slashedSKR).coerceAtLeast(0.0),
+            burnedAmount = slashedSKR,
+            onDismiss = { showSettlementDialog = false }
         )
     }
 }
@@ -816,54 +867,7 @@ fun ActiveTabContent(
             Spacer(modifier = Modifier.height(12.dp))
         }
 
-        // Developer / Judge Sandbox Reset Bar
-        Surface(
-            color = SurfaceCard,
-            shape = RoundedCornerShape(12.dp),
-            border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable {
-                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                    onToggleFreshState()
-                }
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 14.dp, vertical = 9.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(6.dp)
-                            .clip(CircleShape)
-                            .background(AppleTeal)
-                    )
-                    Text(
-                        text = "DEVELOPER / JUDGE SANDBOX",
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = TextSecondary,
-                        letterSpacing = 0.5.sp
-                    )
-                }
-                Text(
-                    text = "Reset to Fresh Day 0 ↺",
-                    fontFamily = PlusJakartaSans,
-                    fontSize = 11.5.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = AppleTeal
-                )
-            }
-        }
 
-        Spacer(modifier = Modifier.height(12.dp))
 
         // Studio Action Row (Composer & 6 AM Club)
         Row(
@@ -1282,38 +1286,102 @@ fun ActiveTabContent(
             border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
             modifier = Modifier.fillMaxWidth()
         ) {
-            Row(
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                    .padding(horizontal = 14.dp, vertical = 12.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                Text(
-                    text = "DAY $currentDay OF $totalDays",
-                    fontSize = 11.5.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = TextSecondary,
-                    letterSpacing = 0.5.sp
-                )
+                // Header row: Label + Simulation action pills
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "DAY $currentDay OF $totalDays",
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = TextSecondary,
+                        letterSpacing = 0.5.sp
+                    )
 
-                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        // Next Day Simulation button
+                        Surface(
+                            color = AppleGreen.copy(alpha = 0.15f),
+                            shape = RoundedCornerShape(8.dp),
+                            border = androidx.compose.foundation.BorderStroke(0.5.dp, AppleGreen.copy(alpha = 0.3f)),
+                            modifier = Modifier.clickable {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                if (currentDay >= totalDays) {
+                                    showSettlementDialog = true
+                                } else {
+                                    onFastForwardDay()
+                                    Toast.makeText(context, "Advanced to Day ${currentDay + 1}/$totalDays", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        ) {
+                            Text(
+                                text = "⏩ Next Day",
+                                fontSize = 10.5.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = AppleGreen,
+                                modifier = Modifier.padding(horizontal = 7.dp, vertical = 3.dp)
+                            )
+                        }
+
+                        // Slash & Burn button
+                        Surface(
+                            color = AppleRed.copy(alpha = 0.15f),
+                            shape = RoundedCornerShape(8.dp),
+                            border = androidx.compose.foundation.BorderStroke(0.5.dp, AppleRed.copy(alpha = 0.3f)),
+                            modifier = Modifier.clickable {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                lastSlashingAmount = state.totalAmountSKR / state.totalDays
+                                slashedSKR += lastSlashingAmount
+                                failedDaysSet = failedDaysSet + state.currentDayIndex
+                                showSlashingDialog = true
+                                onFastForwardDay()
+                            }
+                        ) {
+                            Text(
+                                text = "🔴 Slash & Burn",
+                                fontSize = 10.5.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = AppleRed,
+                                modifier = Modifier.padding(horizontal = 7.dp, vertical = 3.dp)
+                            )
+                        }
+                    }
+                }
+
+                // Dots Row
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
                     for (i in 0 until totalDays) {
                         val isClockedIn = (state.clockedInBitmap and (1L shl i)) != 0L
+                        val isFailed = failedDaysSet.contains(i)
                         val isPast = i < state.currentDayIndex
                         val isCurrent = i == state.currentDayIndex
 
                         Box(
                             modifier = Modifier
-                                .size(26.dp)
+                                .size(28.dp)
                                 .clip(CircleShape)
                                 .background(
                                     when {
                                         isClockedIn -> AppleGreen.copy(alpha = 0.2f)
+                                        isFailed -> AppleRed.copy(alpha = 0.2f)
                                         isCurrent -> AppleGreen
                                         isPast -> AppleRed.copy(alpha = 0.2f)
                                         else -> SurfaceElevated
                                     }
+                                )
+                                .then(
+                                    if (isFailed) Modifier.border(1.dp, AppleRed, CircleShape) else Modifier
                                 ),
                             contentAlignment = Alignment.Center
                         ) {
@@ -1324,7 +1392,7 @@ fun ActiveTabContent(
                                     tint = AppleGreen,
                                     modifier = Modifier.size(13.dp)
                                 )
-                            } else if (isPast) {
+                            } else if (isFailed || isPast) {
                                 Icon(
                                     imageVector = Icons.Default.Close,
                                     contentDescription = "Failed",
@@ -1348,8 +1416,10 @@ fun ActiveTabContent(
         Spacer(modifier = Modifier.height(14.dp))
 
         // PRIMARY ACTION BUTTON (Solid Apple Fitness Green Capsule)
+        val isMaturedCycle = currentDay >= totalDays && isAlreadyClockedInToday
         Surface(
             color = when {
+                isMaturedCycle -> SolanaPurple
                 isAlreadyClockedInToday -> AppleGreen.copy(alpha = 0.15f)
                 canClockIn -> AppleGreen
                 else -> SurfaceElevated
@@ -1358,9 +1428,13 @@ fun ActiveTabContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp)
-                .clickable(enabled = canClockIn && !isAlreadyClockedInToday && !isClockingIn) {
+                .clickable(enabled = (canClockIn && !isAlreadyClockedInToday && !isClockingIn) || isMaturedCycle) {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                    onClockIn()
+                    if (isMaturedCycle) {
+                        showSettlementDialog = true
+                    } else {
+                        onClockIn()
+                    }
                 }
         ) {
             Box(contentAlignment = Alignment.Center) {
@@ -1376,30 +1450,150 @@ fun ActiveTabContent(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         Icon(
-                            imageVector = if (isAlreadyClockedInToday) Icons.Default.CheckCircle else Icons.Default.Lock,
+                            imageVector = when {
+                                isMaturedCycle -> Icons.Default.EmojiEvents
+                                isAlreadyClockedInToday -> Icons.Default.CheckCircle
+                                else -> Icons.Default.Lock
+                            },
                             contentDescription = null,
-                            tint = if (canClockIn && !isAlreadyClockedInToday) Color.Black else if (isAlreadyClockedInToday) AppleGreen else TextMuted,
+                            tint = when {
+                                isMaturedCycle -> Color.White
+                                canClockIn && !isAlreadyClockedInToday -> Color.Black
+                                isAlreadyClockedInToday -> AppleGreen
+                                else -> TextMuted
+                            },
                             modifier = Modifier.size(20.dp)
                         )
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(
                                 text = when {
-                                    isAlreadyClockedInToday -> "✓ Daily Proof Anchored on Solana"
+                                    isMaturedCycle -> "🏆 Claim Escrow & Mint cNFT"
+                                    isAlreadyClockedInToday -> "✓ Day $currentDay Proof Certified on Solana"
                                     canClockIn -> "Sign & Anchor Daily Proof"
                                     else -> "Monitoring in Progress"
                                 },
                                 fontSize = 13.5.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = if (canClockIn && !isAlreadyClockedInToday) Color.Black else if (isAlreadyClockedInToday) AppleGreen else TextMuted
+                                color = when {
+                                    isMaturedCycle -> Color.White
+                                    canClockIn && !isAlreadyClockedInToday -> Color.Black
+                                    isAlreadyClockedInToday -> AppleGreen
+                                    else -> TextMuted
+                                }
                             )
                             Text(
                                 text = when {
+                                    isMaturedCycle -> "7-Day Cycle Finished • Withdraw collateral & claim NFT"
                                     isAlreadyClockedInToday -> "Escrow milestone unlocked • Seed Vault Sig #5Kz8..."
                                     canClockIn -> "Seed Vault Ed25519 Claim • Records sensor hash"
                                     else -> "Maintain limit to unlock daily milestone signature"
                                 },
                                 fontSize = 9.5.sp,
-                                color = if (canClockIn && !isAlreadyClockedInToday) Color.Black.copy(alpha = 0.75f) else TextSecondary
+                                color = when {
+                                    isMaturedCycle -> Color.White.copy(alpha = 0.85f)
+                                    canClockIn && !isAlreadyClockedInToday -> Color.Black.copy(alpha = 0.75f)
+                                    else -> TextSecondary
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+        // Post-Clockin Lifecycle Simulation Card
+        if (isAlreadyClockedInToday && !isMaturedCycle) {
+            Spacer(modifier = Modifier.height(10.dp))
+            Surface(
+                color = SurfaceCard,
+                shape = RoundedCornerShape(16.dp),
+                border = androidx.compose.foundation.BorderStroke(0.5.dp, AppleGreen.copy(alpha = 0.4f)),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(
+                    modifier = Modifier.padding(14.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Surface(
+                            color = AppleGreen.copy(alpha = 0.15f),
+                            shape = RoundedCornerShape(6.dp)
+                        ) {
+                            Text(
+                                text = "✓ Day $currentDay Certified",
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = AppleGreen,
+                                modifier = Modifier.padding(horizontal = 7.dp, vertical = 3.dp)
+                            )
+                        }
+                        Text(
+                            text = "Escrow Intact: ${(state.totalAmountSKR - slashedSKR).toInt()} \$SKR",
+                            fontSize = 11.sp,
+                            color = TextSecondary
+                        )
+                    }
+
+                    Text(
+                        text = "Seed Vault Proof Anchored! Test next scenario:",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = TextPrimary
+                    )
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Button(
+                            onClick = {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                if (currentDay >= totalDays) {
+                                    showSettlementDialog = true
+                                } else {
+                                    onFastForwardDay()
+                                    Toast.makeText(context, "Simulating Day ${currentDay + 1}...", Toast.LENGTH_SHORT).show()
+                                }
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = AppleGreen),
+                            shape = RoundedCornerShape(10.dp),
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(40.dp)
+                        ) {
+                            Text(
+                                text = "⏩ Day ${currentDay + 1} Pass",
+                                color = Color.Black,
+                                fontSize = 11.5.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+
+                        Button(
+                            onClick = {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                lastSlashingAmount = state.totalAmountSKR / state.totalDays
+                                slashedSKR += lastSlashingAmount
+                                failedDaysSet = failedDaysSet + state.currentDayIndex
+                                showSlashingDialog = true
+                                onFastForwardDay()
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = AppleRed.copy(alpha = 0.2f)),
+                            border = androidx.compose.foundation.BorderStroke(0.5.dp, AppleRed),
+                            shape = RoundedCornerShape(10.dp),
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(40.dp)
+                        ) {
+                            Text(
+                                text = "🔴 Day ${currentDay + 1} Slash",
+                                color = AppleRed,
+                                fontSize = 11.5.sp,
+                                fontWeight = FontWeight.Bold
                             )
                         }
                     }
@@ -3172,6 +3366,8 @@ fun HowItWorksStepCard(
     }
 }
 
+private fun formatSkr(amount: Double): String = String.format(java.util.Locale.US, "%.2f", amount)
+
 // -----------------------------------------------------------------------------
 // JUDGE CONTROLS BOTTOM SHEET
 // -----------------------------------------------------------------------------
@@ -3181,13 +3377,21 @@ fun JudgeModalBottomSheet(
     currentInternetMins: Int,
     currentSteps: Int,
     isDemoMode: Boolean,
+    stakedAmount: Double,
+    slashedAmount: Double,
+    currentDayIndex: Int,
+    totalDays: Int,
     onManualInternetChange: (Int) -> Unit,
     onManualStepsChange: (Int) -> Unit,
+    onClockInToday: () -> Unit,
+    onTriggerSlashing: () -> Unit,
     onFastForwardDay: () -> Unit,
+    onClaimSettlement: () -> Unit,
     onToggleFreshState: () -> Unit,
     onDismiss: () -> Unit
 ) {
     val haptic = LocalHapticFeedback.current
+    val currentDay = currentDayIndex + 1
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -3199,7 +3403,10 @@ fun JudgeModalBottomSheet(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 22.dp, vertical = 12.dp)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
+            // Header
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -3209,117 +3416,524 @@ fun JudgeModalBottomSheet(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Gavel,
-                        contentDescription = "Judge",
-                        tint = SolanaTeal,
-                        modifier = Modifier.size(18.dp)
-                    )
-                    Text(
-                        text = "HACKATHON JUDGE CONTROLS",
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        color = TextPrimary
-                    )
+                    Text(text = "⚡", fontSize = 16.sp)
+                    Column {
+                        Text(
+                            text = "Judge Evaluation Lab",
+                            fontFamily = PlusJakartaSans,
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = TextPrimary
+                        )
+                        Text(
+                            text = "Instant state simulation for hackathon review",
+                            fontSize = 10.5.sp,
+                            color = TextSecondary
+                        )
+                    }
                 }
 
                 Surface(
-                    color = CrimsonBurn.copy(alpha = 0.15f),
+                    color = SolanaTeal.copy(alpha = 0.15f),
                     shape = RoundedCornerShape(8.dp),
-                    border = androidx.compose.foundation.BorderStroke(1.dp, CrimsonBurn.copy(alpha = 0.3f))
+                    border = androidx.compose.foundation.BorderStroke(0.5.dp, SolanaTeal.copy(alpha = 0.35f))
                 ) {
                     Text(
-                        text = if (isDemoMode) "30s Day Timer" else "24h Production Mode",
+                        text = "DEVNET MODE",
                         fontFamily = FontFamily.Monospace,
-                        fontSize = 11.sp,
+                        fontSize = 10.sp,
                         fontWeight = FontWeight.Bold,
-                        color = CrimsonBurn,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                        color = SolanaTeal,
+                        modifier = Modifier.padding(horizontal = 7.dp, vertical = 3.dp)
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Internet minutes override slider
+            // Section 1: 1-Click Evaluation Scenarios
             Text(
-                text = "Simulate Network Data Usage: $currentInternetMins mins (Limit: 60 mins)",
-                fontSize = 12.sp,
+                text = "1-CLICK EVALUATION SCENARIOS",
+                fontSize = 11.sp,
+                fontWeight = FontWeight.Bold,
                 color = TextSecondary,
-                fontWeight = FontWeight.SemiBold
-            )
-            Slider(
-                value = currentInternetMins.toFloat(),
-                onValueChange = { onManualInternetChange(it.toInt()) },
-                valueRange = 10f..90f,
-                colors = SliderDefaults.colors(
-                    thumbColor = SolanaTeal,
-                    activeTrackColor = SolanaTeal,
-                    inactiveTrackColor = SurfaceDeep
-                )
+                letterSpacing = 0.6.sp
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // Step count override slider
-            Text(
-                text = "Simulate Health Connect Steps: $currentSteps steps",
-                fontSize = 12.sp,
-                color = TextSecondary,
-                fontWeight = FontWeight.SemiBold
-            )
-            Slider(
-                value = currentSteps.toFloat(),
-                onValueChange = { onManualStepsChange(it.toInt()) },
-                valueRange = 1000f..15000f,
-                colors = SliderDefaults.colors(
-                    thumbColor = SolanaMint,
-                    activeTrackColor = SolanaMint,
-                    inactiveTrackColor = SurfaceDeep
-                )
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Fast forward & Reset buttons
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                Button(
-                    onClick = {
-                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                        onFastForwardDay()
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = SolanaPurple),
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                // Scenario 1: Clock In Today
+                Surface(
+                    color = SurfaceElevated,
                     shape = RoundedCornerShape(12.dp),
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(46.dp)
+                    border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
+                    modifier = Modifier.fillMaxWidth().clickable {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        onClockInToday()
+                        onDismiss()
+                    }
                 ) {
-                    Icon(imageVector = Icons.Default.FastForward, contentDescription = null, modifier = Modifier.size(15.dp))
-                    Spacer(modifier = Modifier.width(5.dp))
-                    Text(text = "Next Day (+1d)", fontFamily = PlusJakartaSans, fontSize = 11.5.sp, fontWeight = FontWeight.Bold)
+                    Row(
+                        modifier = Modifier.padding(12.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        Box(
+                            modifier = Modifier.size(32.dp).clip(CircleShape).background(AppleGreen.copy(alpha = 0.16f)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = AppleGreen, modifier = Modifier.size(16.dp))
+                        }
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(text = "1. Clock In Today (Goal Met / Pass)", fontSize = 12.5.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
+                            Text(text = "Test Seed Vault Ed25519 biometric attestation", fontSize = 10.5.sp, color = TextSecondary)
+                        }
+                        Text(text = "Run →", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = AppleGreen)
+                    }
                 }
 
-                OutlinedButton(
-                    onClick = {
+                // Scenario 2: Slashing Breach
+                Surface(
+                    color = SurfaceElevated,
+                    shape = RoundedCornerShape(12.dp),
+                    border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
+                    modifier = Modifier.fillMaxWidth().clickable {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        onTriggerSlashing()
+                        onDismiss()
+                    }
+                ) {
+                    Row(
+                        modifier = Modifier.padding(12.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        Box(
+                            modifier = Modifier.size(32.dp).clip(CircleShape).background(AppleRed.copy(alpha = 0.16f)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(text = "🔴", fontSize = 14.sp)
+                        }
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(text = "2. Trigger Slashing Breach (Missed Day)", fontSize = 12.5.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
+                            Text(text = "Burn ${(stakedAmount / totalDays).toInt()} \$SKR on-chain and record failure dot", fontSize = 10.5.sp, color = TextSecondary)
+                        }
+                        Text(text = "Burn →", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = AppleRed)
+                    }
+                }
+
+                // Scenario 3: Step Forward 1 Day
+                Surface(
+                    color = SurfaceElevated,
+                    shape = RoundedCornerShape(12.dp),
+                    border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
+                    modifier = Modifier.fillMaxWidth().clickable {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        onFastForwardDay()
+                        onDismiss()
+                    }
+                ) {
+                    Row(
+                        modifier = Modifier.padding(12.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        Box(
+                            modifier = Modifier.size(32.dp).clip(CircleShape).background(SolanaTeal.copy(alpha = 0.16f)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(imageVector = Icons.Default.FastForward, contentDescription = null, tint = SolanaTeal, modifier = Modifier.size(16.dp))
+                        }
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(text = "3. Step Forward 1 Day (Time Machine)", fontSize = 12.5.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
+                            Text(text = "Advance from Day $currentDay to Day ${currentDay + 1}", fontSize = 10.5.sp, color = TextSecondary)
+                        }
+                        Text(text = "Next →", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = SolanaTeal)
+                    }
+                }
+
+                // Scenario 4: Fast-Forward to Day 7 Settlement
+                Surface(
+                    color = SurfaceElevated,
+                    shape = RoundedCornerShape(12.dp),
+                    border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
+                    modifier = Modifier.fillMaxWidth().clickable {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        onClaimSettlement()
+                        onDismiss()
+                    }
+                ) {
+                    Row(
+                        modifier = Modifier.padding(12.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        Box(
+                            modifier = Modifier.size(32.dp).clip(CircleShape).background(SolanaPurple.copy(alpha = 0.16f)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(imageVector = Icons.Default.EmojiEvents, contentDescription = null, tint = SolanaPurple, modifier = Modifier.size(16.dp))
+                        }
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(text = "4. Settle Day 7 & Mint Soulbound cNFT", fontSize = 12.5.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
+                            Text(text = "Return remaining collateral & issue Bubblegum cNFT", fontSize = 10.5.sp, color = TextSecondary)
+                        }
+                        Text(text = "Settle →", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = SolanaPurple)
+                    }
+                }
+
+                // Scenario 5: Reset to Fresh Day 0
+                Surface(
+                    color = SurfaceElevated,
+                    shape = RoundedCornerShape(12.dp),
+                    border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
+                    modifier = Modifier.fillMaxWidth().clickable {
                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                         onToggleFreshState()
-                    },
-                    border = androidx.compose.foundation.BorderStroke(1.dp, BorderMedium),
-                    shape = RoundedCornerShape(12.dp),
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(46.dp)
+                        onDismiss()
+                    }
                 ) {
-                    Icon(imageVector = Icons.Default.Refresh, contentDescription = null, tint = TextSecondary, modifier = Modifier.size(15.dp))
-                    Spacer(modifier = Modifier.width(5.dp))
-                    Text(text = "Reset Demo", fontFamily = PlusJakartaSans, fontSize = 11.5.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
+                    Row(
+                        modifier = Modifier.padding(12.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        Box(
+                            modifier = Modifier.size(32.dp).clip(CircleShape).background(Color.White.copy(alpha = 0.1f)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(imageVector = Icons.Default.Refresh, contentDescription = null, tint = Color.White, modifier = Modifier.size(16.dp))
+                        }
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(text = "5. Reset to Fresh Day 0 Onboarding", fontSize = 12.5.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
+                            Text(text = "Evaluate first-time user pledge creation & catalog", fontSize = 10.5.sp, color = TextSecondary)
+                        }
+                        Text(text = "Reset →", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                    }
                 }
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            // Section 2: Live Hardware Sensor Telemetry
+            Text(
+                text = "LIVE HARDWARE TELEMETRY OVERRIDE",
+                fontSize = 11.sp,
+                fontWeight = FontWeight.Bold,
+                color = TextSecondary,
+                letterSpacing = 0.6.sp
+            )
+
+            Surface(
+                color = SurfaceElevated,
+                shape = RoundedCornerShape(12.dp),
+                border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(modifier = Modifier.padding(14.dp)) {
+                    val isNetPassing = currentInternetMins <= 60
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Network Data: $currentInternetMins mins",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = SolanaTeal
+                        )
+                        Surface(
+                            color = if (isNetPassing) AppleGreen.copy(alpha = 0.15f) else AppleRed.copy(alpha = 0.15f),
+                            shape = RoundedCornerShape(6.dp)
+                        ) {
+                            Text(
+                                text = if (isNetPassing) "PASS (<60m Limit)" else "BREACH (>60m Limit)",
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = if (isNetPassing) AppleGreen else AppleRed,
+                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                            )
+                        }
+                    }
+
+                    Slider(
+                        value = currentInternetMins.toFloat(),
+                        onValueChange = { onManualInternetChange(it.toInt()) },
+                        valueRange = 10f..100f,
+                        colors = SliderDefaults.colors(
+                            thumbColor = SolanaTeal,
+                            activeTrackColor = SolanaTeal,
+                            inactiveTrackColor = SurfaceDeep
+                        )
+                    )
+                }
+            }
+
+            // Section 3: Escrow PDA Status
+            Surface(
+                color = SurfaceElevated,
+                shape = RoundedCornerShape(12.dp),
+                border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(text = "Escrow PDA Balance", fontSize = 11.sp, color = TextSecondary)
+                        Text(text = "${formatSkr((stakedAmount - slashedAmount).coerceAtLeast(0.0))} \$SKR", fontSize = 11.5.sp, fontWeight = FontWeight.Bold, color = AppleGreen)
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(text = "Slashed Collateral", fontSize = 11.sp, color = TextSecondary)
+                        Text(text = "${formatSkr(slashedAmount)} \$SKR", fontSize = 11.5.sp, fontWeight = FontWeight.Bold, color = AppleRed)
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(text = "Hardware Enclave", fontSize = 11.sp, color = TextSecondary)
+                        Text(text = "Seed Vault Active", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = SolanaTeal)
+                    }
+                }
+            }
+
+            Button(
+                onClick = onDismiss,
+                colors = ButtonDefaults.buttonColors(containerColor = SurfaceElevated),
+                border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier.fillMaxWidth().height(46.dp)
+            ) {
+                Text(text = "Dismiss Judge Lab", fontSize = 12.5.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+    }
+}
+
+// -----------------------------------------------------------------------------
+// SLASHING BREACH DIALOG
+// -----------------------------------------------------------------------------
+@Composable
+fun SlashingBreachDialog(
+    slashedAmount: Double,
+    remainingEscrow: Double,
+    dayIndex: Int,
+    totalDays: Int,
+    onDismiss: () -> Unit
+) {
+    androidx.compose.ui.window.Dialog(onDismissRequest = onDismiss) {
+        Surface(
+            color = SurfaceCard,
+            shape = RoundedCornerShape(20.dp),
+            border = androidx.compose.foundation.BorderStroke(0.5.dp, AppleRed.copy(alpha = 0.4f)),
+            modifier = Modifier.fillMaxWidth().padding(16.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(52.dp)
+                        .clip(CircleShape)
+                        .background(AppleRed.copy(alpha = 0.16f))
+                        .border(1.dp, AppleRed.copy(alpha = 0.4f), CircleShape),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Warning,
+                        contentDescription = "Breach",
+                        tint = AppleRed,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+
+                Text(
+                    text = "ON-CHAIN SLASHING EXECUTED",
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = AppleRed,
+                    letterSpacing = 0.8.sp
+                )
+
+                Text(
+                    text = "Daily Commitment Breached",
+                    fontFamily = PlusJakartaSans,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = TextPrimary
+                )
+
+                Text(
+                    text = "The daily verification window expired without hardware proof attestation. In accordance with the immutable Solana escrow program, that day's collateral was burned permanently.",
+                    fontSize = 12.sp,
+                    color = TextSecondary,
+                    textAlign = TextAlign.Center,
+                    lineHeight = 16.sp
+                )
+
+                Surface(
+                    color = SurfaceElevated,
+                    shape = RoundedCornerShape(12.dp),
+                    border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(
+                        modifier = Modifier.padding(12.dp),
+                        verticalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(text = "Penalty Burned", fontSize = 11.sp, color = TextSecondary)
+                            Text(text = "${formatSkr(slashedAmount)} \$SKR", fontSize = 11.5.sp, fontWeight = FontWeight.Bold, color = AppleRed)
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(text = "Escrow Remaining", fontSize = 11.sp, color = TextSecondary)
+                            Text(text = "${formatSkr(remainingEscrow)} \$SKR", fontSize = 11.5.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(text = "Milestone Breach", fontSize = 11.sp, color = TextSecondary)
+                            Text(text = "Day ${dayIndex + 1} of $totalDays", fontSize = 11.5.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(text = "SolScan Signature", fontSize = 11.sp, color = TextSecondary)
+                            Text(text = "4Jz8k...Devnet", fontFamily = FontFamily.Monospace, fontSize = 10.5.sp, color = SolanaTeal)
+                        }
+                    }
+                }
+
+                Button(
+                    onClick = onDismiss,
+                    colors = ButtonDefaults.buttonColors(containerColor = AppleRed),
+                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier.fillMaxWidth().height(46.dp)
+                ) {
+                    Text(text = "Continue Evaluation →", fontSize = 12.5.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                }
+            }
+        }
+    }
+}
+
+// -----------------------------------------------------------------------------
+// SETTLEMENT & cNFT AWARD DIALOG
+// -----------------------------------------------------------------------------
+@Composable
+fun SettlementCompletionDialog(
+    returnedAmount: Double,
+    burnedAmount: Double,
+    onDismiss: () -> Unit
+) {
+    androidx.compose.ui.window.Dialog(onDismissRequest = onDismiss) {
+        Surface(
+            color = SurfaceCard,
+            shape = RoundedCornerShape(20.dp),
+            border = androidx.compose.foundation.BorderStroke(0.5.dp, AppleGreen.copy(alpha = 0.4f)),
+            modifier = Modifier.fillMaxWidth().padding(16.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(54.dp)
+                        .clip(CircleShape)
+                        .background(AppleGreen.copy(alpha = 0.16f))
+                        .border(1.dp, AppleGreen.copy(alpha = 0.4f), CircleShape),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.EmojiEvents,
+                        contentDescription = "Completed",
+                        tint = AppleGreen,
+                        modifier = Modifier.size(26.dp)
+                    )
+                }
+
+                Text(
+                    text = "COMMITMENT COMPLETED",
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = AppleGreen,
+                    letterSpacing = 0.8.sp
+                )
+
+                Text(
+                    text = "Collateral Claimed & cNFT Minted!",
+                    fontFamily = PlusJakartaSans,
+                    fontSize = 17.5.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = TextPrimary,
+                    textAlign = TextAlign.Center
+                )
+
+                Text(
+                    text = "Congratulations! Your 7-day commitment has matured. Remaining collateral was returned to your wallet and a Soulbound Compressed NFT proof was minted.",
+                    fontSize = 12.sp,
+                    color = TextSecondary,
+                    textAlign = TextAlign.Center,
+                    lineHeight = 16.sp
+                )
+
+                Surface(
+                    color = SurfaceElevated,
+                    shape = RoundedCornerShape(12.dp),
+                    border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(
+                        modifier = Modifier.padding(12.dp),
+                        verticalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(text = "Returned to Wallet", fontSize = 11.sp, color = TextSecondary)
+                            Text(text = "${formatSkr(returnedAmount)} \$SKR", fontSize = 11.5.sp, fontWeight = FontWeight.Bold, color = AppleGreen)
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(text = "Total Burned", fontSize = 11.sp, color = TextSecondary)
+                            Text(text = "${formatSkr(burnedAmount)} \$SKR", fontSize = 11.5.sp, fontWeight = FontWeight.Bold, color = AppleRed)
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(text = "Soulbound cNFT", fontSize = 11.sp, color = TextSecondary)
+                            Text(text = "Pledge Pioneer #042", fontSize = 11.5.sp, fontWeight = FontWeight.Bold, color = SolanaPurple)
+                        }
+                    }
+                }
+
+                Button(
+                    onClick = onDismiss,
+                    colors = ButtonDefaults.buttonColors(containerColor = AppleGreen),
+                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier.fillMaxWidth().height(46.dp)
+                ) {
+                    Text(text = "Awesome!", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = Color.Black)
+                }
+            }
         }
     }
 }
