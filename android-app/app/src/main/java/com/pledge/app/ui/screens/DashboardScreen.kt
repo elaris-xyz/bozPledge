@@ -368,7 +368,18 @@ fun DashboardScreen(
                             screenDetoxRule = screenDetoxRule,
                             pulseScale = pulseScale,
                             selectedChipIndex = selectedChipIndex,
-                            onSelectChipIndex = { selectedChipIndex = it }
+                            onSelectChipIndex = { selectedChipIndex = it },
+                            onFastForwardDay = onFastForwardDay,
+                            onTriggerSlashing = {
+                                lastSlashingAmount = if (state.totalDays > 0) state.totalAmountSKR / state.totalDays else 357.14
+                                slashedSKR += lastSlashingAmount
+                                failedDaysSet = failedDaysSet + state.currentDayIndex
+                                showSlashingDialog = true
+                                onFastForwardDay()
+                            },
+                            onOpenSettlement = { showSettlementDialog = true },
+                            slashedSKR = slashedSKR,
+                            failedDaysSet = failedDaysSet
                         )
                     }
                     1 -> {
@@ -758,7 +769,12 @@ fun ActiveTabContent(
     screenDetoxRule: HabitRule,
     pulseScale: Float,
     selectedChipIndex: Int,
-    onSelectChipIndex: (Int) -> Unit
+    onSelectChipIndex: (Int) -> Unit,
+    onFastForwardDay: () -> Unit = {},
+    onTriggerSlashing: () -> Unit = {},
+    onOpenSettlement: () -> Unit = {},
+    slashedSKR: Double = 0.0,
+    failedDaysSet: Set<Int> = emptySet()
 ) {
     if (state.startTimestamp == 0L) {
         Day0OnboardingContent(
@@ -1315,7 +1331,7 @@ fun ActiveTabContent(
                             modifier = Modifier.clickable {
                                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                 if (currentDay >= totalDays) {
-                                    showSettlementDialog = true
+                                    onOpenSettlement()
                                 } else {
                                     onFastForwardDay()
                                     Toast.makeText(context, "Advanced to Day ${currentDay + 1}/$totalDays", Toast.LENGTH_SHORT).show()
@@ -1338,11 +1354,7 @@ fun ActiveTabContent(
                             border = androidx.compose.foundation.BorderStroke(0.5.dp, AppleRed.copy(alpha = 0.3f)),
                             modifier = Modifier.clickable {
                                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                lastSlashingAmount = state.totalAmountSKR / state.totalDays
-                                slashedSKR += lastSlashingAmount
-                                failedDaysSet = failedDaysSet + state.currentDayIndex
-                                showSlashingDialog = true
-                                onFastForwardDay()
+                                onTriggerSlashing()
                             }
                         ) {
                             Text(
@@ -1431,7 +1443,7 @@ fun ActiveTabContent(
                 .clickable(enabled = (canClockIn && !isAlreadyClockedInToday && !isClockingIn) || isMaturedCycle) {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     if (isMaturedCycle) {
-                        showSettlementDialog = true
+                        onOpenSettlement()
                     } else {
                         onClockIn()
                     }
@@ -1553,7 +1565,7 @@ fun ActiveTabContent(
                             onClick = {
                                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                 if (currentDay >= totalDays) {
-                                    showSettlementDialog = true
+                                    onOpenSettlement()
                                 } else {
                                     onFastForwardDay()
                                     Toast.makeText(context, "Simulating Day ${currentDay + 1}...", Toast.LENGTH_SHORT).show()
@@ -1576,11 +1588,7 @@ fun ActiveTabContent(
                         Button(
                             onClick = {
                                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                lastSlashingAmount = state.totalAmountSKR / state.totalDays
-                                slashedSKR += lastSlashingAmount
-                                failedDaysSet = failedDaysSet + state.currentDayIndex
-                                showSlashingDialog = true
-                                onFastForwardDay()
+                                onTriggerSlashing()
                             },
                             colors = ButtonDefaults.buttonColors(containerColor = AppleRed.copy(alpha = 0.2f)),
                             border = androidx.compose.foundation.BorderStroke(0.5.dp, AppleRed),
