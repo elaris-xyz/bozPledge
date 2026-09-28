@@ -67,7 +67,7 @@ class MainActivity : ComponentActivity() {
         var isSettling by remember { mutableStateOf(false) }
         var isDemoMode by remember { mutableStateOf(true) }
 
-        // Initial default commitment: Fresh Day 0 onboarding state
+        // Initial default commitment: Day 2 Active Escrow for Judges
         var commitmentState by remember {
             mutableStateOf(
                 CommitmentState(
@@ -76,12 +76,12 @@ class MainActivity : ComponentActivity() {
                     clockInAuthority = sessionKeyManager.getPublicKeyBase58(),
                     targetSteps = 8000,
                     totalDays = 7,
-                    completedDays = 0,
+                    completedDays = 1,
                     dayDurationSec = 86400L,
-                    startTimestamp = 0L, // Fresh Day 0 Onboarding by default
-                    totalAmountSKR = 0.0,
+                    startTimestamp = (System.currentTimeMillis() / 1000L) - 86400L, // Day 2 Active
+                    totalAmountSKR = 2500.0,
                     settled = false,
-                    clockedInBitmap = 0L,
+                    clockedInBitmap = 0b00001L,
                     rule = HabitRule(
                         id = "odd_internet",
                         title = "Odd Days Internet Detox",
