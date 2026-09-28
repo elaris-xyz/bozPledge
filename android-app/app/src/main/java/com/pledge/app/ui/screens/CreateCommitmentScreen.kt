@@ -5,18 +5,24 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.Security
+import androidx.compose.material.icons.filled.Speed
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -71,7 +77,7 @@ fun CreateCommitmentScreen(
         ),
         HabitRule(
             id = "screen_detox",
-            title = "App Detox (< 2h)",
+            title = "Social Media Detox (<2h)",
             sensorType = SensorType.SCREEN_DETOX,
             schedulePreset = SchedulePreset.DAILY,
             activeDaysOfWeek = (1..7).toSet(),
@@ -112,7 +118,7 @@ fun CreateCommitmentScreen(
         when (selectedPresetIndex) {
             0 -> 2500.0
             1 -> 5000.0
-            2 -> 500.0
+            2 -> 1000.0
             else -> 1000.0
         }
     }
@@ -123,12 +129,20 @@ fun CreateCommitmentScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
-                        text = "bozPledge STUDIO",
-                        fontWeight = FontWeight.Black,
-                        fontSize = 18.sp,
-                        color = TextPrimary
-                    )
+                    Column {
+                        Text(
+                            text = "Sovereign Escrow Studio",
+                            fontFamily = PlusJakartaSans,
+                            fontWeight = FontWeight.ExtraBold,
+                            fontSize = 17.sp,
+                            color = TextPrimary
+                        )
+                        Text(
+                            text = "Hardware-Attested Smart Contract Deployer",
+                            fontSize = 11.sp,
+                            color = TextSecondary
+                        )
+                    }
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
@@ -139,140 +153,145 @@ fun CreateCommitmentScreen(
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = DarkBackground)
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = BgVoid)
             )
         },
-        containerColor = DarkBackground
+        containerColor = BgVoid
     ) { paddingValues ->
         Column(
             modifier = modifier
                 .fillMaxSize()
                 .padding(paddingValues)
                 .verticalScroll(scrollState)
-                .padding(20.dp)
+                .padding(horizontal = 16.dp, vertical = 12.dp)
         ) {
-            // Mode Toggle (Presets vs Rule Composer)
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(DarkSurface, RoundedCornerShape(16.dp))
-                    .padding(4.dp)
+            // Apple Segmented Control: Verified Blueprints vs Custom Rule Engine
+            Surface(
+                color = SurfaceElevated,
+                shape = RoundedCornerShape(12.dp),
+                border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Box(
+                Row(
                     modifier = Modifier
-                        .weight(1f)
-                        .background(
-                            if (!isComposerTab) SolanaTeal.copy(alpha = 0.2f) else Color.Transparent,
-                            RoundedCornerShape(12.dp)
-                        )
-                        .clickable { isComposerTab = false }
-                        .padding(vertical = 10.dp),
-                    contentAlignment = Alignment.Center
+                        .fillMaxWidth()
+                        .padding(3.dp)
                 ) {
-                    Text(
-                        text = "⚡ PRESETS",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 13.sp,
-                        color = if (!isComposerTab) SolanaTeal else TextSecondary
-                    )
-                }
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .clip(RoundedCornerShape(9.dp))
+                            .background(if (!isComposerTab) SurfaceCard else Color.Transparent)
+                            .clickable { isComposerTab = false }
+                            .padding(vertical = 8.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Verified Blueprints",
+                            fontFamily = PlusJakartaSans,
+                            fontWeight = if (!isComposerTab) FontWeight.Bold else FontWeight.Medium,
+                            fontSize = 12.5.sp,
+                            color = if (!isComposerTab) TextPrimary else TextSecondary
+                        )
+                    }
 
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .background(
-                            if (isComposerTab) SolanaGreen.copy(alpha = 0.2f) else Color.Transparent,
-                            RoundedCornerShape(12.dp)
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .clip(RoundedCornerShape(9.dp))
+                            .background(if (isComposerTab) SurfaceCard else Color.Transparent)
+                            .clickable { isComposerTab = true }
+                            .padding(vertical = 8.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Smart Rule Studio",
+                            fontFamily = PlusJakartaSans,
+                            fontWeight = if (isComposerTab) FontWeight.Bold else FontWeight.Medium,
+                            fontSize = 12.5.sp,
+                            color = if (isComposerTab) TextPrimary else TextSecondary
                         )
-                        .clickable { isComposerTab = true }
-                        .padding(vertical = 10.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "🧠 RULE COMPOSER",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 13.sp,
-                        color = if (isComposerTab) SolanaGreen else TextSecondary
-                    )
+                    }
                 }
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(18.dp))
 
             if (!isComposerTab) {
-                // Preset habits list
+                // Preset habits list (Apple Inset Grouped)
                 Text(
                     text = "SELECT HABIT BLUEPRINT",
-                    fontSize = 12.sp,
+                    fontSize = 11.5.sp,
                     fontWeight = FontWeight.Bold,
                     color = TextSecondary,
-                    letterSpacing = 1.sp
+                    letterSpacing = 0.5.sp
                 )
                 Spacer(modifier = Modifier.height(10.dp))
 
-                presets.forEachIndexed { index, preset ->
-                    val isSelected = selectedPresetIndex == index
-                    val presetStake = when(index) {
-                        0 -> "2,500 \$SKR"
-                        1 -> "5,000 \$SKR"
-                        2 -> "500 \$SKR"
-                        else -> "1,000 \$SKR"
-                    }
+                Surface(
+                    color = SurfaceCard,
+                    shape = RoundedCornerShape(16.dp),
+                    border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column {
+                        presets.forEachIndexed { index, preset ->
+                            val isSelected = selectedPresetIndex == index
+                            val presetStake = when(index) {
+                                0 -> "2,500 \$SKR"
+                                1 -> "5,000 \$SKR"
+                                2 -> "1,000 \$SKR"
+                                else -> "1,000 \$SKR"
+                            }
 
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 10.dp)
-                            .border(
-                                width = if (isSelected) 2.dp else 1.dp,
-                                color = if (isSelected) SolanaTeal else DarkBorder,
-                                shape = RoundedCornerShape(16.dp)
-                            )
-                            .clickable { selectedPresetIndex = index },
-                        colors = CardDefaults.cardColors(
-                            containerColor = if (isSelected) SolanaTeal.copy(alpha = 0.08f) else DarkSurface
-                        )
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Column(modifier = Modifier.weight(1f)) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable { selectedPresetIndex = index }
+                                    .background(if (isSelected) AppleGreen.copy(alpha = 0.08f) else Color.Transparent)
+                                    .padding(horizontal = 16.dp, vertical = 14.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(
+                                        text = preset.title,
+                                        fontFamily = PlusJakartaSans,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 14.sp,
+                                        color = if (isSelected) AppleGreen else TextPrimary
+                                    )
+                                    Spacer(modifier = Modifier.height(2.dp))
+                                    Text(
+                                        text = "${preset.sensorType.apiSource} • ${preset.schedulePreset.displayName}",
+                                        fontSize = 11.5.sp,
+                                        color = TextSecondary
+                                    )
+                                }
                                 Text(
-                                    text = preset.title,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 15.sp,
-                                    color = TextPrimary
-                                )
-                                Spacer(modifier = Modifier.height(3.dp))
-                                Text(
-                                    text = "${preset.sensorType.apiSource} • ${preset.schedulePreset.displayName}",
-                                    fontSize = 12.sp,
-                                    color = TextSecondary
+                                    text = presetStake,
+                                    fontFamily = PlusJakartaSans,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    fontSize = 13.5.sp,
+                                    color = if (isSelected) AppleGreen else TextSecondary
                                 )
                             }
-                            Text(
-                                text = presetStake,
-                                fontWeight = FontWeight.Black,
-                                fontSize = 14.sp,
-                                color = if (isSelected) SolanaTeal else TextMuted
-                            )
+                            if (index < presets.size - 1) {
+                                Divider(color = BorderSubtle, thickness = 0.5.dp)
+                            }
                         }
                     }
                 }
             } else {
-                // Advanced Rule Composer (IFTTT)
+                // Executive Rule Composer (No numbered survey headers)
                 Text(
-                    text = "1. TELEMETRY / SENSOR SOURCE",
-                    fontSize = 12.sp,
+                    text = "HARDWARE TELEMETRY PIPELINE",
+                    fontSize = 11.sp,
                     fontWeight = FontWeight.Bold,
                     color = TextSecondary,
-                    letterSpacing = 1.sp
+                    letterSpacing = 0.5.sp
                 )
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -280,16 +299,28 @@ fun CreateCommitmentScreen(
                 ) {
                     SensorType.values().take(2).forEach { sensor ->
                         val isSel = customSensor == sensor
-                        Box(
+                        Surface(
+                            color = if (isSel) AppleGreen.copy(alpha = 0.12f) else SurfaceCard,
+                            shape = RoundedCornerShape(12.dp),
+                            border = androidx.compose.foundation.BorderStroke(
+                                0.5.dp,
+                                if (isSel) AppleGreen.copy(alpha = 0.5f) else BorderSubtle
+                            ),
                             modifier = Modifier
                                 .weight(1f)
-                                .height(56.dp)
-                                .border(if (isSel) 2.dp else 1.dp, if (isSel) SolanaGreen else DarkBorder, RoundedCornerShape(14.dp))
-                                .background(if (isSel) SolanaGreen.copy(alpha = 0.15f) else DarkSurface, RoundedCornerShape(14.dp))
-                                .clickable { customSensor = sensor },
-                            contentAlignment = Alignment.Center
+                                .clickable { customSensor = sensor }
                         ) {
-                            Text(sensor.displayName, fontSize = 12.sp, fontWeight = FontWeight.Bold, color = if (isSel) SolanaGreen else TextSecondary)
+                            Box(
+                                modifier = Modifier.padding(vertical = 12.dp, horizontal = 8.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = sensor.displayName,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = if (isSel) AppleGreen else TextPrimary
+                                )
+                            }
                         }
                     }
                 }
@@ -300,72 +331,91 @@ fun CreateCommitmentScreen(
                 ) {
                     SensorType.values().drop(2).forEach { sensor ->
                         val isSel = customSensor == sensor
-                        Box(
+                        Surface(
+                            color = if (isSel) AppleGreen.copy(alpha = 0.12f) else SurfaceCard,
+                            shape = RoundedCornerShape(12.dp),
+                            border = androidx.compose.foundation.BorderStroke(
+                                0.5.dp,
+                                if (isSel) AppleGreen.copy(alpha = 0.5f) else BorderSubtle
+                            ),
                             modifier = Modifier
                                 .weight(1f)
-                                .height(56.dp)
-                                .border(if (isSel) 2.dp else 1.dp, if (isSel) SolanaGreen else DarkBorder, RoundedCornerShape(14.dp))
-                                .background(if (isSel) SolanaGreen.copy(alpha = 0.15f) else DarkSurface, RoundedCornerShape(14.dp))
-                                .clickable { customSensor = sensor },
-                            contentAlignment = Alignment.Center
+                                .clickable { customSensor = sensor }
                         ) {
-                            Text(sensor.displayName, fontSize = 12.sp, fontWeight = FontWeight.Bold, color = if (isSel) SolanaGreen else TextSecondary)
+                            Box(
+                                modifier = Modifier.padding(vertical = 12.dp, horizontal = 8.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = sensor.displayName,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = if (isSel) AppleGreen else TextPrimary
+                                )
+                            }
                         }
                     }
                 }
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-                // Schedule selection
+                // Enforcement Cadence
                 Text(
-                    text = "2. SCHEDULE PRESET",
-                    fontSize = 12.sp,
+                    text = "ENFORCEMENT CADENCE",
+                    fontSize = 11.sp,
                     fontWeight = FontWeight.Bold,
                     color = TextSecondary,
-                    letterSpacing = 1.sp
+                    letterSpacing = 0.5.sp
                 )
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    listOf(SchedulePreset.ODD_DAYS, SchedulePreset.EVEN_DAYS, SchedulePreset.DAILY).forEach { sched ->
+                    listOf(
+                        SchedulePreset.ODD_DAYS to "Odd Days",
+                        SchedulePreset.EVEN_DAYS to "Even Days",
+                        SchedulePreset.DAILY to "Daily (7d)"
+                    ).forEach { (sched, label) ->
                         val isSel = customSchedule == sched
-                        Box(
+                        Surface(
+                            color = if (isSel) AppleTeal.copy(alpha = 0.12f) else SurfaceCard,
+                            shape = RoundedCornerShape(12.dp),
+                            border = androidx.compose.foundation.BorderStroke(
+                                0.5.dp,
+                                if (isSel) AppleTeal.copy(alpha = 0.5f) else BorderSubtle
+                            ),
                             modifier = Modifier
                                 .weight(1f)
-                                .height(44.dp)
-                                .border(if (isSel) 2.dp else 1.dp, if (isSel) SolanaTeal else DarkBorder, RoundedCornerShape(12.dp))
-                                .background(if (isSel) SolanaTeal.copy(alpha = 0.15f) else DarkSurface, RoundedCornerShape(12.dp))
-                                .clickable { customSchedule = sched },
-                            contentAlignment = Alignment.Center
+                                .clickable { customSchedule = sched }
                         ) {
-                            Text(
-                                when (sched) {
-                                    SchedulePreset.ODD_DAYS -> "Odd Days"
-                                    SchedulePreset.EVEN_DAYS -> "Even Days"
-                                    else -> "Daily"
-                                },
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = if (isSel) SolanaTeal else TextSecondary
-                            )
+                            Box(
+                                modifier = Modifier.padding(vertical = 10.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = label,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = if (isSel) AppleTeal else TextPrimary
+                                )
+                            }
                         }
                     }
                 }
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
                 // Limit & Staking Inputs
                 Text(
-                    text = "3. LIMIT & FREE-FORM COLLATERAL",
-                    fontSize = 12.sp,
+                    text = "DAILY VERIFICATION THRESHOLD",
+                    fontSize = 11.sp,
                     fontWeight = FontWeight.Bold,
                     color = TextSecondary,
-                    letterSpacing = 1.sp
+                    letterSpacing = 0.5.sp
                 )
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -374,78 +424,153 @@ fun CreateCommitmentScreen(
                     OutlinedTextField(
                         value = customLimitText,
                         onValueChange = { customLimitText = it },
-                        label = { Text("Max Target") },
+                        label = { Text("Target Limit") },
                         modifier = Modifier.weight(1f),
+                        singleLine = true,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = SolanaTeal,
-                            unfocusedBorderColor = DarkBorder
+                            focusedBorderColor = AppleTeal,
+                            unfocusedBorderColor = BorderSubtle,
+                            focusedContainerColor = SurfaceCard,
+                            unfocusedContainerColor = SurfaceCard
                         )
                     )
 
                     OutlinedTextField(
-                        value = customStakeText,
-                        onValueChange = { customStakeText = it },
-                        label = { Text("Stake \$SKR") },
+                        value = customUnit,
+                        onValueChange = { customUnit = it },
+                        label = { Text("Unit") },
                         modifier = Modifier.weight(1f),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        singleLine = true,
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = SolanaGreen,
-                            unfocusedBorderColor = DarkBorder
+                            focusedBorderColor = AppleTeal,
+                            unfocusedBorderColor = BorderSubtle,
+                            focusedContainerColor = SurfaceCard,
+                            unfocusedContainerColor = SurfaceCard
                         )
                     )
                 }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Staking & Collateral
+                Text(
+                    text = "ESCROW COLLATERAL DEPOSIT (\$SKR)",
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = TextSecondary,
+                    letterSpacing = 0.5.sp
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Quick Staking Presets
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    listOf("1000" to "1K", "2500" to "2.5K", "5000" to "5K", "10000" to "10K").forEach { (amount, label) ->
+                        val isSel = customStakeText == amount
+                        Surface(
+                            color = if (isSel) AppleGreen.copy(alpha = 0.15f) else SurfaceCard,
+                            shape = RoundedCornerShape(8.dp),
+                            border = androidx.compose.foundation.BorderStroke(
+                                0.5.dp,
+                                if (isSel) AppleGreen.copy(alpha = 0.4f) else BorderSubtle
+                            ),
+                            modifier = Modifier
+                                .weight(1f)
+                                .clickable { customStakeText = amount }
+                        ) {
+                            Box(
+                                modifier = Modifier.padding(vertical = 7.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = "$label \$SKR",
+                                    fontSize = 11.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = if (isSel) AppleGreen else TextSecondary
+                                )
+                            }
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                OutlinedTextField(
+                    value = customStakeText,
+                    onValueChange = { customStakeText = it },
+                    label = { Text("Custom Amount (\$SKR)") },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = AppleGreen,
+                        unfocusedBorderColor = BorderSubtle,
+                        focusedContainerColor = SurfaceCard,
+                        unfocusedContainerColor = SurfaceCard
+                    )
+                )
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(18.dp))
 
-            // Demo Mode Box
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .border(1.dp, SolanaTeal.copy(alpha = 0.4f), RoundedCornerShape(18.dp)),
-                colors = CardDefaults.cardColors(containerColor = DarkSurface)
+            // Demo Mode Sandbox Card
+            Surface(
+                color = SurfaceCard,
+                shape = RoundedCornerShape(16.dp),
+                border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
+                        .padding(14.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = "Demo Mode (30s Days)",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 14.sp,
-                            color = SolanaTeal
-                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            Text(
+                                text = "Hackathon Fast-Forward Mode",
+                                fontFamily = PlusJakartaSans,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 13.sp,
+                                color = AppleTeal
+                            )
+                        }
                         Spacer(modifier = Modifier.height(2.dp))
                         Text(
-                            text = "Compresses 24h into 30 seconds for fast hackathon judging & verification.",
-                            fontSize = 12.sp,
-                            color = TextSecondary
+                            text = "Compresses 24h into 30s for rapid judge evaluation & verification.",
+                            fontSize = 11.5.sp,
+                            color = TextSecondary,
+                            lineHeight = 15.sp
                         )
                     }
                     Switch(
                         checked = isDemoMode,
                         onCheckedChange = { isDemoMode = it },
                         colors = SwitchDefaults.colors(
-                            checkedThumbColor = SolanaTeal,
-                            checkedTrackColor = SolanaTeal.copy(alpha = 0.4f)
+                            checkedThumbColor = Color.Black,
+                            checkedTrackColor = AppleTeal
                         )
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(18.dp))
 
-            // Smart Rule Logic Specification Box (Apple Shortcuts style)
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth(),
+            // Executive Smart Contract Specifications Card (Replaces student IF-THEN code box)
+            val dailyLoss = String.format("%.2f", stakeAmount / 7)
+            Surface(
+                color = SurfaceCard,
                 shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = SurfaceCard)
+                border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Row(
@@ -453,57 +578,83 @@ fun CreateCommitmentScreen(
                         horizontalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Security,
+                            imageVector = Icons.Default.Description,
                             contentDescription = null,
                             tint = AppleTeal,
-                            modifier = Modifier.size(16.dp)
+                            modifier = Modifier.size(15.dp)
                         )
                         Text(
-                            text = "SMART ESCROW SPECIFICATION",
-                            fontSize = 11.sp,
-                            fontWeight = FontWeight.Bold,
+                            text = "SMART ESCROW SPECIFICATIONS",
+                            fontSize = 10.5.sp,
+                            fontWeight = FontWeight.ExtraBold,
                             color = AppleTeal,
                             letterSpacing = 0.5.sp
                         )
                     }
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
 
-                    val dailyLoss = (stakeAmount / 7).toInt()
-                    val ruleDesc = "IF (${activeRule.sensorType.displayName} <= ${activeRule.thresholdLimit} ${activeRule.unit}) ON (${activeRule.schedulePreset.displayName})\nTHEN Unlock Daily Clock-In (Seed Vault Sign)\nELSE Burn $dailyLoss \$SKR from PDA Escrow"
+                    // Contract Spec Table
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        ContractSpecRow(
+                            label = "Sensor Verification",
+                            value = "${activeRule.sensorType.displayName} < ${activeRule.thresholdLimit} ${activeRule.unit}"
+                        )
+                        Divider(color = BorderSubtle, thickness = 0.5.dp)
+                        ContractSpecRow(
+                            label = "Active Cadence",
+                            value = activeRule.schedulePreset.displayName
+                        )
+                        Divider(color = BorderSubtle, thickness = 0.5.dp)
+                        ContractSpecRow(
+                            label = "Escrow PDA Stake",
+                            value = "${String.format("%,.0f", stakeAmount)} \$SKR"
+                        )
+                        Divider(color = BorderSubtle, thickness = 0.5.dp)
+                        ContractSpecRow(
+                            label = "Daily Slashing Risk",
+                            value = "$dailyLoss \$SKR burned per failure",
+                            valueColor = AppleRed
+                        )
+                        Divider(color = BorderSubtle, thickness = 0.5.dp)
+                        ContractSpecRow(
+                            label = "Enclave Authorization",
+                            value = "Seed Vault Ed25519 Hardware Sign",
+                            valueColor = AppleGreen
+                        )
+                    }
+                }
+            }
 
+            Spacer(modifier = Modifier.height(18.dp))
+
+            // Deploy Button (Solid Apple Fitness Green Capsule)
+            Surface(
+                color = AppleGreen,
+                shape = RoundedCornerShape(50),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(52.dp)
+                    .clickable {
+                        val stepsTarget = activeRule.thresholdLimit.toInt()
+                        onSubmitCommitment(selectedDays, stepsTarget, stakeAmount, isDemoMode, activeRule)
+                    }
+            ) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
                     Text(
-                        text = ruleDesc,
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = TextPrimary,
-                        lineHeight = 20.sp
+                        text = "DEPLOY SMART ESCROW (${String.format("%,.0f", stakeAmount)} \$SKR)",
+                        color = Color.Black,
+                        fontFamily = PlusJakartaSans,
+                        fontWeight = FontWeight.ExtraBold,
+                        fontSize = 13.5.sp,
+                        letterSpacing = 0.4.sp
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // Deploy Button (Solid Apple Fitness Green Capsule)
-            Button(
-                onClick = {
-                    val stepsTarget = activeRule.thresholdLimit.toInt()
-                    onSubmitCommitment(selectedDays, stepsTarget, stakeAmount, isDemoMode, activeRule)
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(52.dp),
-                shape = RoundedCornerShape(50),
-                colors = ButtonDefaults.buttonColors(containerColor = AppleGreen)
-            ) {
-                Text(
-                    text = "Deploy Smart Rule (${stakeAmount.toInt()} \$SKR)",
-                    color = Color.Black,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 14.5.sp
-                )
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -514,15 +665,43 @@ fun CreateCommitmentScreen(
                     imageVector = Icons.Default.Security,
                     contentDescription = null,
                     tint = TextMuted,
-                    modifier = Modifier.size(14.dp)
+                    modifier = Modifier.size(13.dp)
                 )
-                Spacer(modifier = Modifier.width(6.dp))
+                Spacer(modifier = Modifier.width(5.dp))
                 Text(
-                    text = "Funds locked in Solana Anchor PDA. 100% SPL Burn upon breach.",
-                    fontSize = 11.sp,
+                    text = "100% Non-Custodial Anchor PDA • Deflationary On-Chain Slashing",
+                    fontSize = 10.5.sp,
                     color = TextMuted
                 )
             }
+
+            Spacer(modifier = Modifier.height(20.dp))
         }
+    }
+}
+
+@Composable
+fun ContractSpecRow(
+    label: String,
+    value: String,
+    valueColor: Color = TextPrimary
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = label,
+            fontSize = 12.sp,
+            color = TextSecondary
+        )
+        Text(
+            text = value,
+            fontFamily = PlusJakartaSans,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = valueColor
+        )
     }
 }

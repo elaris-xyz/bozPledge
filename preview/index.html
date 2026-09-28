@@ -691,33 +691,32 @@
             font-size: 14px;
             font-weight: 700;
             color: #FFFFFF;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            line-height: 1.3;
+            margin-bottom: 3px;
         }
         .ios-row-content p {
-            font-size: 11px;
+            font-size: 11.5px;
             color: var(--text-secondary);
-            margin-top: 2px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            line-height: 1.35;
         }
         /* App Store Pill Button */
         .app-store-pill {
             background: #2C2C2E;
             color: var(--ios-blue);
             border-radius: var(--radius-pill);
-            padding: 6px 14px;
-            font-size: 12px;
+            padding: 6px 12px;
+            font-size: 11px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.4px;
             flex-shrink: 0;
+            border: 0.5px solid rgba(255, 255, 255, 0.08);
+            text-align: center;
         }
         .app-store-pill.active {
-            background: var(--ios-green);
-            color: #000000;
+            background: rgba(48, 209, 88, 0.15);
+            color: var(--ios-green);
+            border: 0.5px solid rgba(48, 209, 88, 0.35);
         }
 
         /* -------------------------------------------------------------
@@ -1240,6 +1239,452 @@
             text-transform: uppercase;
         }
 
+        /* Enterprise Header & Button Styles */
+        .btn-ios-pill.icon-only {
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            border-radius: 50%;
+            background: #1C1C1E;
+            border: 0.5px solid var(--ios-separator);
+            color: #FFFFFF;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .btn-ios-pill.icon-only:active {
+            background: #2C2C2E;
+        }
+
+        /* Judge Sandbox Card */
+        .judge-sandbox-card {
+            background: linear-gradient(135deg, rgba(100, 210, 255, 0.08) 0%, rgba(191, 90, 242, 0.06) 100%);
+            border: 0.5px solid rgba(100, 210, 255, 0.25);
+            border-radius: 16px;
+            padding: 14px 16px;
+            margin-top: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .judge-sandbox-card:active {
+            transform: scale(0.99);
+            border-color: var(--ios-teal);
+        }
+        .judge-sandbox-badge {
+            display: inline-block;
+            font-size: 9.5px;
+            font-weight: 800;
+            letter-spacing: 0.6px;
+            color: var(--ios-teal);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        .judge-sandbox-title {
+            font-size: 13.5px;
+            font-weight: 800;
+            color: #FFFFFF;
+            margin-bottom: 3px;
+        }
+        .judge-sandbox-desc {
+            font-size: 11.5px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+        .judge-sandbox-btn {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--ios-teal);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Dev Mode Bar in Active Dashboard */
+        .dev-mode-bar {
+            background: rgba(100, 210, 255, 0.08);
+            border: 0.5px solid rgba(100, 210, 255, 0.2);
+            border-radius: 10px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--ios-teal);
+            margin-bottom: 12px;
+            cursor: pointer;
+        }
+        .dev-mode-action {
+            font-weight: 700;
+            text-decoration: underline;
+        }
+
+        /* Enterprise Hardware Telemetry Specifications */
+        .enterprise-spec-card {
+            background: #1C1C1E;
+            border-radius: 16px;
+            padding: 16px;
+            border: 0.5px solid var(--ios-separator);
+            margin-top: 12px;
+        }
+        .enterprise-spec-header {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            color: var(--ios-teal);
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+        .spec-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .spec-item {
+            background: #2C2C2E;
+            border-radius: 12px;
+            padding: 10px 11px;
+            border: 0.5px solid rgba(255, 255, 255, 0.04);
+        }
+        .spec-name {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: #FFFFFF;
+            margin-bottom: 3px;
+        }
+        .spec-desc {
+            font-size: 10.5px;
+            color: var(--text-secondary);
+            line-height: 1.35;
+        }
+
+        /* Escrow Feature Row */
+        .escrow-feature-row {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .escrow-feat {
+            background: #2C2C2E;
+            border-radius: 12px;
+            padding: 10px 12px;
+            border: 0.5px solid rgba(255, 255, 255, 0.04);
+        }
+        .escrow-feat-val {
+            font-size: 12.5px;
+            font-weight: 700;
+            color: #FFFFFF;
+            margin-bottom: 2px;
+        }
+        .escrow-feat-sub {
+            font-size: 11px;
+            color: var(--text-secondary);
+            line-height: 1.35;
+        }
+
+        /* Executive Smart Contract Summary Table */
+        .executive-contract-card {
+            background: #1C1C1E;
+            border-radius: 16px;
+            padding: 14px 16px;
+            border: 0.5px solid rgba(100, 210, 255, 0.25);
+            margin-bottom: 16px;
+        }
+        .executive-contract-header {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            color: var(--ios-teal);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        .contract-spec-table {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+        .contract-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11.5px;
+            padding: 3px 0;
+            border-bottom: 0.5px solid rgba(255, 255, 255, 0.04);
+        }
+        .contract-row:last-child {
+            border-bottom: none;
+        }
+        .contract-key {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        .contract-val {
+            color: #FFFFFF;
+            font-weight: 700;
+            text-align: right;
+        }
+
+        /* Ranks 3-Stat Metric Grid */
+        .ranks-stat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+        .ranks-stat-card {
+            background: #1C1C1E;
+            border-radius: 14px;
+            padding: 11px 9px;
+            text-align: center;
+            border: 0.5px solid var(--ios-separator);
+        }
+        .ranks-stat-label {
+            font-size: 9.5px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: 4px;
+        }
+        .ranks-stat-value {
+            font-size: 13.5px;
+            font-weight: 800;
+            font-family: var(--font-heading);
+            color: #FFFFFF;
+        }
+
+        /* Ranks Filter Bar */
+        .ranks-filter-bar {
+            display: flex;
+            background: #1C1C1E;
+            border-radius: 10px;
+            padding: 3px;
+            margin-bottom: 12px;
+            border: 0.5px solid var(--ios-separator);
+        }
+        .ranks-filter-pill {
+            flex: 1;
+            text-align: center;
+            padding: 6px 0;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .ranks-filter-pill.active {
+            background: #2C2C2E;
+            color: #FFFFFF;
+        }
+
+        /* User Pinned Standing Card */
+        .user-standing-card {
+            background: linear-gradient(135deg, rgba(48, 209, 88, 0.12) 0%, rgba(100, 210, 255, 0.08) 100%);
+            border: 0.5px solid rgba(48, 209, 88, 0.3);
+            border-radius: 16px;
+            padding: 13px 15px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .standing-rank-badge {
+            background: var(--ios-green);
+            color: #000000;
+            font-size: 12px;
+            font-weight: 800;
+            padding: 4px 9px;
+            border-radius: 8px;
+            margin-right: 10px;
+        }
+        .standing-title {
+            font-size: 13px;
+            font-weight: 800;
+            color: #FFFFFF;
+        }
+        .standing-sub {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 1px;
+        }
+
+        /* Live Activity Stream */
+        .activity-stream-card {
+            background: #1C1C1E;
+            border-radius: 16px;
+            padding: 14px 16px;
+            border: 0.5px solid var(--ios-separator);
+            margin-top: 14px;
+        }
+        .activity-stream-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 10.5px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 7px 0;
+            border-bottom: 0.5px solid rgba(255, 255, 255, 0.04);
+            font-size: 11px;
+        }
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        .activity-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--ios-green);
+            flex-shrink: 0;
+        }
+        .activity-text {
+            flex: 1;
+            color: #FFFFFF;
+        }
+        .activity-time {
+            color: var(--text-muted);
+            font-size: 10px;
+            font-family: var(--font-mono);
+        }
+
+        /* Luxury Vault Titanium Card */
+        .vault-titanium-card {
+            background: linear-gradient(135deg, #1C1C1E 0%, #252528 100%);
+            border-radius: 20px;
+            padding: 20px 18px;
+            border: 0.5px solid rgba(255, 255, 255, 0.12);
+            margin-bottom: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+        .vault-cert-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(48, 209, 88, 0.14);
+            color: var(--ios-green);
+            font-size: 9.5px;
+            font-weight: 800;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: var(--radius-pill);
+            margin-bottom: 10px;
+        }
+        .vault-stat-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 14px;
+        }
+        .vault-stat-box {
+            background: rgba(0, 0, 0, 0.35);
+            border-radius: 12px;
+            padding: 10px;
+            border: 0.5px solid rgba(255, 255, 255, 0.06);
+        }
+        .vault-stat-num {
+            font-size: 14px;
+            font-weight: 800;
+            color: #FFFFFF;
+            font-family: var(--font-mono);
+        }
+        .vault-stat-txt {
+            font-size: 10px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+        .vault-action-bar {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            margin-bottom: 14px;
+        }
+
+        /* Luxury cNFT Collectible Cards */
+        .nft-award-card.luxury {
+            background: #1C1C1E;
+            border: 0.5px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 14px 10px;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+        .award-tier-badge {
+            font-size: 9px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 2px 7px;
+            border-radius: 4px;
+            margin-top: 4px;
+            display: inline-block;
+        }
+        .award-explorer-link {
+            font-size: 9.5px;
+            color: var(--ios-teal);
+            margin-top: 6px;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 600;
+        }
+
+        /* On-Chain Audit Ledger */
+        .onchain-audit-card {
+            background: #1C1C1E;
+            border-radius: 16px;
+            padding: 14px 16px;
+            border: 0.5px solid var(--ios-separator);
+            margin-top: 14px;
+        }
+        .audit-tx-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 9px 0;
+            border-bottom: 0.5px solid rgba(255, 255, 255, 0.04);
+        }
+        .audit-tx-row:last-child {
+            border-bottom: none;
+        }
+        .audit-tx-hash {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 700;
+            color: #FFFFFF;
+        }
+        .audit-tx-meta {
+            font-size: 10px;
+            color: var(--text-secondary);
+            margin-top: 1px;
+        }
+        .audit-tx-status {
+            font-size: 10px;
+            font-weight: 800;
+            color: var(--ios-green);
+            background: rgba(48, 209, 88, 0.12);
+            padding: 3px 7px;
+            border-radius: 6px;
+        }
+
         .tab-panel { display: none; }
         .tab-panel.active { display: block; animation: fadeIn 0.25s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -1281,24 +1726,18 @@
                         <div class="brand-title">boz<span>PLEDGE</span></div>
                         <div class="brand-subtitle">
                             <span class="pulse-beacon"></span>
-                            <span id="sync-status-text">NetworkStats Active • Synced</span>
+                            <span id="sync-status-text">Seeker Enclave • Active</span>
                         </div>
                     </div>
                     <span class="genesis-badge" id="genesis-pill" style="display:none">SEEKER GENESIS</span>
                 </div>
                 <div class="header-actions">
-                    <div class="btn-ios-pill demo-pill fresh" id="demo-mode-pill" onclick="toggleDemoModeSwitch()">
-                        <span id="demo-pill-label">⚡ Load Demo</span>
-                    </div>
-                    <div class="btn-ios-pill" id="guide-toggle-btn" onclick="openHowItWorksModal()">
-                        <span>💡 Guide</span>
-                    </div>
-                    <div class="btn-ios-pill" id="judge-toggle-btn" onclick="toggleSandboxDrawer()">
-                        <svg class="icon sm" viewBox="0 0 24 24"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/></svg>
-                    </div>
+                    <button class="btn-ios-pill icon-only" id="guide-toggle-btn" onclick="openHowItWorksModal()" title="Architecture Guide">
+                        <span>💡</span>
+                    </button>
                     <button class="btn-ios-pill connect-pill" id="wallet-btn" onclick="openWalletModal()">
                         <div class="status-dot"></div>
-                        <span id="wallet-btn-label">Connect</span>
+                        <span id="wallet-btn-label">Seeker...7xK2</span>
                     </button>
                 </div>
             </div>
@@ -1366,14 +1805,12 @@
                             + Compose Custom Smart Rule
                         </button>
 
-                        <div style="background: rgba(100, 210, 255, 0.08); border-radius: 12px; padding: 12px; display: flex; align-items: center; justify-content: space-between; border: 0.5px solid rgba(100, 210, 255, 0.2); cursor: pointer;" onclick="simulateActiveUser()">
-                            <div style="display: flex; align-items: center; gap: 8px;">
-                                <span style="font-size: 15px;">⚡</span>
-                                <div style="font-size: 11.5px; color: var(--ios-teal); font-weight: 600;">
-                                    Judge Demo Mode: <strong>Switch to Active Day 2</strong>
-                                </div>
-                            </div>
-                            <svg class="icon sm" style="color: var(--ios-teal);" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                        <!-- Judge Sandbox Card -->
+                        <div class="judge-sandbox-card" onclick="simulateActiveUser()">
+                            <div class="judge-sandbox-badge">HACKATHON JUDGE SANDBOX</div>
+                            <div class="judge-sandbox-title">Instant-Load Day 2 Escrow Simulation</div>
+                            <div class="judge-sandbox-desc">Skip day 1 onboarding to test live hardware sensor telemetry, Seed Vault Ed25519 proof signing, and slashing rules.</div>
+                            <div class="judge-sandbox-btn">Launch Live Simulation →</div>
                         </div>
                     </div>
                 </div>
@@ -1394,6 +1831,12 @@
                             Active Habit: <strong>Odd-Days Internet Detox</strong>. Hardware sensors track your habit without cheating. When your limit is met, tap the verification button to lock in your daily progress.
                         </div>
                         <div class="ios-tip-action" onclick="openHowItWorksModal()">How it works (interactive 3-step walkthrough) →</div>
+                    </div>
+
+                    <!-- Dev Mode Bar in Active Dashboard -->
+                    <div class="dev-mode-bar" onclick="simulateFreshUser()">
+                        <span>⚡ Simulated Day 2 Active Escrow (Demo Mode)</span>
+                        <span class="dev-mode-action">Reset to Fresh Day 0 ↺</span>
                     </div>
 
                     <!-- Action Row: Rule Composer & 6 AM Club -->
@@ -1569,7 +2012,7 @@
                         </div>
                         <div class="ios-row-content">
                             <h4>Odd-Days Internet Detox (&lt;1h)</h4>
-                            <p>NetworkStats • Mon/Wed/Fri/Sun • 2,500 $SKR</p>
+                            <p>NetworkStats API • Mon/Wed/Fri/Sun • 2,500 $SKR</p>
                         </div>
                         <div class="app-store-pill active" id="pill-oddInternet">ACTIVE</div>
                     </div>
@@ -1618,6 +2061,50 @@
                         <div class="app-store-pill" id="pill-gym">ACTIVATE</div>
                     </div>
                 </div>
+
+                <!-- Enterprise Hardware Telemetry Specifications -->
+                <div class="enterprise-spec-card">
+                    <div class="enterprise-spec-header">
+                        <svg class="icon sm" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 7h10M7 12h10M7 17h10"/></svg>
+                        <span>SEEKER HARDWARE TELEMETRY PIPELINE</span>
+                    </div>
+                    <div class="spec-grid">
+                        <div class="spec-item">
+                            <div class="spec-name">NetworkStatsManager</div>
+                            <div class="spec-desc">Cellular UID metrics sealed directly from Android OS kernel.</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-name">Health Connect</div>
+                            <div class="spec-desc">Cryptographically stamped sensor steps with hardware pedometer.</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-name">Hardware NTP Clock</div>
+                            <div class="spec-desc">Tamper-proof real-time clock isolated from local time spoofing.</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-name">UsageStatsManager</div>
+                            <div class="spec-desc">System-level foreground screen package timer.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Solana Escrow Guarantee -->
+                <div class="enterprise-spec-card" style="margin-top: 12px; margin-bottom: 16px;">
+                    <div class="enterprise-spec-header" style="color: var(--ios-green);">
+                        <svg class="icon sm" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        <span>SOLANA SMART ESCROW GUARANTEES</span>
+                    </div>
+                    <div class="escrow-feature-row">
+                        <div class="escrow-feat">
+                            <div class="escrow-feat-val">100% Non-Custodial PDA</div>
+                            <div class="escrow-feat-sub">Staked tokens reside in deterministic Program Derived Address (PDA) escrow. Only Seed Vault proof signatures can release them.</div>
+                        </div>
+                        <div class="escrow-feat">
+                            <div class="escrow-feat-val">Deflationary Slashing Engine</div>
+                            <div class="escrow-feat-sub">Missed milestones trigger on-chain SPL token burn instructions, removing supply permanently from circulation.</div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- VIEW 3: LEADERBOARD (Apple Activity Sharing) -->
@@ -1629,23 +2116,48 @@
                     </div>
                 </div>
 
-                <div class="stats-2-col" style="margin-bottom: 14px;">
-                    <div class="mini-stat-card">
-                        <div class="mini-stat-title">Total Protocol Burned</div>
-                        <div class="mini-stat-val" style="color: var(--ios-red);">48,250 $SKR</div>
+                <!-- 3 Protocol Metrics -->
+                <div class="ranks-stat-grid">
+                    <div class="ranks-stat-card">
+                        <div class="ranks-stat-label">Total Staked</div>
+                        <div class="ranks-stat-value" style="color: var(--ios-teal);">284.5K</div>
                     </div>
-                    <div class="mini-stat-card">
-                        <div class="mini-stat-title">Community Success Rate</div>
-                        <div class="mini-stat-val" style="color: var(--ios-green);">92.4%</div>
+                    <div class="ranks-stat-card">
+                        <div class="ranks-stat-label">Total Burned</div>
+                        <div class="ranks-stat-value" style="color: var(--ios-red);">48,250</div>
+                    </div>
+                    <div class="ranks-stat-card">
+                        <div class="ranks-stat-label">Success Rate</div>
+                        <div class="ranks-stat-value" style="color: var(--ios-green);">94.2%</div>
                     </div>
                 </div>
 
+                <!-- Epoch Filter Bar -->
+                <div class="ranks-filter-bar">
+                    <div class="ranks-filter-pill active">Weekly Sprint</div>
+                    <div class="ranks-filter-pill">30-Day Epoch</div>
+                    <div class="ranks-filter-pill">All-Time Genesis</div>
+                </div>
+
+                <!-- User Pinned Standing -->
+                <div class="user-standing-card">
+                    <div style="display: flex; align-items: center;">
+                        <div class="standing-rank-badge">#42</div>
+                        <div>
+                            <div class="standing-title">You (Seeker Genesis)</div>
+                            <div class="standing-sub">2,500 $SKR Staked • Top 4% on Solana</div>
+                        </div>
+                    </div>
+                    <div class="app-store-pill" style="background: var(--ios-green); color: #000000;">4D STREAK ✨</div>
+                </div>
+
+                <!-- Verified Leaderboard List -->
                 <div class="ios-grouped-list">
                     <div class="ios-list-row">
                         <div class="leader-medal gold">1</div>
                         <div class="ios-row-content">
                             <h4>Toly.sol</h4>
-                            <p>14,200 avg steps • 0 burns</p>
+                            <p>14,200 avg steps • 0 burns • Genesis Node</p>
                         </div>
                         <div class="app-store-pill" style="color: var(--ios-orange);">28D STREAK 🔥</div>
                     </div>
@@ -1654,37 +2166,105 @@
                         <div class="leader-medal silver">2</div>
                         <div class="ios-row-content">
                             <h4>Mert_Helius</h4>
-                            <p>11,800 avg steps • 0 burns</p>
+                            <p>11,800 avg steps • 0 burns • RPC Master</p>
                         </div>
                         <div class="app-store-pill" style="color: var(--ios-orange);">21D STREAK 🔥</div>
                     </div>
 
-                    <div class="ios-list-row user-row">
-                        <div class="leader-medal bronze" style="background: rgba(48, 209, 88, 0.2); color: var(--ios-green);">3</div>
+                    <div class="ios-list-row">
+                        <div class="leader-medal bronze">3</div>
                         <div class="ios-row-content">
-                            <h4 style="color: var(--ios-green);">You (Seeker Genesis)</h4>
-                            <p>2,500 $SKR Staked • Net Detox</p>
+                            <h4>Raj_Gokal</h4>
+                            <p>9,500 avg steps • 0 burns • Core Builder</p>
                         </div>
-                        <div class="app-store-pill" style="background: var(--ios-green); color: #000000;">4D STREAK ✨</div>
+                        <div class="app-store-pill" style="color: var(--ios-orange);">17D STREAK 🔥</div>
+                    </div>
+
+                    <div class="ios-list-row">
+                        <div class="leader-medal">4</div>
+                        <div class="ios-row-content">
+                            <h4>Solana_Sensei</h4>
+                            <p>Odd-Days Internet Detox • 0 Burns</p>
+                        </div>
+                        <div class="app-store-pill" style="color: var(--ios-teal);">12D STREAK ✨</div>
+                    </div>
+
+                    <div class="ios-list-row">
+                        <div class="leader-medal">5</div>
+                        <div class="ios-row-content">
+                            <h4>Dr_Crypto</h4>
+                            <p>6:00 AM Club Hero • Hardware NTP</p>
+                        </div>
+                        <div class="app-store-pill" style="color: var(--ios-teal);">9D STREAK ✨</div>
+                    </div>
+                </div>
+
+                <!-- Live On-Chain Activity Stream -->
+                <div class="activity-stream-card">
+                    <div class="activity-stream-header">
+                        <svg class="icon sm" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                        <span>RECENT HARDWARE ATTESTATIONS (SOLANA DEVNET)</span>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-dot"></div>
+                        <div class="activity-text"><strong>toly.sol</strong> verified 14,500 steps via Health Connect</div>
+                        <div class="activity-time">3m ago</div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-dot"></div>
+                        <div class="activity-text"><strong>mert_helius</strong> locked 5,000 $SKR in 6 AM Club Escrow</div>
+                        <div class="activity-time">11m ago</div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-dot"></div>
+                        <div class="activity-text"><strong>solana_sensei</strong> anchored Seed Vault Ed25519 proof</div>
+                        <div class="activity-time">28m ago</div>
                     </div>
                 </div>
             </div>
 
             <!-- VIEW 4: VAULT / PROFILE (Apple Wallet & Awards) -->
             <div class="tab-panel" id="view-vault">
-                <div style="background: #1C1C1E; border-radius: 20px; padding: 22px 16px; text-align: center; margin-bottom: 14px;">
-                    <div style="width: 54px; height: 54px; border-radius: 16px; background: rgba(48, 209, 88, 0.14); display: inline-flex; align-items: center; justify-content: center; color: var(--ios-green); margin-bottom: 10px;">
-                        <svg class="icon lg" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                <!-- Luxury Titanium Header Card -->
+                <div class="vault-titanium-card">
+                    <div class="vault-cert-badge">
+                        <svg class="icon sm" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                        <span>SEEKER SEED VAULT CERTIFIED</span>
                     </div>
-                    <h3 style="font-weight: 800; font-size: 17px;" id="profile-address-text">Seeker...7xK2 (Solana Devnet)</h3>
-                    <p style="font-size: 13px; color: var(--ios-green); font-family: var(--font-mono); margin-top: 4px;" id="profile-skr-text">2,500 $SKR Locked in Smart Escrow</p>
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <div>
+                            <h3 style="font-weight: 800; font-size: 18px; color: #FFFFFF;" id="profile-address-text">Seeker...7xK2</h3>
+                            <p style="font-size: 11px; color: var(--text-secondary); margin-top: 2px;">Solana Devnet • Enclave Node #8492</p>
+                        </div>
+                        <div style="width: 44px; height: 44px; border-radius: 14px; background: rgba(48, 209, 88, 0.14); display: flex; align-items: center; justify-content: center; color: var(--ios-green); border: 0.5px solid rgba(48, 209, 88, 0.3);">
+                            <svg class="icon md" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        </div>
+                    </div>
+
+                    <div class="vault-stat-row">
+                        <div class="vault-stat-box">
+                            <div class="vault-stat-num" style="color: var(--ios-green);" id="profile-skr-text">2,500 $SKR</div>
+                            <div class="vault-stat-txt">Locked in Smart Escrow PDA</div>
+                        </div>
+                        <div class="vault-stat-box">
+                            <div class="vault-stat-num" style="color: #FFFFFF;">14,250.0 $SKR</div>
+                            <div class="vault-stat-txt">Available Liquid Balance</div>
+                        </div>
+                    </div>
                 </div>
 
-                <button onclick="showToast('Settle request submitted to Seed Vault'); playSuccessChime();" class="btn-clock-in" style="height: 48px; background: var(--ios-purple); color: #FFFFFF; box-shadow: 0 4px 20px rgba(191, 90, 242, 0.35);">
-                    Settle & Claim Vault Escrow
-                </button>
+                <!-- Dual Action Bar -->
+                <div class="vault-action-bar">
+                    <button onclick="showToast('Settle request submitted to Seed Vault'); playSuccessChime();" class="btn-clock-in" style="flex: 2; height: 44px; font-size: 12.5px; background: var(--ios-purple); color: #FFFFFF; box-shadow: 0 4px 18px rgba(191, 90, 242, 0.3);">
+                        Settle &amp; Claim Escrow
+                    </button>
+                    <button onclick="showToast('Opening Solana Explorer PDA contract...');" class="btn-ios-pill" style="flex: 1; height: 44px; justify-content: center; font-size: 11px; font-weight: 700; background: #2C2C2E; color: #FFFFFF; border: 0.5px solid var(--ios-separator); border-radius: 12px;">
+                        Solscan ↗
+                    </button>
+                </div>
 
-                <div class="stats-2-col" style="margin-top: 10px;">
+                <!-- Stats 2 Col -->
+                <div class="stats-2-col" style="margin-bottom: 14px;">
                     <div class="mini-stat-card">
                         <div class="mini-stat-title">Total Returned</div>
                         <div class="mini-stat-val" style="color: var(--ios-green)">1,450 $SKR</div>
@@ -1695,37 +2275,71 @@
                     </div>
                 </div>
 
-                <div style="font-weight: 700; font-size: 13px; margin: 16px 0 10px 0; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;">
+                <!-- Soulbound cNFTs -->
+                <div style="font-weight: 800; font-size: 12px; margin: 16px 0 10px 0; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;">
                     Soulbound Proof-of-Action cNFTs
                 </div>
                 <div class="nft-award-grid">
-                    <div class="nft-award-card">
+                    <div class="nft-award-card luxury">
                         <div class="award-icon-circle" style="background: rgba(100, 210, 255, 0.14); color: var(--ios-teal);">
                             <svg class="icon md" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20M2 12h20"/></svg>
                         </div>
                         <div class="award-title">Data Master</div>
-                        <div class="award-tag" style="color: var(--ios-teal);">cNFT Verified ✓</div>
+                        <span class="award-tier-badge" style="background: rgba(100, 210, 255, 0.14); color: var(--ios-teal);">cNFT #481 • Bronze</span>
+                        <a href="javascript:void(0)" onclick="showToast('Opening cNFT on Solana Explorer...')" class="award-explorer-link">Solana Explorer ↗</a>
                     </div>
-                    <div class="nft-award-card">
+                    <div class="nft-award-card luxury">
                         <div class="award-icon-circle" style="background: rgba(255, 159, 10, 0.14); color: var(--ios-orange);">
                             <svg class="icon md" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><polyline points="12 9 12 12 13.5 13.5"/></svg>
                         </div>
                         <div class="award-title">6 AM Club Hero</div>
-                        <div class="award-tag" style="color: var(--ios-orange);">cNFT Verified ✓</div>
+                        <span class="award-tier-badge" style="background: rgba(255, 159, 10, 0.14); color: var(--ios-orange);">cNFT #102 • Silver</span>
+                        <a href="javascript:void(0)" onclick="showToast('Opening cNFT on Solana Explorer...')" class="award-explorer-link">Solana Explorer ↗</a>
                     </div>
-                    <div class="nft-award-card">
+                    <div class="nft-award-card luxury">
                         <div class="award-icon-circle" style="background: rgba(48, 209, 88, 0.14); color: var(--ios-green);">
                             <svg class="icon md" viewBox="0 0 24 24"><path d="M13 4v16M17 8l-4-4-4 4"/><circle cx="12" cy="4" r="1.5"/></svg>
                         </div>
                         <div class="award-title">10k Pioneer</div>
-                        <div class="award-tag" style="color: var(--ios-green);">cNFT Verified ✓</div>
+                        <span class="award-tier-badge" style="background: rgba(48, 209, 88, 0.14); color: var(--ios-green);">cNFT #94 • Gold</span>
+                        <a href="javascript:void(0)" onclick="showToast('Opening cNFT on Solana Explorer...')" class="award-explorer-link">Solana Explorer ↗</a>
                     </div>
-                    <div class="nft-award-card">
+                    <div class="nft-award-card luxury">
                         <div class="award-icon-circle" style="background: rgba(191, 90, 242, 0.14); color: var(--ios-purple);">
                             <svg class="icon md" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                         </div>
                         <div class="award-title">Iron Will Genesis</div>
-                        <div class="award-tag" style="color: var(--ios-purple);">Genesis cNFT ✓</div>
+                        <span class="award-tier-badge" style="background: rgba(191, 90, 242, 0.14); color: var(--ios-purple);">Genesis VIP • #12</span>
+                        <a href="javascript:void(0)" onclick="showToast('Opening cNFT on Solana Explorer...')" class="award-explorer-link">Solana Explorer ↗</a>
+                    </div>
+                </div>
+
+                <!-- On-Chain Immutable Audit Ledger -->
+                <div class="onchain-audit-card">
+                    <div class="activity-stream-header">
+                        <svg class="icon sm" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        <span>IMMUTABLE SMART CONTRACT AUDIT TRAIL</span>
+                    </div>
+                    <div class="audit-tx-row">
+                        <div class="audit-tx-left">
+                            <div class="audit-tx-hash">Tx #7x9a...8b12</div>
+                            <div class="audit-tx-meta">Milestone Proof Anchor • Slot 298104812</div>
+                        </div>
+                        <div class="audit-tx-status">Confirmed ✓</div>
+                    </div>
+                    <div class="audit-tx-row">
+                        <div class="audit-tx-left">
+                            <div class="audit-tx-hash">Tx #4d2e...99c1</div>
+                            <div class="audit-tx-meta">Escrow PDA Deposit (2,500 $SKR) • Slot 298099120</div>
+                        </div>
+                        <div class="audit-tx-status">Confirmed ✓</div>
+                    </div>
+                    <div class="audit-tx-row">
+                        <div class="audit-tx-left">
+                            <div class="audit-tx-hash">Tx #1a8c...33f4</div>
+                            <div class="audit-tx-meta">Seed Vault Nonce Verification • Slot 298092401</div>
+                        </div>
+                        <div class="audit-tx-status">Confirmed ✓</div>
                     </div>
                 </div>
             </div>
@@ -1758,20 +2372,20 @@
                 <div class="modal-header-row">
                     <div class="modal-title">
                         <svg class="icon md" style="color: var(--ios-teal);" viewBox="0 0 24 24"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></svg>
-                        <span>Smart Rule Composer</span>
+                        <span>Sovereign Escrow Studio</span>
                     </div>
                     <div class="modal-close-btn" onclick="closeComposerModal()">
                         <svg class="icon sm" viewBox="0 0 24 24"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
                     </div>
                 </div>
 
-                <!-- 1. Sensor Trigger -->
-                <div class="composer-section-label">1. Hardware Telemetry Source</div>
+                <!-- Sensor Trigger -->
+                <div class="composer-section-label">Hardware Telemetry Pipeline</div>
                 <div class="sensor-select-grid">
                     <div class="sensor-btn-tile active" id="sensor-opt-net" onclick="selectComposerSensor('net', this)">
                         <svg class="icon md" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20M2 12h20"/></svg>
                         <div>
-                            <div class="tile-title">Internet & Data</div>
+                            <div class="tile-title">Internet &amp; Data</div>
                             <div class="tile-sub">NetworkStatsManager</div>
                         </div>
                     </div>
@@ -1798,8 +2412,8 @@
                     </div>
                 </div>
 
-                <!-- 2. Threshold Limit -->
-                <div class="composer-section-label">2. Target Constraint Limit</div>
+                <!-- Threshold Limit -->
+                <div class="composer-section-label">Daily Verification Threshold</div>
                 <div style="display: flex; gap: 8px; margin-bottom: 14px;">
                     <input type="text" class="input-dark-field" id="composer-limit-val" value="1.0" style="width: 110px;" oninput="updateComposerPreview()">
                     <select class="input-dark-field" id="composer-unit-select" style="flex: 1;" onchange="updateComposerPreview()">
@@ -1809,8 +2423,8 @@
                     </select>
                 </div>
 
-                <!-- 3. Schedule -->
-                <div class="composer-section-label">3. Day-of-Week Schedule</div>
+                <!-- Schedule -->
+                <div class="composer-section-label">Enforcement Cadence</div>
                 <div class="schedule-preset-row">
                     <div class="preset-badge-btn active" id="sched-odd-btn" onclick="applySchedulePreset('odd')">
                         <svg class="icon sm" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
@@ -1834,25 +2448,48 @@
                     <div class="day-toggle-pill active" id="day-sun" onclick="toggleDayPill(this)">Sun</div>
                 </div>
 
-                <!-- 4. Stake Collateral -->
-                <div class="composer-section-label">4. Collateral $SKR (Free Input)</div>
+                <!-- Stake Collateral -->
+                <div class="composer-section-label">Escrow Collateral Deposit ($SKR)</div>
+                <div style="display: flex; gap: 8px; margin-bottom: 8px;" id="composer-stake-presets">
+                    <div class="preset-badge-btn" style="flex:1; text-align:center; padding: 6px 0;" onclick="setComposerStake(1000, this)">1K $SKR</div>
+                    <div class="preset-badge-btn active" style="flex:1; text-align:center; padding: 6px 0;" onclick="setComposerStake(2500, this)">2.5K $SKR</div>
+                    <div class="preset-badge-btn" style="flex:1; text-align:center; padding: 6px 0;" onclick="setComposerStake(5000, this)">5K $SKR</div>
+                    <div class="preset-badge-btn" style="flex:1; text-align:center; padding: 6px 0;" onclick="setComposerStake(10000, this)">10K $SKR</div>
+                </div>
                 <input type="number" class="input-dark-field" id="composer-stake-val" value="2500" style="margin-bottom: 14px;" oninput="updateComposerPreview()">
 
-                <!-- Apple Shortcuts Style Natural Summary -->
-                <div class="apple-shortcuts-card">
-                    <div class="apple-shortcuts-header">
-                        <svg class="icon sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
-                        <span>Smart Escrow Logic Specification</span>
+                <!-- Executive Smart Contract Specifications -->
+                <div class="executive-contract-card">
+                    <div class="executive-contract-header">
+                        <svg class="icon sm" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        <span>Smart Escrow Contract Specifications</span>
                     </div>
-                    <div class="apple-shortcuts-text" id="preview-rule-text">
-                        IF (Internet & Data &lt;= 1.0 Hours) ON (Odd Days: Mon, Wed, Fri, Sun)<br>
-                        THEN Unlock Daily Clock-In (Seed Vault Sign)<br>
-                        ELSE Burn 357.14 $SKR from PDA Escrow
+                    <div class="contract-spec-table">
+                        <div class="contract-row">
+                            <span class="contract-key">Sensor Verification</span>
+                            <span class="contract-val" id="spec-sensor-val">Internet &amp; Data &lt; 1.0 Hours</span>
+                        </div>
+                        <div class="contract-row">
+                            <span class="contract-key">Active Cadence</span>
+                            <span class="contract-val" id="spec-cadence-val">Odd Days (Mon, Wed, Fri, Sun)</span>
+                        </div>
+                        <div class="contract-row">
+                            <span class="contract-key">Escrow PDA Stake</span>
+                            <span class="contract-val" id="spec-stake-val">2,500 $SKR</span>
+                        </div>
+                        <div class="contract-row">
+                            <span class="contract-key">Daily Slashing Risk</span>
+                            <span class="contract-val" id="spec-slash-val" style="color: var(--ios-red);">357.14 $SKR burned per failure</span>
+                        </div>
+                        <div class="contract-row">
+                            <span class="contract-key">Enclave Authorization</span>
+                            <span class="contract-val" style="color: var(--ios-green);">Seed Vault Ed25519 Hardware Sign</span>
+                        </div>
                     </div>
                 </div>
 
                 <button onclick="deployComposerRule()" class="btn-clock-in" style="height: 50px;">
-                    DEPLOY SMART RULE (2,500 $SKR)
+                    DEPLOY SMART ESCROW (2,500 $SKR)
                 </button>
             </div>
         </div>
@@ -2493,10 +3130,20 @@
             updateComposerPreview();
         }
 
+        function setComposerStake(val, btn) {
+            const stakeInput = document.getElementById('composer-stake-val');
+            if (stakeInput) stakeInput.value = val;
+            if (btn) {
+                document.querySelectorAll('#composer-stake-presets .preset-badge-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            }
+            updateComposerPreview();
+        }
+
         function updateComposerPreview() {
-            composerLimit = document.getElementById('composer-limit-val').value || '1.0';
-            composerUnit = document.getElementById('composer-unit-select').value;
-            composerStake = parseFloat(document.getElementById('composer-stake-val').value) || 2500;
+            composerLimit = document.getElementById('composer-limit-val')?.value || '1.0';
+            composerUnit = document.getElementById('composer-unit-select')?.value || 'Hours';
+            composerStake = parseFloat(document.getElementById('composer-stake-val')?.value) || 2500;
 
             const activePills = [];
             ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].forEach(d => {
@@ -2505,19 +3152,30 @@
             });
 
             const scheduleStr = (activePills.length === 4 && activePills.includes('Mon') && activePills.includes('Wed')) ? 
-                'Odd Days (Mon, Wed, Fri, Sun)' : activePills.join(', ');
+                'Odd Days (Mon, Wed, Fri, Sun)' : (activePills.length === 7 ? 'Daily (7 Days/Week)' : (activePills.length > 0 ? activePills.join(', ') : 'None Selected'));
 
-            const dailyLoss = (composerStake / 7).toFixed(2);
+            const divisor = activePills.length > 0 ? activePills.length : 7;
+            const dailyLoss = (composerStake / divisor).toFixed(2);
 
-            let sensorName = "Internet & Data Usage";
-            if (composerSensor === 'screen') sensorName = "Screen Time Usage";
-            if (composerSensor === 'steps') sensorName = "Physical Steps Count";
-            if (composerSensor === 'gym') sensorName = "Gym & Workout Duration";
+            let sensorName = "Internet & Data";
+            if (composerSensor === 'screen') sensorName = "Screen Time";
+            if (composerSensor === 'steps') sensorName = "Physical Steps";
+            if (composerSensor === 'gym') sensorName = "Gym & Workout";
 
-            document.getElementById('preview-rule-text').innerHTML = 
-                `IF (${sensorName} &lt;= ${composerLimit} ${composerUnit}) ON (${scheduleStr})<br>` +
-                `THEN Unlock Daily Clock-In (Seed Vault Sign)<br>` +
-                `ELSE Burn ${dailyLoss} $SKR from PDA Escrow`;
+            const specSensorEl = document.getElementById('spec-sensor-val');
+            if (specSensorEl) specSensorEl.innerText = `${sensorName} < ${composerLimit} ${composerUnit}`;
+
+            const specCadenceEl = document.getElementById('spec-cadence-val');
+            if (specCadenceEl) specCadenceEl.innerText = scheduleStr;
+
+            const specStakeEl = document.getElementById('spec-stake-val');
+            if (specStakeEl) specStakeEl.innerText = `${composerStake.toLocaleString()} $SKR`;
+
+            const specSlashEl = document.getElementById('spec-slash-val');
+            if (specSlashEl) specSlashEl.innerText = `${dailyLoss} $SKR burned per failure`;
+
+            const btnDeploy = document.querySelector('#composer-modal .btn-clock-in');
+            if (btnDeploy) btnDeploy.innerText = `DEPLOY SMART ESCROW (${composerStake.toLocaleString()} $SKR)`;
         }
 
         function deployComposerRule() {

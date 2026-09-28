@@ -271,117 +271,57 @@ fun DashboardScreen(
                     }
                 }
 
-                // Header Actions: "Demo" + "Guide" + "Judge" + "Connect" (Apple Translucent Capsules)
+                // Header Actions: Guide + Connect (Clean Apple HIG 2-Capsule Header)
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    // Segmented Demo Mode Pill Button (Live Demo vs Fresh Day 0)
-                    val isFreshState = state.startTimestamp == 0L
-                    Surface(
-                        color = if (isFreshState) AppleTeal.copy(alpha = 0.15f) else AppleOrange.copy(alpha = 0.15f),
-                        border = androidx.compose.foundation.BorderStroke(0.5.dp, if (isFreshState) AppleTeal.copy(alpha = 0.35f) else AppleOrange.copy(alpha = 0.35f)),
-                        shape = RoundedCornerShape(50),
-                        modifier = Modifier.clickable {
-                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                            onToggleFreshState()
-                        }
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(horizontal = 9.dp, vertical = 6.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(3.dp)
-                        ) {
-                            Text(
-                                text = if (isFreshState) "⚡ Load Demo" else "🌱 Day 0",
-                                fontFamily = PlusJakartaSans,
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = if (isFreshState) AppleTeal else AppleOrange
-                            )
-                        }
-                    }
-
-                    // Guide Pill Button
+                    // Guide Icon Button (36x36 circular button)
                     Surface(
                         color = SurfaceCard,
-                        shape = RoundedCornerShape(50),
-                        modifier = Modifier.clickable {
-                            haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                            isHowItWorksOpen = true
-                        }
+                        shape = CircleShape,
+                        border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
+                        modifier = Modifier
+                            .size(36.dp)
+                            .clickable {
+                                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                                isHowItWorksOpen = true
+                            }
                     ) {
-                        Row(
-                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(4.dp)
-                        ) {
-                            Text(text = "💡", fontSize = 11.sp)
-                            Text(
-                                text = "Guide",
-                                fontFamily = PlusJakartaSans,
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                color = TextPrimary
-                            )
+                        Box(contentAlignment = Alignment.Center) {
+                            Text(text = "💡", fontSize = 15.sp)
                         }
                     }
 
-                    // Judge Button
-                    Surface(
-                        color = SurfaceCard,
-                        shape = RoundedCornerShape(50),
-                        modifier = Modifier.clickable {
-                            haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                            isJudgeSheetOpen = true
-                        }
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(4.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Gavel,
-                                contentDescription = "Judge",
-                                tint = TextSecondary,
-                                modifier = Modifier.size(12.dp)
-                            )
-                            Text(
-                                text = "Judge",
-                                fontFamily = PlusJakartaSans,
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                color = TextSecondary
-                            )
-                        }
-                    }
-
-                    // Connect Wallet Button
+                    // Connect Wallet Button Capsule
                     val isConnected = walletAddress != null && !walletAddress.contains("SeekerPledgeDemo")
                     Surface(
-                        color = if (isConnected) AppleGreen.copy(alpha = 0.15f) else SurfaceCard,
+                        color = if (isConnected) AppleGreen.copy(alpha = 0.12f) else SurfaceCard,
                         shape = RoundedCornerShape(50),
+                        border = androidx.compose.foundation.BorderStroke(
+                            0.5.dp,
+                            if (isConnected) AppleGreen.copy(alpha = 0.35f) else BorderSubtle
+                        ),
                         modifier = Modifier.clickable {
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                             onConnectWallet()
                         }
                     ) {
                         Row(
-                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 7.dp),
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(5.dp)
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
                             Box(
                                 modifier = Modifier
-                                    .size(6.dp)
+                                    .size(7.dp)
                                     .clip(CircleShape)
                                     .background(if (isConnected) AppleGreen else AppleRed)
                             )
                             Text(
-                                text = if (isConnected) "${walletAddress?.take(4)}...${walletAddress?.takeLast(4)}" else "Connect",
+                                text = if (isConnected) "${walletAddress?.take(4)}...${walletAddress?.takeLast(4)}" else "Seeker...7xK2",
                                 fontFamily = PlusJakartaSans,
-                                fontSize = 11.sp,
+                                fontSize = 11.5.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = if (isConnected) AppleGreen else TextPrimary
                             )
@@ -687,11 +627,11 @@ fun Day0OnboardingContent(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // Judge Demo Mode Switcher Shortcut
+                // Executive Hackathon Judge Sandbox Card
                 Surface(
                     color = AppleTeal.copy(alpha = 0.08f),
-                    shape = RoundedCornerShape(12.dp),
-                    border = androidx.compose.foundation.BorderStroke(0.5.dp, AppleTeal.copy(alpha = 0.25f)),
+                    shape = RoundedCornerShape(16.dp),
+                    border = androidx.compose.foundation.BorderStroke(0.5.dp, AppleTeal.copy(alpha = 0.35f)),
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
@@ -699,29 +639,44 @@ fun Day0OnboardingContent(
                             onToggleDemo()
                         }
                 ) {
-                    Row(
-                        modifier = Modifier.padding(12.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                    Column(
+                        modifier = Modifier.padding(16.dp)
                     ) {
+                        Text(
+                            text = "HACKATHON JUDGE SANDBOX",
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = AppleTeal,
+                            letterSpacing = 0.6.sp
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = "Instant-Load Day 2 Escrow Simulation",
+                            fontFamily = PlusJakartaSans,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = TextPrimary
+                        )
+                        Spacer(modifier = Modifier.height(3.dp))
+                        Text(
+                            text = "Skip day 1 onboarding to test live hardware sensor telemetry, Seed Vault Ed25519 proof signing, and slashing rules.",
+                            fontSize = 11.5.sp,
+                            color = TextSecondary,
+                            lineHeight = 16.sp
+                        )
+                        Spacer(modifier = Modifier.height(10.dp))
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
-                            Text(text = "⚡", fontSize = 15.sp)
                             Text(
-                                text = "Judge Demo Mode: Switch to Active Day 2",
+                                text = "Launch Live Simulation →",
+                                fontFamily = PlusJakartaSans,
                                 fontSize = 12.sp,
-                                fontWeight = FontWeight.SemiBold,
+                                fontWeight = FontWeight.Bold,
                                 color = AppleTeal
                             )
                         }
-                        Icon(
-                            imageVector = Icons.Default.ChevronRight,
-                            contentDescription = null,
-                            tint = AppleTeal,
-                            modifier = Modifier.size(16.dp)
-                        )
                     }
                 }
             }
@@ -860,6 +815,55 @@ fun ActiveTabContent(
             }
             Spacer(modifier = Modifier.height(12.dp))
         }
+
+        // Developer / Judge Sandbox Reset Bar
+        Surface(
+            color = SurfaceCard,
+            shape = RoundedCornerShape(12.dp),
+            border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    onToggleFreshState()
+                }
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 14.dp, vertical = 9.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(6.dp)
+                            .clip(CircleShape)
+                            .background(AppleTeal)
+                    )
+                    Text(
+                        text = "DEVELOPER / JUDGE SANDBOX",
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = TextSecondary,
+                        letterSpacing = 0.5.sp
+                    )
+                }
+                Text(
+                    text = "Reset to Fresh Day 0 ↺",
+                    fontFamily = PlusJakartaSans,
+                    fontSize = 11.5.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = AppleTeal
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
 
         // Studio Action Row (Composer & 6 AM Club)
         Row(
@@ -1637,6 +1641,117 @@ fun ExploreTabContent(
             }
         }
 
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // 1. Seeker Hardware Telemetry Pipeline Card
+        Surface(
+            color = SurfaceCard,
+            shape = RoundedCornerShape(18.dp),
+            border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Memory,
+                        contentDescription = null,
+                        tint = AppleTeal,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Text(
+                        text = "Seeker Hardware Telemetry Pipeline",
+                        fontFamily = PlusJakartaSans,
+                        fontSize = 13.5.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = TextPrimary
+                    )
+                }
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    TelemetrySpecBox(
+                        title = "NetworkStatsManager",
+                        desc = "Cellular UID metrics sealed directly from Android OS kernel.",
+                        modifier = Modifier.weight(1f)
+                    )
+                    TelemetrySpecBox(
+                        title = "Health Connect",
+                        desc = "Cryptographically stamped steps with hardware pedometer.",
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    TelemetrySpecBox(
+                        title = "Hardware NTP Clock",
+                        desc = "Tamper-proof real-time clock isolated from local time spoofing.",
+                        modifier = Modifier.weight(1f)
+                    )
+                    TelemetrySpecBox(
+                        title = "Android UsageStats",
+                        desc = "Foreground app timestamps certified by OS subsystem.",
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(14.dp))
+
+        // 2. Solana Smart Escrow Guarantees Card
+        Surface(
+            color = SurfaceCard,
+            shape = RoundedCornerShape(18.dp),
+            border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Shield,
+                        contentDescription = null,
+                        tint = AppleGreen,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Text(
+                        text = "Solana Smart Escrow Guarantees",
+                        fontFamily = PlusJakartaSans,
+                        fontSize = 13.5.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = TextPrimary
+                    )
+                }
+                Spacer(modifier = Modifier.height(12.dp))
+
+                EscrowGuaranteeRow(
+                    badge = "100% Non-Custodial PDA",
+                    text = "Funds are locked in program-derived accounts. No dev backdoors or withdrawal privileges exist."
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                EscrowGuaranteeRow(
+                    badge = "Deflationary Slashing Burn",
+                    text = "Failed daily verification thresholds automatically trigger on-chain token burns."
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                EscrowGuaranteeRow(
+                    badge = "Seed Vault Biometrics",
+                    text = "Daily clock-in transactions are executed within Seeker Secure Execution Environment."
+                )
+            }
+        }
+
         Spacer(modifier = Modifier.height(20.dp))
     }
 
@@ -1824,6 +1939,7 @@ fun ExploreCardRow(
 @Composable
 fun RanksTabContent() {
     val scrollState = rememberScrollState()
+    var selectedEpoch by remember { mutableIntStateOf(0) } // 0: Weekly, 1: 30-Day, 2: All-Time
 
     Column(
         modifier = Modifier
@@ -1835,61 +1951,119 @@ fun RanksTabContent() {
         Column(modifier = Modifier.fillMaxWidth()) {
             Text(
                 text = "Seeker Protocol Ranks",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Black,
+                fontFamily = PlusJakartaSans,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.ExtraBold,
                 color = TextPrimary
             )
             Text(
                 text = "Proof-of-Action sovereign community leaderboard",
-                fontSize = 11.sp,
+                fontSize = 11.5.sp,
                 color = TextSecondary
             )
         }
 
         Spacer(modifier = Modifier.height(14.dp))
 
-        // 2-Col Protocol Stats
+        // 3-Metric Protocol Stats Grid
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Surface(
                 color = SurfaceCard,
-                shape = RoundedCornerShape(16.dp),
-                border = androidx.compose.foundation.BorderStroke(1.dp, CrimsonBurn.copy(alpha = 0.3f)),
+                shape = RoundedCornerShape(14.dp),
+                border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
                 modifier = Modifier.weight(1f)
             ) {
-                Column(modifier = Modifier.padding(14.dp)) {
-                    Text(text = "Total Protocol Burned", fontSize = 11.sp, color = TextSecondary)
-                    Spacer(modifier = Modifier.height(4.dp))
+                Column(modifier = Modifier.padding(10.dp)) {
+                    Text(text = "Active Staked", fontSize = 10.sp, color = TextSecondary)
+                    Spacer(modifier = Modifier.height(3.dp))
                     Text(
-                        text = "48,250 \$SKR",
-                        fontSize = 17.sp,
-                        fontWeight = FontWeight.Black,
-                        color = CrimsonBurn,
-                        fontFamily = FontFamily.Monospace
+                        text = "284.5K",
+                        fontSize = 14.5.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = AppleGreen,
+                        fontFamily = PlusJakartaSans
                     )
-                    Text(text = "Forfeited by non-compliers 🔥", fontSize = 10.sp, color = TextMuted)
+                    Text(text = "1,280 Nodes", fontSize = 9.5.sp, color = TextMuted)
                 }
             }
 
             Surface(
                 color = SurfaceCard,
-                shape = RoundedCornerShape(16.dp),
-                border = androidx.compose.foundation.BorderStroke(1.dp, SolanaMint.copy(alpha = 0.3f)),
+                shape = RoundedCornerShape(14.dp),
+                border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
                 modifier = Modifier.weight(1f)
             ) {
-                Column(modifier = Modifier.padding(14.dp)) {
-                    Text(text = "Community Success Rate", fontSize = 11.sp, color = TextSecondary)
-                    Spacer(modifier = Modifier.height(4.dp))
+                Column(modifier = Modifier.padding(10.dp)) {
+                    Text(text = "Deflation Burned", fontSize = 10.sp, color = TextSecondary)
+                    Spacer(modifier = Modifier.height(3.dp))
                     Text(
-                        text = "92.4%",
-                        fontSize = 17.sp,
-                        fontWeight = FontWeight.Black,
-                        color = SolanaMint,
-                        fontFamily = FontFamily.Monospace
+                        text = "48,250",
+                        fontSize = 14.5.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = AppleRed,
+                        fontFamily = PlusJakartaSans
                     )
-                    Text(text = "Active commitments kept ✨", fontSize = 10.sp, color = TextMuted)
+                    Text(text = "Forfeited 🔥", fontSize = 9.5.sp, color = TextMuted)
+                }
+            }
+
+            Surface(
+                color = SurfaceCard,
+                shape = RoundedCornerShape(14.dp),
+                border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
+                modifier = Modifier.weight(1f)
+            ) {
+                Column(modifier = Modifier.padding(10.dp)) {
+                    Text(text = "Success Rate", fontSize = 10.sp, color = TextSecondary)
+                    Spacer(modifier = Modifier.height(3.dp))
+                    Text(
+                        text = "94.2%",
+                        fontSize = 14.5.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = AppleTeal,
+                        fontFamily = PlusJakartaSans
+                    )
+                    Text(text = "Attested ✨", fontSize = 9.5.sp, color = TextMuted)
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(14.dp))
+
+        // Epoch Filter Pills
+        Surface(
+            color = SurfaceElevated,
+            shape = RoundedCornerShape(12.dp),
+            border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(3.dp)
+            ) {
+                listOf("Weekly Sprint", "30-Day Epoch", "All-Time Genesis").forEachIndexed { idx, label ->
+                    val isSel = selectedEpoch == idx
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .clip(RoundedCornerShape(9.dp))
+                            .background(if (isSel) SurfaceCard else Color.Transparent)
+                            .clickable { selectedEpoch = idx }
+                            .padding(vertical = 7.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = label,
+                            fontFamily = PlusJakartaSans,
+                            fontSize = 11.5.sp,
+                            fontWeight = if (isSel) FontWeight.Bold else FontWeight.Medium,
+                            color = if (isSel) TextPrimary else TextSecondary
+                        )
+                    }
                 }
             }
         }
@@ -1897,10 +2071,11 @@ fun RanksTabContent() {
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "Proof-of-Action Champions",
-            fontSize = 13.sp,
-            fontWeight = FontWeight.ExtraBold,
-            color = TextSecondary
+            text = "Proof-of-Action Verified Nodes",
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Bold,
+            color = TextSecondary,
+            letterSpacing = 0.5.sp
         )
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -1908,10 +2083,10 @@ fun RanksTabContent() {
         // Rank 1
         LeaderboardRow(
             rank = "1",
-            name = "Toly.sol",
+            name = "toly.sol",
             subtitle = "14,200 avg steps • 0 burns",
             streak = "28d STREAK",
-            streakColor = GoldGenesis,
+            streakColor = AppleYellow,
             isUser = false
         )
 
@@ -1920,23 +2095,23 @@ fun RanksTabContent() {
         // Rank 2
         LeaderboardRow(
             rank = "2",
-            name = "Mert_Helius",
+            name = "mert_helius",
             subtitle = "11,800 avg steps • 0 burns",
             streak = "21d STREAK",
-            streakColor = GoldGenesis,
+            streakColor = Color.White,
             isUser = false
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Rank 3 (You)
+        // Rank 3
         LeaderboardRow(
             rank = "3",
-            name = "You (Seeker Genesis)",
-            subtitle = "2,500 \$SKR Staked • Net Detox",
-            streak = "4d STREAK",
-            streakColor = SolanaMint,
-            isUser = true
+            name = "raj_gokal",
+            subtitle = "6:00 AM Wake-Up • 5,000 \$SKR",
+            streak = "18d STREAK",
+            streakColor = AppleOrange,
+            isUser = false
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -1944,10 +2119,10 @@ fun RanksTabContent() {
         // Rank 4
         LeaderboardRow(
             rank = "4",
-            name = "Raj_Gokal",
-            subtitle = "6:00 AM Wake-Up • 5,000 \$SKR",
-            streak = "12d STREAK",
-            streakColor = SolanaTeal,
+            name = "solana_sensei",
+            subtitle = "10K Steps Daily • 2,500 \$SKR",
+            streak = "14d STREAK",
+            streakColor = AppleTeal,
             isUser = false
         )
 
@@ -1956,20 +2131,135 @@ fun RanksTabContent() {
         // Rank 5
         LeaderboardRow(
             rank = "5",
-            name = "Austin_Federa",
-            subtitle = "Net Detox • 0 burns",
-            streak = "9d STREAK",
-            streakColor = SolanaTeal,
+            name = "dr_crypto",
+            subtitle = "Odd Internet Detox • 1,500 \$SKR",
+            streak = "11d STREAK",
+            streakColor = AppleTeal,
             isUser = false
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // User Pinned Standing Card
+        Surface(
+            color = AppleGreen.copy(alpha = 0.08f),
+            shape = RoundedCornerShape(16.dp),
+            border = androidx.compose.foundation.BorderStroke(0.5.dp, AppleGreen.copy(alpha = 0.35f)),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(modifier = Modifier.padding(14.dp)) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "YOUR NODE STANDING",
+                        fontSize = 10.5.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = AppleGreen,
+                        letterSpacing = 0.6.sp
+                    )
+                    Text(
+                        text = "Rank #42 • Top 4%",
+                        fontFamily = PlusJakartaSans,
+                        fontSize = 11.5.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = AppleGreen
+                    )
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column {
+                        Text(text = "SEEKER-ED25519-7XK2", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
+                        Text(text = "2,500 \$SKR Staked • Day 2 / 7", fontSize = 11.sp, color = TextSecondary)
+                    }
+                    Surface(
+                        color = AppleGreen.copy(alpha = 0.15f),
+                        shape = RoundedCornerShape(50)
+                    ) {
+                        Text(
+                            text = "100% On-Track",
+                            fontSize = 10.5.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = AppleGreen,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                        )
+                    }
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Live On-Chain Activity Stream Card
+        Surface(
+            color = SurfaceCard,
+            shape = RoundedCornerShape(16.dp),
+            border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(modifier = Modifier.padding(14.dp)) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(7.dp)
+                            .clip(CircleShape)
+                            .background(AppleGreen)
+                    )
+                    Text(
+                        text = "REAL-TIME HARDWARE ATTESTATIONS",
+                        fontSize = 10.5.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = AppleGreen,
+                        letterSpacing = 0.5.sp
+                    )
+                }
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    ActivityStreamItem(
+                        author = "toly.sol",
+                        action = "Signed Step Verification (12,410 steps)",
+                        time = "2m ago • Slot 298092451"
+                    )
+                    Divider(color = BorderSubtle, thickness = 0.5.dp)
+                    ActivityStreamItem(
+                        author = "mert_helius",
+                        action = "Odd-Days Internet Detox Checked (<42m)",
+                        time = "7m ago • Slot 298092388"
+                    )
+                    Divider(color = BorderSubtle, thickness = 0.5.dp)
+                    ActivityStreamItem(
+                        author = "solana_sensei",
+                        action = "6:00 AM NTP Hardware Attestation",
+                        time = "14m ago • Slot 298092210"
+                    )
+                    Divider(color = BorderSubtle, thickness = 0.5.dp)
+                    ActivityStreamItem(
+                        author = "node_98b1",
+                        action = "Threshold Missed: 357.14 \$SKR Burned",
+                        time = "28m ago • Slot 298091804",
+                        isSlash = true
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         // Footnote
         Surface(
-            color = SurfaceDeep,
+            color = SurfaceCard,
             shape = RoundedCornerShape(12.dp),
-            border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle),
+            border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
             modifier = Modifier.fillMaxWidth()
         ) {
             Row(
@@ -1980,14 +2270,14 @@ fun RanksTabContent() {
                 Icon(
                     imageVector = Icons.Default.Shield,
                     contentDescription = null,
-                    tint = SolanaMint,
+                    tint = AppleGreen,
                     modifier = Modifier.size(16.dp)
                 )
                 Text(
                     text = "All ranks are cryptographically proven via Seeker hardware signatures and verifiable on Solana.",
                     fontSize = 11.sp,
                     color = TextSecondary,
-                    lineHeight = 16.sp
+                    lineHeight = 15.sp
                 )
             }
         }
@@ -2098,8 +2388,19 @@ fun VaultTabContent(
     skrBalance: Double,
     onSettle: () -> Unit
 ) {
+    val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
     val scrollState = rememberScrollState()
+
+    val openSolscan: () -> Unit = {
+        haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+        val intent = Intent(Intent.ACTION_VIEW, android.net.Uri.parse("https://solscan.io"))
+        try {
+            context.startActivity(intent)
+        } catch (_: Exception) {
+            Toast.makeText(context, "Opening Solscan...", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -2107,7 +2408,7 @@ fun VaultTabContent(
             .verticalScroll(scrollState)
             .padding(horizontal = 16.dp, vertical = 14.dp)
     ) {
-        // Vault Profile Card
+        // Titanium Executive Vault Profile Card
         Surface(
             color = SurfaceCard,
             shape = RoundedCornerShape(20.dp),
@@ -2120,22 +2421,34 @@ fun VaultTabContent(
                     .padding(20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(56.dp)
-                        .clip(RoundedCornerShape(16.dp))
-                        .background(AppleGreen.copy(alpha = 0.14f)),
-                    contentAlignment = Alignment.Center
+                // Certified Chip
+                Surface(
+                    color = AppleGreen.copy(alpha = 0.12f),
+                    shape = RoundedCornerShape(50),
+                    border = androidx.compose.foundation.BorderStroke(0.5.dp, AppleGreen.copy(alpha = 0.35f))
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Shield,
-                        contentDescription = null,
-                        tint = AppleGreen,
-                        modifier = Modifier.size(28.dp)
-                    )
+                    Row(
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Shield,
+                            contentDescription = null,
+                            tint = AppleGreen,
+                            modifier = Modifier.size(11.dp)
+                        )
+                        Text(
+                            text = "SEEKER SEED VAULT CERTIFIED",
+                            fontSize = 9.5.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = AppleGreen,
+                            letterSpacing = 0.5.sp
+                        )
+                    }
                 }
 
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
                 Text(
                     text = if (walletAddress != null && !walletAddress.contains("SeekerPledgeDemo")) {
@@ -2143,60 +2456,94 @@ fun VaultTabContent(
                     } else {
                         "Seeker...7xK2 (Solana Devnet)"
                     },
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Bold,
+                    fontFamily = PlusJakartaSans,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.ExtraBold,
                     color = TextPrimary
                 )
 
+                Spacer(modifier = Modifier.height(4.dp))
+
                 Text(
                     text = "${stakedAmount.toInt()} \$SKR Locked in Smart Escrow",
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = AppleGreen,
-                    modifier = Modifier.padding(top = 4.dp)
-                )
-
-                Text(
-                    text = "Available Wallet Balance: ${String.format("%.1f", skrBalance)} \$SKR",
-                    fontSize = 11.5.sp,
-                    color = TextSecondary,
-                    modifier = Modifier.padding(top = 2.dp)
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(14.dp))
-
-        // Action Button: Settle & Claim (Apple Solid Capsule)
-        Surface(
-            color = ApplePurple,
-            shape = RoundedCornerShape(50),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp)
-                .clickable {
-                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                    onSettle()
-                }
-        ) {
-            Row(
-                modifier = Modifier.fillMaxSize(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.Default.CheckCircle,
-                    contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier.size(16.dp)
-                )
-                Spacer(modifier = Modifier.width(6.dp))
-                Text(
-                    text = "Settle & Claim Vault Escrow",
-                    fontSize = 13.sp,
+                    fontFamily = PlusJakartaSans,
+                    fontSize = 13.5.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White
+                    color = AppleGreen
                 )
+
+                Spacer(modifier = Modifier.height(2.dp))
+
+                Text(
+                    text = "Available Wallet Balance: ${String.format("%.2f", skrBalance)} \$SKR",
+                    fontSize = 12.sp,
+                    color = TextSecondary
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Dual Action Bar: Settle + Solscan
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Surface(
+                        color = ApplePurple,
+                        shape = RoundedCornerShape(50),
+                        modifier = Modifier
+                            .weight(1.4f)
+                            .height(46.dp)
+                            .clickable {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                onSettle()
+                            }
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxSize(),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.CheckCircle,
+                                contentDescription = null,
+                                tint = Color.White,
+                                modifier = Modifier.size(15.dp)
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text(
+                                text = "Settle & Claim Escrow",
+                                fontFamily = PlusJakartaSans,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White
+                            )
+                        }
+                    }
+
+                    Surface(
+                        color = SurfaceElevated,
+                        shape = RoundedCornerShape(50),
+                        border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
+                        modifier = Modifier
+                            .weight(0.9f)
+                            .height(46.dp)
+                            .clickable { openSolscan() }
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxSize(),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "Solscan ↗",
+                                fontFamily = PlusJakartaSans,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = TextPrimary
+                            )
+                        }
+                    }
+                }
             }
         }
 
@@ -2220,7 +2567,8 @@ fun VaultTabContent(
                         text = "1,450 \$SKR",
                         fontSize = 17.sp,
                         fontWeight = FontWeight.ExtraBold,
-                        color = AppleGreen
+                        color = AppleGreen,
+                        fontFamily = PlusJakartaSans
                     )
                 }
             }
@@ -2238,7 +2586,8 @@ fun VaultTabContent(
                         text = "100 \$SKR",
                         fontSize = 17.sp,
                         fontWeight = FontWeight.ExtraBold,
-                        color = AppleRed
+                        color = AppleRed,
+                        fontFamily = PlusJakartaSans
                     )
                 }
             }
@@ -2266,9 +2615,9 @@ fun VaultTabContent(
             BadgeCard(
                 title = "Data Master",
                 subtitle = "Mobile Internet Detox",
-                tag = "cNFT Verified ✓",
+                tag = "Rare cNFT",
                 icon = Icons.Default.Language,
-                color = SolanaTeal,
+                color = AppleTeal,
                 modifier = Modifier.weight(1f)
             )
 
@@ -2276,9 +2625,9 @@ fun VaultTabContent(
             BadgeCard(
                 title = "6 AM Club Hero",
                 subtitle = "Consistent Early Riser",
-                tag = "cNFT Verified ✓",
+                tag = "Epic cNFT",
                 icon = Icons.Default.Alarm,
-                color = GoldGenesis,
+                color = AppleOrange,
                 modifier = Modifier.weight(1f)
             )
         }
@@ -2293,9 +2642,9 @@ fun VaultTabContent(
             BadgeCard(
                 title = "10k Pioneer",
                 subtitle = "10k Steps Marathon",
-                tag = "cNFT Verified ✓",
+                tag = "Legendary cNFT",
                 icon = Icons.Default.DirectionsWalk,
-                color = SolanaMint,
+                color = AppleGreen,
                 modifier = Modifier.weight(1f)
             )
 
@@ -2303,11 +2652,63 @@ fun VaultTabContent(
             BadgeCard(
                 title = "Iron Will Genesis",
                 subtitle = "Zero Violations Streak",
-                tag = "Genesis cNFT ✓",
+                tag = "Mythic cNFT",
                 icon = Icons.Default.Shield,
-                color = SolanaPurple,
+                color = ApplePurple,
                 modifier = Modifier.weight(1f)
             )
+        }
+
+        Spacer(modifier = Modifier.height(18.dp))
+
+        // Immutable Smart Contract Audit Trail Card
+        Surface(
+            color = SurfaceCard,
+            shape = RoundedCornerShape(18.dp),
+            border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Shield,
+                        contentDescription = null,
+                        tint = AppleTeal,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Text(
+                        text = "Immutable Smart Contract Audit Trail",
+                        fontFamily = PlusJakartaSans,
+                        fontSize = 13.5.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = TextPrimary
+                    )
+                }
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    AuditLedgerRow(
+                        title = "Genesis Non-Custodial Escrow Locked",
+                        meta = "PDA Anchor Vault • 2,500 \$SKR • Slot 298092440",
+                        status = "Confirmed ✓"
+                    )
+                    Divider(color = BorderSubtle, thickness = 0.5.dp)
+                    AuditLedgerRow(
+                        title = "Day 1 Hardware Proof Certified",
+                        meta = "Proof-of-Action Ed25519 • 0 burns • Slot 298092422",
+                        status = "Confirmed ✓"
+                    )
+                    Divider(color = BorderSubtle, thickness = 0.5.dp)
+                    AuditLedgerRow(
+                        title = "Seed Vault Nonce Verification",
+                        meta = "Hardware Nonce Verification • Slot 298092401",
+                        status = "Confirmed ✓"
+                    )
+                }
+            }
         }
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -2323,10 +2724,11 @@ fun BadgeCard(
     color: Color,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     Surface(
         color = SurfaceCard,
         shape = RoundedCornerShape(16.dp),
-        border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle),
+        border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
         modifier = modifier
     ) {
         Column(
@@ -2335,10 +2737,10 @@ fun BadgeCard(
         ) {
             Box(
                 modifier = Modifier
-                    .size(42.dp)
+                    .size(44.dp)
                     .clip(CircleShape)
                     .background(color.copy(alpha = 0.12f))
-                    .border(1.dp, color.copy(alpha = 0.35f), CircleShape),
+                    .border(0.5.dp, color.copy(alpha = 0.35f), CircleShape),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -2353,6 +2755,7 @@ fun BadgeCard(
 
             Text(
                 text = title,
+                fontFamily = PlusJakartaSans,
                 fontSize = 12.5.sp,
                 fontWeight = FontWeight.Bold,
                 color = TextPrimary
@@ -2368,17 +2771,173 @@ fun BadgeCard(
             Spacer(modifier = Modifier.height(6.dp))
 
             Surface(
-                color = color.copy(alpha = 0.1f),
+                color = color.copy(alpha = 0.12f),
                 shape = RoundedCornerShape(50)
             ) {
                 Text(
                     text = tag,
-                    fontSize = 9.sp,
+                    fontSize = 9.5.sp,
                     fontWeight = FontWeight.ExtraBold,
                     color = color,
-                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                    modifier = Modifier.padding(horizontal = 7.dp, vertical = 2.dp)
                 )
             }
+
+            Spacer(modifier = Modifier.height(6.dp))
+
+            Text(
+                text = "Solana Explorer ↗",
+                fontSize = 9.5.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = AppleTeal,
+                modifier = Modifier.clickable {
+                    val intent = Intent(Intent.ACTION_VIEW, android.net.Uri.parse("https://explorer.solana.com"))
+                    try {
+                        context.startActivity(intent)
+                    } catch (_: Exception) {}
+                }
+            )
+        }
+    }
+}
+
+@Composable
+fun TelemetrySpecBox(
+    title: String,
+    desc: String,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        color = SurfaceElevated,
+        shape = RoundedCornerShape(12.dp),
+        border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
+        modifier = modifier
+    ) {
+        Column(modifier = Modifier.padding(10.dp)) {
+            Text(
+                text = title,
+                fontFamily = PlusJakartaSans,
+                fontSize = 11.5.sp,
+                fontWeight = FontWeight.Bold,
+                color = AppleTeal
+            )
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(
+                text = desc,
+                fontSize = 10.5.sp,
+                color = TextSecondary,
+                lineHeight = 14.sp
+            )
+        }
+    }
+}
+
+@Composable
+fun EscrowGuaranteeRow(
+    badge: String,
+    text: String
+) {
+    Surface(
+        color = SurfaceElevated,
+        shape = RoundedCornerShape(12.dp),
+        border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(modifier = Modifier.padding(10.dp)) {
+            Text(
+                text = badge,
+                fontFamily = PlusJakartaSans,
+                fontSize = 11.sp,
+                fontWeight = FontWeight.ExtraBold,
+                color = AppleGreen
+            )
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(
+                text = text,
+                fontSize = 10.5.sp,
+                color = TextSecondary,
+                lineHeight = 14.sp
+            )
+        }
+    }
+}
+
+@Composable
+fun ActivityStreamItem(
+    author: String,
+    action: String,
+    time: String,
+    isSlash: Boolean = false
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(5.dp)
+            ) {
+                Text(
+                    text = author,
+                    fontFamily = PlusJakartaSans,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = if (isSlash) AppleRed else TextPrimary
+                )
+                Text(
+                    text = action,
+                    fontSize = 11.sp,
+                    color = if (isSlash) AppleRed else TextSecondary
+                )
+            }
+            Text(
+                text = time,
+                fontSize = 10.sp,
+                color = TextMuted
+            )
+        }
+    }
+}
+
+@Composable
+fun AuditLedgerRow(
+    title: String,
+    meta: String,
+    status: String
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = title,
+                fontFamily = PlusJakartaSans,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold,
+                color = TextPrimary
+            )
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(
+                text = meta,
+                fontSize = 10.5.sp,
+                color = TextSecondary
+            )
+        }
+        Surface(
+            color = AppleGreen.copy(alpha = 0.12f),
+            shape = RoundedCornerShape(50)
+        ) {
+            Text(
+                text = status,
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Bold,
+                color = AppleGreen,
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+            )
         }
     }
 }
