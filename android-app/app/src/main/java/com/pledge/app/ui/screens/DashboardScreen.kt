@@ -828,6 +828,49 @@ fun ActiveTabContent(
             .verticalScroll(scrollState)
             .padding(horizontal = 16.dp, vertical = 10.dp)
     ) {
+        // Top Evaluation Sandbox Context Pill for Judges
+        Surface(
+            color = SurfaceCard,
+            shape = RoundedCornerShape(12.dp),
+            border = androidx.compose.foundation.BorderStroke(0.5.dp, SolanaTeal.copy(alpha = 0.35f)),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Row(
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(7.dp)
+                            .clip(CircleShape)
+                            .background(SolanaTeal)
+                    )
+                    Column {
+                        Text(
+                            text = "HACKATHON EVALUATION SANDBOX",
+                            fontSize = 9.5.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = SolanaTeal,
+                            letterSpacing = 0.6.sp
+                        )
+                        Text(
+                            text = "Day 2 of 7 active escrow pre-loaded with live hardware telemetry.",
+                            fontSize = 11.sp,
+                            color = TextSecondary
+                        )
+                    }
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+
         // Helpful Orientation Tip Banner (Apple Tips style)
         if (showTipBanner) {
             Surface(
@@ -1605,6 +1648,46 @@ fun ActiveTabContent(
                             )
                         }
                     }
+
+                    // Solana Blink Action Share Button
+                    Surface(
+                        color = SolanaPurple.copy(alpha = 0.15f),
+                        shape = RoundedCornerShape(10.dp),
+                        border = androidx.compose.foundation.BorderStroke(0.5.dp, SolanaPurple.copy(alpha = 0.4f)),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                val blinkUrl = "https://dial.to/?action=solana-action:https://pledge.app/api/blink/odd_internet"
+                                val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                                    type = "text/plain"
+                                    putExtra(Intent.EXTRA_TEXT, "Just locked 2,500 \$SKR in @bozPledge on @solanamobile Seeker! Day $currentDay verified on-chain via Solana Blink: $blinkUrl")
+                                }
+                                context.startActivity(Intent.createChooser(shareIntent, "Share Solana Blink via"))
+                            }
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 9.dp),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Share,
+                                contentDescription = "Share Blink",
+                                tint = SolanaPurple,
+                                modifier = Modifier.size(14.dp)
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text(
+                                text = "Share Proof via Solana Blink on X",
+                                fontSize = 11.5.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = SolanaPurple
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -1630,7 +1713,7 @@ fun ActiveTabContent(
                     modifier = Modifier.size(16.dp).padding(top = 1.dp)
                 )
                 Text(
-                    text = "Hardware sensors track telemetry automatically. Your Seed Vault key cryptographically signs the attestation digest to release your daily escrow milestone without centralized oracles.",
+                    text = "Requires Seed Vault Signature: Hardware sensors track telemetry automatically. Tapping generates a cryptographic SHA-256 attestation digest to release your daily escrow milestone without centralized oracles.",
                     fontSize = 11.sp,
                     color = TextSecondary,
                     lineHeight = 15.sp
@@ -1756,6 +1839,74 @@ fun ExploreTabContent(
                     color = AppleTeal,
                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                 )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(14.dp))
+
+        // The Story Behind bozPLEDGE (The Mountain Goat)
+        Surface(
+            color = SurfaceCard,
+            shape = RoundedCornerShape(16.dp),
+            border = androidx.compose.foundation.BorderStroke(0.5.dp, SolanaPurple.copy(alpha = 0.35f)),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(
+                modifier = Modifier.padding(14.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "THE PHILOSOPHY OF bozPLEDGE",
+                        fontSize = 9.5.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = SolanaPurple,
+                        letterSpacing = 0.6.sp
+                    )
+                    Surface(
+                        color = SolanaPurple.copy(alpha = 0.15f),
+                        shape = RoundedCornerShape(6.dp),
+                        border = androidx.compose.foundation.BorderStroke(0.5.dp, SolanaPurple.copy(alpha = 0.3f))
+                    ) {
+                        Text(
+                            text = "Mountain Goat (Boz)",
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White,
+                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                        )
+                    }
+                }
+                Text(
+                    text = "The mountain goat (Boz) is legendary across rugged ranges for scaling sheer, vertical rock faces with fearless balance and stubborn endurance. We built bozPLEDGE on this exact philosophy: your daily discipline becomes as sure-footed and unyielding as a mountain goat, anchored by tamper-proof Solana Seeker hardware.",
+                    fontSize = 11.5.sp,
+                    color = TextSecondary,
+                    lineHeight = 16.sp
+                )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    modifier = Modifier.horizontalScroll(rememberScrollState())
+                ) {
+                    listOf("Mountain Grit", "Zero Excuses", "Hardware Enclave Proof", "Non-Custodial Escrow").forEach { tag ->
+                        Surface(
+                            color = SurfaceElevated,
+                            shape = RoundedCornerShape(6.dp),
+                            border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle)
+                        ) {
+                            Text(
+                                text = tag,
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = TextPrimary,
+                                modifier = Modifier.padding(horizontal = 7.dp, vertical = 3.dp)
+                            )
+                        }
+                    }
+                }
             }
         }
 
@@ -3818,9 +3969,50 @@ fun SlashingBreachDialog(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
+                            Text(text = "Burn Destination", fontSize = 11.sp, color = TextSecondary)
+                            Text(text = "1111...1111 (Incinerator)", fontFamily = FontFamily.Monospace, fontSize = 10.5.sp, color = AppleOrange)
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(text = "Developer Protocol Cut", fontSize = 11.sp, color = TextSecondary)
+                            Text(text = "0.00 \$SKR (0% Fee)", fontSize = 11.5.sp, fontWeight = FontWeight.Bold, color = AppleGreen)
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
                             Text(text = "SolScan Signature", fontSize = 11.sp, color = TextSecondary)
                             Text(text = "4Jz8k...Devnet", fontFamily = FontFamily.Monospace, fontSize = 10.5.sp, color = SolanaTeal)
                         }
+                    }
+                }
+
+                // Zero Conflict of Interest Security Trust Mark
+                Surface(
+                    color = AppleGreen.copy(alpha = 0.08f),
+                    shape = RoundedCornerShape(10.dp),
+                    border = androidx.compose.foundation.BorderStroke(0.5.dp, AppleGreen.copy(alpha = 0.25f)),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
+                        verticalAlignment = Alignment.Top,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Shield,
+                            contentDescription = null,
+                            tint = AppleGreen,
+                            modifier = Modifier.size(16.dp).padding(top = 1.dp)
+                        )
+                        Text(
+                            text = "Zero Conflict of Interest: Slashed collateral is irrevocably incinerated into Solana's burn address. The developers earn 0% from user failure, guaranteeing a pure anti-sloth commitment mechanism.",
+                            fontSize = 10.5.sp,
+                            color = TextSecondary,
+                            lineHeight = 14.sp
+                        )
                     }
                 }
 

@@ -657,6 +657,107 @@
         }
         .btn-post-action:active { transform: scale(0.96); }
 
+        /* Evaluation Sandbox Context Pill */
+        .eval-sandbox-banner {
+            background: #1C1C1E;
+            border-radius: 12px;
+            border: 0.5px solid rgba(100, 210, 255, 0.35);
+            padding: 9px 12px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+        .eval-sandbox-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .eval-pulse-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--ios-teal);
+            box-shadow: 0 0 8px var(--ios-teal);
+            flex-shrink: 0;
+        }
+        .eval-sandbox-badge {
+            font-size: 9.5px;
+            font-weight: 800;
+            color: var(--ios-teal);
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+        }
+        .eval-sandbox-text {
+            font-size: 11px;
+            color: var(--text-secondary);
+            line-height: 1.2;
+        }
+        .eval-sandbox-btn {
+            background: rgba(100, 210, 255, 0.12);
+            color: var(--ios-teal);
+            border: 0.5px solid rgba(100, 210, 255, 0.3);
+            border-radius: 8px;
+            padding: 5px 9px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        /* Brand Story Card */
+        .brand-story-card {
+            background: linear-gradient(135deg, #1C1C1E 0%, #151518 100%);
+            border-radius: 16px;
+            border: 0.5px solid rgba(191, 90, 242, 0.35);
+            padding: 14px 16px;
+            margin-bottom: 14px;
+        }
+        .brand-story-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .brand-story-badge {
+            font-size: 9.5px;
+            font-weight: 800;
+            color: var(--ios-purple);
+            letter-spacing: 0.6px;
+        }
+        .mountain-goat-tag {
+            font-size: 11px;
+            font-weight: 700;
+            color: #FFFFFF;
+            background: rgba(191, 90, 242, 0.15);
+            padding: 2px 8px;
+            border-radius: 6px;
+            border: 0.5px solid rgba(191, 90, 242, 0.3);
+        }
+        .brand-story-body {
+            font-size: 11.5px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+        .brand-story-pills {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .story-pill {
+            font-size: 10px;
+            font-weight: 700;
+            color: #E5E5EA;
+            background: #2C2C2E;
+            padding: 3px 8px;
+            border-radius: 6px;
+            border: 0.5px solid rgba(255, 255, 255, 0.08);
+        }
+
         /* Primary Action: Solid Apple Fitness Green Capsule CTA */
         .btn-clock-in {
             width: 100%;
@@ -1863,7 +1964,7 @@
             <div class="tab-panel active" id="view-dashboard">
                 
                 <!-- DAY 0 / FRESH USER ONBOARDING -->
-                <div id="empty-state-container" style="display: block;">
+                <div id="empty-state-container" style="display: none;">
                     <div class="day0-welcome-card">
                         <div class="day0-badge">
                             <svg class="icon sm" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
@@ -1933,7 +2034,21 @@
                 </div>
 
                 <!-- ACTIVE DASHBOARD CONTENT WRAPPER -->
-                <div id="active-dashboard-content" style="display: none;">
+                <div id="active-dashboard-content" style="display: block;">
+
+                    <!-- Top Evaluation Sandbox Context Pill -->
+                    <div class="eval-sandbox-banner">
+                        <div class="eval-sandbox-left">
+                            <div class="eval-pulse-dot"></div>
+                            <div>
+                                <div class="eval-sandbox-badge">HACKATHON EVALUATION SANDBOX</div>
+                                <div class="eval-sandbox-text">Day 2 of 7 active escrow pre-loaded with live hardware telemetry.</div>
+                            </div>
+                        </div>
+                        <button class="eval-sandbox-btn" onclick="openJudgeLabModal()">
+                            <span>⚡ Judge Lab →</span>
+                        </button>
+                    </div>
 
                     <!-- Action Row: Rule Composer & 6 AM Club -->
                     <div class="studio-action-grid">
@@ -2083,12 +2198,17 @@
                                 <span>🔴 Test Day <span id="post-breach-day-num">3</span> Breach &amp; Burn</span>
                             </button>
                         </div>
+                        <!-- Solana Blink Share Action Button -->
+                        <button onclick="shareAsBlink()" style="margin-top: 8px; width: 100%; height: 38px; display: flex; align-items: center; justify-content: center; gap: 6px; background: rgba(153, 69, 255, 0.15); border: 0.5px solid rgba(153, 69, 255, 0.4); border-radius: 10px; color: #DC8CFF; font-size: 11.5px; font-weight: 700; cursor: pointer;">
+                            <svg class="icon xs" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                            <span>Share Verification via Solana Blink on X</span>
+                        </button>
                     </div>
 
                     <!-- Cryptographic Proof Explanation Note -->
                     <div class="proof-architecture-note">
                         <svg class="icon sm" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="12" cy="11" r="2"/></svg>
-                        <span>Hardware sensors track telemetry automatically. Your Seed Vault key cryptographically signs the attestation digest to release your daily escrow milestone without centralized oracles.</span>
+                        <span><strong>Requires Seed Vault Signature:</strong> Hardware sensors track telemetry automatically. Tapping generates a cryptographic SHA-256 attestation digest to release your daily escrow milestone without centralized oracles.</span>
                     </div>
 
                     <!-- Share as Blink Button -->
@@ -2118,6 +2238,24 @@
 
             <!-- VIEW 2: EXPLORE / CATALOG (Apple Inset Grouped) -->
             <div class="tab-panel" id="view-explore">
+
+                <!-- The Story of bozPLEDGE (The Mountain Goat) -->
+                <div class="brand-story-card">
+                    <div class="brand-story-header">
+                        <div class="brand-story-badge">THE PHILOSOPHY OF bozPLEDGE</div>
+                        <div class="mountain-goat-tag">The Tenacious Mountain Goat (Boz)</div>
+                    </div>
+                    <div class="brand-story-body">
+                        The mountain goat (<em>Boz</em>) is legendary across rugged ranges for scaling sheer, impossible rock faces with fearless equilibrium and stubborn endurance. We built <strong>bozPLEDGE</strong> on this exact principle: your daily discipline becomes as sure-footed and unyielding as a mountain goat, anchored by tamper-proof Solana Seeker hardware.
+                    </div>
+                    <div class="brand-story-pills">
+                        <span class="story-pill">Mountain Grit</span>
+                        <span class="story-pill">Zero Excuses</span>
+                        <span class="story-pill">Hardware Enclave Proof</span>
+                        <span class="story-pill">Non-Custodial Escrow</span>
+                    </div>
+                </div>
+
                 <div class="catalog-title-row">
                     <div>
                         <div class="catalog-main-title">Commitment Catalog</div>
@@ -2927,10 +3065,26 @@
                             <span class="contract-val" id="slashing-day-label">Day 3 of 7</span>
                         </div>
                         <div class="contract-row">
+                            <span class="contract-key">Burn Destination</span>
+                            <span class="contract-val" style="font-family: var(--font-mono); font-size: 10px; color: var(--ios-orange);" title="Irrevocable Solana Incinerator">1111...1111 (Incinerator)</span>
+                        </div>
+                        <div class="contract-row">
+                            <span class="contract-key">Developer Protocol Cut</span>
+                            <span class="contract-val" style="color: var(--ios-green); font-weight: 700;">0.00 $SKR (0% Fee)</span>
+                        </div>
+                        <div class="contract-row">
                             <span class="contract-key">SolScan Signature</span>
                             <span class="contract-val" id="slashing-tx-hash" style="font-family: var(--font-mono); font-size: 11px; color: var(--ios-teal);">4Jz8k...Devnet</span>
                         </div>
                     </div>
+                </div>
+
+                <!-- Zero Conflict of Interest Security Trust Mark -->
+                <div style="background: rgba(48, 209, 88, 0.08); border-radius: 10px; padding: 10px 12px; margin-bottom: 14px; border: 0.5px solid rgba(48, 209, 88, 0.25); display: flex; align-items: flex-start; gap: 8px;">
+                    <svg class="icon xs" style="color: var(--ios-green); margin-top: 2px;" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 12 15 16 10"/></svg>
+                    <span style="font-size: 11px; color: var(--text-secondary); line-height: 1.35;">
+                        <strong style="color: var(--ios-green);">Zero Conflict of Interest:</strong> Slashed collateral is irrevocably incinerated into Solana's burn address. The developers earn 0% from user failure, guaranteeing a pure anti-sloth commitment mechanism.
+                    </span>
                 </div>
 
                 <div style="display: flex; gap: 8px;">
@@ -4043,6 +4197,7 @@
         });
 
         // Initialize
+        simulateActiveUser();
         updateProgress();
     </script>
 </body>
