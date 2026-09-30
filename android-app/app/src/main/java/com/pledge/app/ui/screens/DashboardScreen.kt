@@ -169,19 +169,10 @@ fun DashboardScreen(
     ) {
         Surface(
             modifier = Modifier
-                .widthIn(max = 440.dp)
+                .widthIn(max = 840.dp)
                 .fillMaxHeight(),
             color = BgVoid,
-            border = androidx.compose.foundation.BorderStroke(
-                1.dp,
-                Brush.verticalGradient(
-                    listOf(
-                        Color(0x4014F195),
-                        Color(0x269945FF),
-                        Color(0x0DFFFFFF)
-                    )
-                )
-            )
+            
         ) {
             Scaffold(
                 containerColor = BgVoid,
@@ -220,7 +211,7 @@ fun DashboardScreen(
                             Icon(
                                 imageVector = icon,
                                 contentDescription = title,
-                                tint = if (isSelected) AppleGreen else TextMuted,
+                                tint = if (isSelected) SolanaNeonMint else Color(0xFF6E7182),
                                 modifier = Modifier.size(22.dp)
                             )
                             Spacer(modifier = Modifier.height(2.dp))
@@ -229,7 +220,7 @@ fun DashboardScreen(
                                 fontFamily = PlusJakartaSans,
                                 fontSize = 10.5.sp,
                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                                color = if (isSelected) AppleGreen else TextMuted
+                                color = if (isSelected) SolanaNeonMint else Color(0xFF6E7182)
                             )
                         }
                     }
@@ -855,16 +846,17 @@ fun ActiveTabContent(
                 Column(modifier = Modifier.padding(14.dp)) {
                     Box(
                         modifier = Modifier
-                            .size(36.dp)
+                            .size(38.dp)
                             .clip(RoundedCornerShape(10.dp))
-                            .background(SurfaceElevated),
+                            .background(Color(0xFF141724))
+                            .border(1.dp, SolanaNeonMint.copy(alpha = 0.4f), RoundedCornerShape(10.dp)),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Icons.Default.Tune,
                             contentDescription = "Composer",
-                            tint = AppleTeal,
-                            modifier = Modifier.size(18.dp)
+                            tint = SolanaNeonMint,
+                            modifier = Modifier.size(20.dp)
                         )
                     }
                     Spacer(modifier = Modifier.height(10.dp))
@@ -899,16 +891,17 @@ fun ActiveTabContent(
                 Column(modifier = Modifier.padding(14.dp)) {
                     Box(
                         modifier = Modifier
-                            .size(36.dp)
+                            .size(38.dp)
                             .clip(RoundedCornerShape(10.dp))
-                            .background(SurfaceElevated),
+                            .background(Color(0xFF141724))
+                            .border(1.dp, SolanaElectricCyan.copy(alpha = 0.4f), RoundedCornerShape(10.dp)),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Icons.Default.Alarm,
                             contentDescription = "Alarm",
-                            tint = AppleOrange,
-                            modifier = Modifier.size(18.dp)
+                            tint = SolanaElectricCyan,
+                            modifier = Modifier.size(20.dp)
                         )
                     }
                     Spacer(modifier = Modifier.height(10.dp))
@@ -960,21 +953,18 @@ fun ActiveTabContent(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
-                        if (index == 0) {
-                            Icon(
-                                imageVector = Icons.Default.Language,
-                                contentDescription = null,
-                                tint = if (isSelected) Color.Black else TextSecondary,
-                                modifier = Modifier.size(14.dp)
-                            )
-                        } else if (index == 1) {
-                            Icon(
-                                imageVector = Icons.Default.Alarm,
-                                contentDescription = null,
-                                tint = if (isSelected) Color.Black else TextSecondary,
-                                modifier = Modifier.size(14.dp)
-                            )
+                        val chipIcon = when(index) {
+                            0 -> Icons.Default.Language
+                            1 -> Icons.Default.Alarm
+                            2 -> Icons.Default.DirectionsWalk
+                            else -> Icons.Default.Add
                         }
+                        Icon(
+                            imageVector = chipIcon,
+                            contentDescription = null,
+                            tint = if (isSelected) Color.Black else TextSecondary,
+                            modifier = Modifier.size(16.dp)
+                        )
                         Text(
                             text = title,
                             fontSize = 12.sp,

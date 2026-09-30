@@ -40,7 +40,7 @@ fun SeekerHeader(
             .padding(horizontal = 16.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        // Row 1: Brand & Status Header (Matching Image 1 Cinema Spec)
+        // Row 1: Brand & Status Header (Devnet Edition)
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -49,21 +49,21 @@ fun SeekerHeader(
             // Brand Logo & Text
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 Box(
                     modifier = Modifier
-                        .size(34.dp)
+                        .size(36.dp)
                         .clip(RoundedCornerShape(10.dp))
-                        .background(SurfaceCard)
-                        .border(0.5.dp, SolanaNeonMint.copy(alpha = 0.5f), RoundedCornerShape(10.dp)),
+                        .background(Color(0xFF141624))
+                        .border(1.dp, SolanaNeonMint.copy(alpha = 0.5f), RoundedCornerShape(10.dp)),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         imageVector = Icons.Default.Shield,
                         contentDescription = "Seeker Brand",
                         tint = SolanaNeonMint,
-                        modifier = Modifier.size(18.dp)
+                        modifier = Modifier.size(20.dp)
                     )
                 }
 
@@ -81,7 +81,7 @@ fun SeekerHeader(
                         Text(
                             text = "bozPLEDGE",
                             fontFamily = PlusJakartaSans,
-                            fontSize = 11.sp,
+                            fontSize = 11.5.sp,
                             fontWeight = FontWeight.Bold,
                             color = SolanaNeonMint
                         )
@@ -97,7 +97,7 @@ fun SeekerHeader(
                                 .background(SolanaNeonMint)
                         )
                         Text(
-                            text = "Hardware Protected Enclave",
+                            text = "Hardware Protected Enclave • Devnet",
                             fontSize = 9.5.sp,
                             color = TextSecondary,
                             fontWeight = FontWeight.Medium
@@ -106,16 +106,16 @@ fun SeekerHeader(
                 }
             }
 
-            // Top Status Badges Row
+            // Top Status Badges Row (Devnet, Wallet, Judge Lab)
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                // Mainnet Beta Pill
+                // Devnet Pill
                 Surface(
-                    color = SolanaNeonMint.copy(alpha = 0.12f),
+                    color = SolanaElectricCyan.copy(alpha = 0.14f),
                     shape = RoundedCornerShape(50),
-                    border = androidx.compose.foundation.BorderStroke(0.5.dp, SolanaNeonMint.copy(alpha = 0.35f))
+                    border = androidx.compose.foundation.BorderStroke(0.5.dp, SolanaElectricCyan.copy(alpha = 0.45f))
                 ) {
                     Row(
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
@@ -126,13 +126,47 @@ fun SeekerHeader(
                             modifier = Modifier
                                 .size(5.dp)
                                 .clip(CircleShape)
-                                .background(SolanaNeonMint)
+                                .background(SolanaElectricCyan)
                         )
                         Text(
-                            text = "Mainnet Beta",
+                            text = "Devnet",
                             fontSize = 9.5.sp,
                             fontWeight = FontWeight.Bold,
-                            color = SolanaNeonMint
+                            color = SolanaElectricCyan
+                        )
+                    }
+                }
+
+                // Wallet Address Pill
+                Surface(
+                    color = if (isConnected) SolanaNeonMint.copy(alpha = 0.12f) else Color(0xFF141624),
+                    shape = RoundedCornerShape(50),
+                    border = androidx.compose.foundation.BorderStroke(
+                        0.5.dp,
+                        if (isConnected) SolanaNeonMint.copy(alpha = 0.4f) else BorderSubtle
+                    ),
+                    modifier = Modifier.clickable {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        onConnectWallet()
+                    }
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(5.dp)
+                                .clip(CircleShape)
+                                .background(if (isConnected) SolanaNeonMint else AppleGreen)
+                        )
+                        Text(
+                            text = if (isConnected) "${walletAddress?.take(4)}...${walletAddress?.takeLast(4)}" else "Seek...7xK2",
+                            fontFamily = PlusJakartaSans,
+                            fontSize = 9.5.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = if (isConnected) SolanaNeonMint else TextPrimary
                         )
                     }
                 }
@@ -165,9 +199,9 @@ fun SeekerHeader(
             }
         }
 
-        // Row 2: Live Solana Network Telemetry Bar
+        // Row 2: Live Solana Devnet Telemetry Bar
         Surface(
-            color = Color(0xFF12141F),
+            color = Color(0xFF10121C),
             shape = RoundedCornerShape(8.dp),
             border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
             modifier = Modifier.fillMaxWidth()
@@ -175,35 +209,35 @@ fun SeekerHeader(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 10.dp, vertical = 5.dp),
+                    .padding(horizontal = 12.dp, vertical = 6.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    horizontalArrangement = Arrangement.spacedBy(5.dp)
                 ) {
                     Box(
                         modifier = Modifier
                             .size(5.dp)
                             .clip(CircleShape)
-                            .background(SolanaNeonMint)
+                            .background(SolanaElectricCyan)
                     )
                     Text(
-                        text = "SOLANA NETWORK: ACTIVE",
+                        text = "SOLANA DEVNET: ACTIVE",
                         fontSize = 8.5.sp,
                         fontWeight = FontWeight.Bold,
-                        color = SolanaNeonMint,
-                        letterSpacing = 0.4.sp
+                        color = SolanaElectricCyan,
+                        letterSpacing = 0.5.sp
                     )
                 }
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     Text(
-                        text = "BLOCK: 271,842,910",
+                        text = "DEVNET SLOT: 298,104,892",
                         fontSize = 8.5.sp,
                         color = TextSecondary,
                         fontFamily = FontFamily.Monospace
