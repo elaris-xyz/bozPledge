@@ -193,7 +193,7 @@ fun DashboardScreen(
                     val navItems = listOf(
                         Triple(0, "Active", Icons.Default.Bolt),
                         Triple(1, "Explore", Icons.Default.Explore),
-                        Triple(2, "Ranks", Icons.Default.EmojiEvents),
+                        Triple(2, "Ranks", Icons.Default.Leaderboard),
                         Triple(3, "Vault", Icons.Default.Shield)
                     )
 
@@ -524,7 +524,7 @@ fun Day0OnboardingContent(
                 Day0BlueprintCard(
                     title = "Odd-Days Internet Detox",
                     subtitle = "NetworkStats • <1h on Mon/Wed/Fri/Sun • 2,500 \$SKR",
-                    icon = Icons.Default.Language,
+                    icon = Icons.Default.Wifi,
                     accentColor = AppleTeal,
                     onClick = {
                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)
@@ -538,7 +538,7 @@ fun Day0OnboardingContent(
                 Day0BlueprintCard(
                     title = "The 6:00 AM Club",
                     subtitle = "Hardware NTP Clock • Wake up <06:00 AM • 5,000 \$SKR",
-                    icon = Icons.Default.Alarm,
+                    icon = Icons.Default.Schedule,
                     accentColor = AppleOrange,
                     onClick = {
                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)
@@ -552,7 +552,7 @@ fun Day0OnboardingContent(
                 Day0BlueprintCard(
                     title = "10,000 Steps Daily",
                     subtitle = "Health Connect • Daily Step Goal • 1,000 \$SKR",
-                    icon = Icons.Default.DirectionsRun,
+                    icon = Icons.Default.DirectionsWalk,
                     accentColor = AppleGreen,
                     onClick = {
                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)
@@ -787,7 +787,12 @@ fun ActiveTabContent(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
-                            Text(text = "💡", fontSize = 13.sp)
+                            Icon(
+                                imageVector = Icons.Default.Info,
+                                contentDescription = null,
+                                tint = AppleGreen,
+                                modifier = Modifier.size(15.dp)
+                            )
                             Text(
                                 text = "Quick Orientation Guide",
                                 fontSize = 13.sp,
@@ -1092,7 +1097,7 @@ fun ActiveTabContent(
                             }
                         ) {
                             Text(
-                                text = "⏩ Next Day",
+                                text = "Advance Day",
                                 fontSize = 10.5.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = AppleGreen,
@@ -1111,7 +1116,7 @@ fun ActiveTabContent(
                             }
                         ) {
                             Text(
-                                text = "🔴 Slash & Burn",
+                                text = "Slash Stake",
                                 fontSize = 10.5.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = AppleRed,
@@ -1263,7 +1268,7 @@ fun ActiveTabContent(
                                 .height(40.dp)
                         ) {
                             Text(
-                                text = "⏩ Day ${currentDay + 1} Pass",
+                                text = "Pass Day ${currentDay + 1}",
                                 color = Color.Black,
                                 fontSize = 11.5.sp,
                                 fontWeight = FontWeight.Bold
@@ -1283,7 +1288,7 @@ fun ActiveTabContent(
                                 .height(40.dp)
                         ) {
                             Text(
-                                text = "🔴 Day ${currentDay + 1} Slash",
+                                text = "Slash Day ${currentDay + 1}",
                                 color = AppleRed,
                                 fontSize = 11.5.sp,
                                 fontWeight = FontWeight.Bold
@@ -1626,7 +1631,12 @@ fun ExploreTabContent(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Text(text = "💡", fontSize = 14.sp)
+                Icon(
+                    imageVector = Icons.Default.Info,
+                    contentDescription = null,
+                    tint = SolanaTeal,
+                    modifier = Modifier.size(16.dp)
+                )
                 Text(
                     text = "Tapping 'Activate' immediately syncs the rule with your phone hardware sensors and redirects you to the active commitment view.",
                     fontSize = 11.5.sp,
@@ -2001,7 +2011,7 @@ fun RanksTabContent() {
                         color = AppleRed,
                         fontFamily = PlusJakartaSans
                     )
-                    Text(text = "Forfeited 🔥", fontSize = 9.5.sp, color = TextMuted)
+                    Text(text = "Forfeited", fontSize = 9.5.sp, color = FlameBurn)
                 }
             }
 
@@ -2021,7 +2031,7 @@ fun RanksTabContent() {
                         color = AppleTeal,
                         fontFamily = PlusJakartaSans
                     )
-                    Text(text = "Attested ✨", fontSize = 9.5.sp, color = TextMuted)
+                    Text(text = "Attested", fontSize = 9.5.sp, color = SolanaNeonMint)
                 }
             }
         }
@@ -2965,7 +2975,7 @@ fun HowItWorksModal(
             ) {
                 Column {
                     Text(
-                        text = "💡 How bozPLEDGE Works",
+                        text = "How bozPLEDGE Works",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Black,
                         color = TextPrimary
@@ -3217,7 +3227,12 @@ fun JudgeModalBottomSheet(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Text(text = "⚡", fontSize = 16.sp)
+                    Icon(
+                        imageVector = Icons.Default.Tune,
+                        contentDescription = null,
+                        tint = SolanaTeal,
+                        modifier = Modifier.size(18.dp)
+                    )
                     Column {
                         Text(
                             text = "Judge Evaluation Lab",
@@ -3310,7 +3325,12 @@ fun JudgeModalBottomSheet(
                             modifier = Modifier.size(32.dp).clip(CircleShape).background(AppleRed.copy(alpha = 0.16f)),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text(text = "🔴", fontSize = 14.sp)
+                            Icon(
+                                imageVector = Icons.Default.Warning,
+                                contentDescription = null,
+                                tint = AppleRed,
+                                modifier = Modifier.size(16.dp)
+                            )
                         }
                         Column(modifier = Modifier.weight(1f)) {
                             Text(text = "2. Trigger Slashing Breach (Missed Day)", fontSize = 12.5.sp, fontWeight = FontWeight.Bold, color = TextPrimary)

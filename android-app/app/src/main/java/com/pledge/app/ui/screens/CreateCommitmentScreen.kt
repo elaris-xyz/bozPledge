@@ -158,13 +158,19 @@ fun CreateCommitmentScreen(
         },
         containerColor = BgVoid
     ) { paddingValues ->
-        Column(
+        Box(
             modifier = modifier
                 .fillMaxSize()
-                .padding(paddingValues)
-                .verticalScroll(scrollState)
-                .padding(horizontal = 16.dp, vertical = 12.dp)
+                .padding(paddingValues),
+            contentAlignment = Alignment.TopCenter
         ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .widthIn(max = 840.dp)
+                    .verticalScroll(scrollState)
+                    .padding(horizontal = 20.dp, vertical = 14.dp)
+            ) {
             // Apple Segmented Control: Verified Blueprints vs Custom Rule Engine
             Surface(
                 color = SurfaceElevated,
@@ -678,6 +684,7 @@ fun CreateCommitmentScreen(
             Spacer(modifier = Modifier.height(20.dp))
         }
     }
+}
 }
 
 @Composable

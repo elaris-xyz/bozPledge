@@ -16,6 +16,7 @@ import com.pledge.app.data.SchedulePreset
 import com.pledge.app.data.SensorType
 import com.pledge.app.data.SessionKeyManager
 import com.pledge.app.data.SolanaManager
+import com.pledge.app.ui.screens.ConnectWalletScreen
 import com.pledge.app.ui.screens.CreateCommitmentScreen
 import com.pledge.app.ui.screens.DashboardScreen
 import com.pledge.app.ui.screens.SettleScreen
@@ -26,6 +27,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 enum class Screen {
+    CONNECT_WALLET,
     DASHBOARD,
     CREATE_PLEDGE,
     SETTLE
@@ -60,14 +62,15 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun PledgeAppRoot() {
-        var currentScreen by remember { mutableStateOf(Screen.DASHBOARD) }
+        var currentScreen by remember { mutableStateOf(Screen.CONNECT_WALLET) }
         var currentSteps by remember { mutableIntStateOf(8500) }
         var currentInternetMins by remember { mutableIntStateOf(38) }
         var isClockingIn by remember { mutableStateOf(false) }
         var isSettling by remember { mutableStateOf(false) }
         var isDemoMode by remember { mutableStateOf(true) }
+        var isConnectingWallet by remember { mutableStateOf(false) }
 
-        // Initial default commitment: Day 2 Active Escrow for Judges
+        // Initial default commitment: Day 0 Fresh Onboarding (User chooses habit & stakes first)
         var commitmentState by remember {
             mutableStateOf(
                 CommitmentState(
@@ -76,12 +79,12 @@ class MainActivity : ComponentActivity() {
                     clockInAuthority = sessionKeyManager.getPublicKeyBase58(),
                     targetSteps = 8000,
                     totalDays = 7,
-                    completedDays = 1,
+                    completedDays = 0,
                     dayDurationSec = 86400L,
-                    startTimestamp = (System.currentTimeMillis() / 1000L) - 86400L, // Day 2 Active
-                    totalAmountSKR = 2500.0,
+                    startTimestamp = 0L, // Fresh Day 0 Onboarding
+                    totalAmountSKR = 0.0,
                     settled = false,
-                    clockedInBitmap = 0b00001L,
+                    clockedInBitmap = 0L,
                     rule = HabitRule(
                         id = "odd_internet",
                         title = "Odd Days Internet Detox",
@@ -108,6 +111,43 @@ class MainActivity : ComponentActivity() {
         }
 
         when (currentScreen) {
+            Screen.CONNECT_WALLET -> {
+                ConnectWalletScreen(
+                    onConnectWallet = {
+                        lifecycleScope.launch {
+                            isConnectingWallet = true
+                            val res = solanaManager.connectWallet(activityResultSender)
+                            isConnectingWallet = false
+                            if (res.isSuccess) {
+                                currentScreen = Screen.DASHBOARD
+                                Toast.makeText(
+                                    this@MainActivity,
+                                    "Connected to Devnet: ${solanaManager.connectedPublicKey?.take(4)}...${solanaManager.connectedPublicKey?.takeLast(4)}",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else {
+                                Toast.makeText(
+                                    this@MainActivity,
+                                    "MWA not detected. Entering Solana Devnet Sandbox",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                currentScreen = Screen.DASHBOARD
+                            }
+                        }
+                    },
+                    onLaunchDemo = {
+                        isDemoMode = true
+                        currentScreen = Screen.DASHBOARD
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Solana Devnet Sandbox Active",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    },
+                    isConnecting = isConnectingWallet
+                )
+            }
+
             Screen.DASHBOARD -> {
                 DashboardScreen(
                     state = commitmentState,

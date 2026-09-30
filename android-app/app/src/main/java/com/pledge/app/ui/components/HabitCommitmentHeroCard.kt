@@ -155,7 +155,7 @@ fun HabitCommitmentHeroCard(
                                     border = androidx.compose.foundation.BorderStroke(0.5.dp, AppleOrange.copy(alpha = 0.4f))
                                 ) {
                                     Text(
-                                        text = "$streakDays DAYS 🔥",
+                                        text = "$streakDays DAYS STREAK",
                                         fontSize = 12.sp,
                                         fontWeight = FontWeight.Bold,
                                         color = AppleOrange,
@@ -271,7 +271,7 @@ fun HabitCommitmentHeroCard(
                                 letterSpacing = 0.6.sp
                             )
                             Text(
-                                text = "$streakDays DAYS 🔥",
+                                text = "$streakDays DAYS STREAK",
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.ExtraBold,
                                 color = AppleOrange

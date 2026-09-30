@@ -26,14 +26,20 @@ fun SettleScreen(
     onDone: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(
+    Box(
         modifier = modifier
             .fillMaxSize()
-            .background(DarkBackground)
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+            .background(DarkBackground),
+        contentAlignment = Alignment.Center
     ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .widthIn(max = 640.dp)
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
         Icon(
             imageVector = if (state.completedDays == state.totalDays) Icons.Default.CheckCircle else Icons.Default.LocalFireDepartment,
             contentDescription = "Status",
@@ -148,4 +154,5 @@ fun SettleScreen(
             }
         }
     }
+}
 }
