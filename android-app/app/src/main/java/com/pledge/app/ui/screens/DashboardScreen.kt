@@ -1,5 +1,9 @@
 package com.pledge.app.ui.screens
 
+import com.pledge.app.ui.components.HabitCommitmentHeroCard
+import com.pledge.app.ui.components.SeedVaultAuthCard
+import com.pledge.app.ui.components.SeekerHeader
+
 import android.content.Intent
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
@@ -149,8 +153,38 @@ fun DashboardScreen(
         label = "pulseScale"
     )
 
-    Scaffold(
-        containerColor = BgVoid,
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                Brush.radialGradient(
+                    colors = listOf(
+                        Color(0xFF161826),
+                        Color(0xFF090A12),
+                        Color(0xFF020305)
+                    )
+                )
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        Surface(
+            modifier = Modifier
+                .widthIn(max = 440.dp)
+                .fillMaxHeight(),
+            color = BgVoid,
+            border = androidx.compose.foundation.BorderStroke(
+                1.dp,
+                Brush.verticalGradient(
+                    listOf(
+                        Color(0x4014F195),
+                        Color(0x269945FF),
+                        Color(0x0DFFFFFF)
+                    )
+                )
+            )
+        ) {
+            Scaffold(
+                containerColor = BgVoid,
         bottomBar = {
             // Apple Translucent Tab Bar
             Surface(
@@ -208,141 +242,12 @@ fun DashboardScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            // 1. TOP APP HEADER (Apple Navigation Bar)
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 10.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // Brand Logo Mark + Text + Subtitle
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(34.dp)
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(SurfaceCard)
-                            .border(0.5.dp, BorderSubtle, RoundedCornerShape(10.dp)),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Shield,
-                            contentDescription = "Logo",
-                            tint = AppleGreen,
-                            modifier = Modifier.size(18.dp)
-                        )
-                    }
-
-                    Column {
-                        Row {
-                            Text(
-                                text = "boz",
-                                fontFamily = PlusJakartaSans,
-                                fontSize = 18.sp,
-                                fontWeight = FontWeight.ExtraBold,
-                                color = TextPrimary,
-                                letterSpacing = (-0.5).sp
-                            )
-                            Text(
-                                text = "PLEDGE",
-                                fontFamily = PlusJakartaSans,
-                                fontSize = 18.sp,
-                                fontWeight = FontWeight.ExtraBold,
-                                color = AppleGreen,
-                                letterSpacing = (-0.5).sp
-                            )
-                        }
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(4.dp)
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(6.dp)
-                                    .clip(CircleShape)
-                                    .background(AppleGreen)
-                            )
-                            Text(
-                                text = "Seeker Hardware Protected",
-                                fontSize = 10.sp,
-                                color = TextSecondary,
-                                fontWeight = FontWeight.Medium
-                            )
-                        }
-                    }
-                }
-
-                // Header Actions: Guide + Connect (Clean Apple HIG 2-Capsule Header)
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    // Judge Lab Pill Button
-                    Surface(
-                        color = SolanaTeal.copy(alpha = 0.15f),
-                        shape = RoundedCornerShape(50),
-                        border = androidx.compose.foundation.BorderStroke(0.5.dp, SolanaTeal.copy(alpha = 0.35f)),
-                        modifier = Modifier.clickable {
-                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                            isJudgeSheetOpen = true
-                        }
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 7.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(4.dp)
-                        ) {
-                            Text(text = "⚡", fontSize = 12.sp)
-                            Text(
-                                text = "Judge Lab",
-                                fontFamily = PlusJakartaSans,
-                                fontSize = 11.5.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = SolanaTeal
-                            )
-                        }
-                    }
-
-                    // Connect Wallet Button Capsule
-                    val isConnected = walletAddress != null && !walletAddress.contains("SeekerPledgeDemo")
-                    Surface(
-                        color = if (isConnected) AppleGreen.copy(alpha = 0.12f) else SurfaceCard,
-                        shape = RoundedCornerShape(50),
-                        border = androidx.compose.foundation.BorderStroke(
-                            0.5.dp,
-                            if (isConnected) AppleGreen.copy(alpha = 0.35f) else BorderSubtle
-                        ),
-                        modifier = Modifier.clickable {
-                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                            onConnectWallet()
-                        }
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 7.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(6.dp)
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(7.dp)
-                                    .clip(CircleShape)
-                                    .background(if (isConnected) AppleGreen else AppleRed)
-                            )
-                            Text(
-                                text = if (isConnected) "${walletAddress?.take(4)}...${walletAddress?.takeLast(4)}" else "Seeker...7xK2",
-                                fontFamily = PlusJakartaSans,
-                                fontSize = 11.5.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = if (isConnected) AppleGreen else TextPrimary
-                            )
-                        }
-                    }
-                }
-            }
+            // 1. TOP SEEKER HEADER (Cinema Grade Hardware Status)
+            SeekerHeader(
+                walletAddress = walletAddress,
+                onConnectWallet = onConnectWallet,
+                onOpenJudgeLab = { isJudgeSheetOpen = true }
+            )
 
             // Main Content Area switched by selectedNavTab
             Box(modifier = Modifier.fillMaxSize()) {
@@ -414,6 +319,8 @@ fun DashboardScreen(
                 }
             }
         }
+    }
+    }
     }
 
     // Modal 1: 30-Second Interactive "How It Works" Walkthrough
@@ -1137,206 +1044,19 @@ fun ActiveTabContent(
 
         Spacer(modifier = Modifier.height(14.dp))
 
-        // Hero Commitment Card (Apple Fitness Activity Widget)
-        Surface(
-            color = SurfaceCard,
-            shape = RoundedCornerShape(20.dp),
-            border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Column(modifier = Modifier.padding(18.dp)) {
-                // Top Badges Row
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Surface(
-                        color = SurfaceElevated,
-                        shape = RoundedCornerShape(50)
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(5.dp)
-                        ) {
-                            Icon(
-                                imageVector = if (isInternetSensor) Icons.Default.Language else if (isWakeUpSensor) Icons.Default.Alarm else Icons.Default.DirectionsWalk,
-                                contentDescription = null,
-                                tint = AppleTeal,
-                                modifier = Modifier.size(12.dp)
-                            )
-                            Text(
-                                text = state.rule.title.uppercase(),
-                                fontSize = 9.5.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = AppleTeal,
-                                letterSpacing = 0.5.sp
-                            )
-                        }
-                    }
+        // Hero Habit Commitment Card with Circular Neon Ring Meter
+        HabitCommitmentHeroCard(
+            ruleTitle = state.rule.title,
+            streakDays = 14,
+            currentVal = currentVal,
+            limitVal = limitVal,
+            unit = state.rule.unit,
+            progressPercent = progressPercent,
+            stakedSKR = state.totalAmountSKR,
+            timeRemainingStr = countdownStr
+        )
 
-                    Surface(
-                        color = SurfaceElevated,
-                        shape = RoundedCornerShape(50)
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(5.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Shield,
-                                contentDescription = null,
-                                tint = ApplePurple,
-                                modifier = Modifier.size(12.dp)
-                            )
-                            Text(
-                                text = "${state.totalAmountSKR.toInt()} \$SKR STAKED",
-                                fontSize = 9.5.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = ApplePurple,
-                                letterSpacing = 0.5.sp
-                            )
-                        }
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Big Metric Display (Apple Fitness typography)
-                Row(
-                    verticalAlignment = Alignment.Bottom,
-                    horizontalArrangement = Arrangement.spacedBy(5.dp)
-                ) {
-                    Text(
-                        text = "$currentVal",
-                        fontSize = 44.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        color = TextPrimary,
-                        lineHeight = 44.sp
-                    )
-                    Text(
-                        text = state.rule.unit,
-                        fontSize = 17.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = TextSecondary,
-                        modifier = Modifier.padding(bottom = 5.dp)
-                    )
-                }
-
-                Text(
-                    text = if (isInternetSensor) {
-                        "used of $limitVal mins max allowed today"
-                    } else if (isWakeUpSensor) {
-                        "Wake-up time recorded (Target: before 06:00 AM)"
-                    } else {
-                        "steps achieved of $limitVal daily target"
-                    },
-                    fontSize = 12.5.sp,
-                    color = TextSecondary,
-                    fontWeight = FontWeight.Normal
-                )
-
-                Spacer(modifier = Modifier.height(14.dp))
-
-                // Meter Progress Bar Track & Fill
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(10.dp)
-                        .clip(RoundedCornerShape(50))
-                        .background(SurfaceElevated)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .fillMaxWidth(fraction = (progressPercent / 100f).coerceIn(0f, 1f))
-                            .clip(RoundedCornerShape(50))
-                            .background(
-                                Brush.horizontalGradient(
-                                    listOf(AppleGreen, AppleTeal)
-                                )
-                            )
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                // Meter Stats Row
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = if (isWithinLimit) "✓ Daily Sensor Goal Achieved • Proof Ready" else "⚠️ Limit Exceeded • Forfeit at Midnight",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = if (isWithinLimit) AppleGreen else AppleRed
-                    )
-                    Text(
-                        text = "$progressPercent%",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = if (isWithinLimit) AppleGreen else AppleRed
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                // Smart Rule Inset Details Box
-                Surface(
-                    color = SurfaceElevated,
-                    shape = RoundedCornerShape(12.dp),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Column(
-                        modifier = Modifier.padding(12.dp),
-                        verticalArrangement = Arrangement.spacedBy(6.dp)
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(text = "Schedule", fontSize = 11.5.sp, color = TextSecondary)
-                            Text(
-                                text = if (isInternetSensor) "Mon, Wed, Fri, Sun (Odd Days)" else "Daily All Days",
-                                fontSize = 11.5.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                color = TextPrimary
-                            )
-                        }
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(text = "Constraint", fontSize = 11.5.sp, color = TextSecondary)
-                            Text(
-                                text = state.rule.title,
-                                fontSize = 11.5.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                color = TextPrimary
-                            )
-                        }
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(text = "Attestation", fontSize = 11.5.sp, color = TextSecondary)
-                            Text(
-                                text = "Seed Vault Enclave • SHA-256 Digest #84201",
-                                fontSize = 11.5.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                color = TextPrimary
-                            )
-                        }
-                    }
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(14.dp))
 
         // Timeline Card (Day Dots)
         Surface(
@@ -1470,91 +1190,23 @@ fun ActiveTabContent(
 
         Spacer(modifier = Modifier.height(14.dp))
 
-        // PRIMARY ACTION BUTTON (Solid Apple Fitness Green Capsule)
+        // Seed Vault Biometric Authorization Card
         val isMaturedCycle = currentDay >= totalDays && isAlreadyClockedInToday
-        Surface(
-            color = when {
-                isMaturedCycle -> SolanaPurple
-                isAlreadyClockedInToday -> AppleGreen.copy(alpha = 0.15f)
-                canClockIn -> AppleGreen
-                else -> SurfaceElevated
-            },
-            shape = RoundedCornerShape(50),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp)
-                .clickable(enabled = (canClockIn && !isAlreadyClockedInToday && !isClockingIn) || isMaturedCycle) {
-                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                    if (isMaturedCycle) {
-                        onOpenSettlement()
-                    } else {
-                        onClockIn()
-                    }
-                }
-        ) {
-            Box(contentAlignment = Alignment.Center) {
-                if (isClockingIn) {
-                    CircularProgressIndicator(
-                        color = Color.Black,
-                        modifier = Modifier.size(24.dp),
-                        strokeWidth = 2.5.dp
-                    )
+        SeedVaultAuthCard(
+            stakedAmount = state.totalAmountSKR,
+            canClockIn = canClockIn,
+            isAlreadyClockedInToday = isAlreadyClockedInToday,
+            isClockingIn = isClockingIn,
+            currentDay = currentDay,
+            totalDays = totalDays,
+            onClockIn = {
+                if (isMaturedCycle) {
+                    onOpenSettlement()
                 } else {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        Icon(
-                            imageVector = when {
-                                isMaturedCycle -> Icons.Default.EmojiEvents
-                                isAlreadyClockedInToday -> Icons.Default.CheckCircle
-                                else -> Icons.Default.Lock
-                            },
-                            contentDescription = null,
-                            tint = when {
-                                isMaturedCycle -> Color.White
-                                canClockIn && !isAlreadyClockedInToday -> Color.Black
-                                isAlreadyClockedInToday -> AppleGreen
-                                else -> TextMuted
-                            },
-                            modifier = Modifier.size(20.dp)
-                        )
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(
-                                text = when {
-                                    isMaturedCycle -> "🏆 Claim Escrow & Mint cNFT"
-                                    isAlreadyClockedInToday -> "✓ Day $currentDay Proof Certified on Solana"
-                                    canClockIn -> "Sign & Anchor Daily Proof"
-                                    else -> "Monitoring in Progress"
-                                },
-                                fontSize = 13.5.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = when {
-                                    isMaturedCycle -> Color.White
-                                    canClockIn && !isAlreadyClockedInToday -> Color.Black
-                                    isAlreadyClockedInToday -> AppleGreen
-                                    else -> TextMuted
-                                }
-                            )
-                            Text(
-                                text = when {
-                                    isMaturedCycle -> "7-Day Cycle Finished • Withdraw collateral & claim NFT"
-                                    isAlreadyClockedInToday -> "Escrow milestone unlocked • Seed Vault Sig #5Kz8..."
-                                    canClockIn -> "Seed Vault Ed25519 Claim • Records sensor hash"
-                                    else -> "Maintain limit to unlock daily milestone signature"
-                                },
-                                fontSize = 9.5.sp,
-                                color = when {
-                                    isMaturedCycle -> Color.White.copy(alpha = 0.85f)
-                                    canClockIn && !isAlreadyClockedInToday -> Color.Black.copy(alpha = 0.75f)
-                                    else -> TextSecondary
-                                }
-                            )
-                        }
-                    }
+                    onClockIn()
                 }
             }
-        }
+        )
 
         // Post-Clockin Lifecycle Simulation Card
         if (isAlreadyClockedInToday && !isMaturedCycle) {

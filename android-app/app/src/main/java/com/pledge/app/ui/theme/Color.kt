@@ -39,7 +39,18 @@ val GoldGenesis = AppleOrange
 val GoldReward = AppleOrange
 val SuccessGreen = AppleGreen
 
+// Solana Seeker Signature Cyber-Luxury Accents
+val SolanaNeonMint = Color(0xFF14F195)
+val SolanaNeonPurple = Color(0xFF9945FF)
+val SolanaElectricCyan = Color(0xFF00F0FF)
+val SolanaGoldAmber = Color(0xFFFFD60A)
+val DarkGlassSurface = Color(0xCC1A1A22)
+val DarkGlassBorder = Color(0x33FFFFFF)
+val GlowGreenAmbient = Color(0x2214F195)
+val GlowPurpleAmbient = Color(0x229945FF)
+
 // Apple Typography Hierarchy Colors
 val TextPrimary = Color(0xFFFFFFFF)
 val TextSecondary = Color(0xFF8E8E93)
 val TextMuted = Color(0xFF636366)
+
