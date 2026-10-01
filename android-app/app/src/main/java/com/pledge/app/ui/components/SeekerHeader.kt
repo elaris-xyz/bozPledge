@@ -205,12 +205,21 @@ fun SeekerHeader(
             }
         }
 
-        // Row 2: Live Solana Devnet Telemetry Bar
+        // Row 2: Live Solana Devnet Telemetry Bar (Clickable to Explorer)
+        val context = androidx.compose.ui.platform.LocalContext.current
         Surface(
             color = Color(0xFF10121C),
             shape = RoundedCornerShape(8.dp),
-            border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
-            modifier = Modifier.fillMaxWidth()
+            border = androidx.compose.foundation.BorderStroke(0.5.dp, SolanaElectricCyan.copy(alpha = 0.3f)),
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    val intent = android.content.Intent(
+                        android.content.Intent.ACTION_VIEW,
+                        android.net.Uri.parse("https://explorer.solana.com/address/PLEDGE1111111111111111111111111111111111111?cluster=devnet")
+                    )
+                    context.startActivity(intent)
+                }
         ) {
             Row(
                 modifier = Modifier
@@ -243,16 +252,17 @@ fun SeekerHeader(
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     Text(
-                        text = "DEVNET SLOT: 298,104,892",
+                        text = "PROGRAM: PLEDGE...1111",
                         fontSize = 8.5.sp,
-                        color = TextSecondary,
+                        color = SolanaNeonMint,
+                        fontWeight = FontWeight.Bold,
                         fontFamily = FontFamily.Monospace
                     )
                     Text(
-                        text = "GAS: 0.000005 SOL",
-                        fontSize = 8.5.sp,
-                        color = TextSecondary,
-                        fontFamily = FontFamily.Monospace
+                        text = "EXPLORER ↗",
+                        fontSize = 8.sp,
+                        color = SolanaElectricCyan,
+                        fontWeight = FontWeight.Bold
                     )
                 }
             }

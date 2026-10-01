@@ -17,7 +17,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -35,8 +34,7 @@ import com.pledge.app.ui.theme.*
 fun ConnectWalletScreen(
     savedWalletAddress: String?,
     onConnectWallet: () -> Unit,
-    onManualAddressSubmit: (String) -> Unit,
-    onConfirmDevnetKeypair: () -> Unit,
+    onConfirmJudgeKeypair: () -> Unit,
     onEnterApp: () -> Unit,
     onDisconnectWallet: () -> Unit,
     isConnecting: Boolean = false,
@@ -50,10 +48,7 @@ fun ConnectWalletScreen(
     val scrollState = rememberScrollState()
     val clipboardManager = LocalClipboardManager.current
 
-    var showManualAddressDialog by remember { mutableStateOf(false) }
-    var showDevnetConfirmDialog by remember { mutableStateOf(false) }
-    var manualAddressInput by remember { mutableStateOf("") }
-    var manualAddressError by remember { mutableStateOf<String?>(null) }
+    var showJudgeConfirmDialog by remember { mutableStateOf(false) }
 
     Box(
         modifier = modifier
@@ -150,9 +145,9 @@ fun ConnectWalletScreen(
 
                     Text(
                         text = if (savedWalletAddress != null)
-                            "کیف‌پول شما متصل است. برای ادامه فعالیت یا ثبت تعهد جدید، وارد برنامه شوید."
+                            "Wallet session active on Solana Devnet. Tap below to enter the protocol."
                         else
-                            "پروتکل ضمانت عادات با گواهی سنسورهای سخت‌افزاری سولانا.\nبرای شروع، ابتدا کیف‌پول خود را متصل یا مشخص نمایید.",
+                            "Sovereign Habit & Proof-of-Action Protocol on Solana Mobile.\nConnect a Devnet wallet to begin evaluation.",
                         fontSize = 13.5.sp,
                         color = TextSecondary,
                         textAlign = TextAlign.Center,
@@ -191,7 +186,7 @@ fun ConnectWalletScreen(
                                             .background(SolanaNeonMint)
                                     )
                                     Text(
-                                        text = "کیف‌پول متصل (Connected Session)",
+                                        text = "Connected Session",
                                         fontFamily = PlusJakartaSans,
                                         fontSize = 12.sp,
                                         fontWeight = FontWeight.Bold,
@@ -237,7 +232,7 @@ fun ConnectWalletScreen(
                                         )
                                         Column {
                                             Text(
-                                                text = "آدرس عمومی حساب:",
+                                                text = "Public Key Authority:",
                                                 fontSize = 10.5.sp,
                                                 color = TextSecondary
                                             )
@@ -260,395 +255,233 @@ fun ConnectWalletScreen(
                                         }
                                     ) {
                                         Row(
-                                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
+                                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 5.dp),
                                             verticalAlignment = Alignment.CenterVertically,
                                             horizontalArrangement = Arrangement.spacedBy(4.dp)
                                         ) {
                                             Icon(
                                                 imageVector = Icons.Default.ContentCopy,
                                                 contentDescription = "Copy",
-                                                tint = TextSecondary,
+                                                tint = SolanaElectricCyan,
                                                 modifier = Modifier.size(13.dp)
                                             )
-                                            Text(text = "کپی", fontSize = 10.5.sp, color = TextSecondary)
+                                            Text(
+                                                text = "Copy",
+                                                fontSize = 11.sp,
+                                                fontWeight = FontWeight.SemiBold,
+                                                color = SolanaElectricCyan
+                                            )
                                         }
                                     }
                                 }
                             }
 
-                            // Primary CTA: Enter App directly!
-                            Surface(
-                                color = SolanaNeonMint,
-                                shape = RoundedCornerShape(14.dp),
+                            // Primary CTA: Enter bozPLEDGE
+                            Button(
+                                onClick = {
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    onEnterApp()
+                                },
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(54.dp)
-                                    .clickable {
-                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                        onEnterApp()
-                                    }
-                            ) {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .background(
-                                            Brush.horizontalGradient(
-                                                listOf(SolanaNeonMint, SolanaElectricCyan)
-                                            )
-                                        ),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Row(
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Default.Login,
-                                            contentDescription = null,
-                                            tint = Color.Black,
-                                            modifier = Modifier.size(20.dp)
-                                        )
-                                        Text(
-                                            text = "ورود به برنامه (Enter bozPLEDGE)",
-                                            fontFamily = PlusJakartaSans,
-                                            fontSize = 15.sp,
-                                            fontWeight = FontWeight.Black,
-                                            color = Color.Black
-                                        )
-                                    }
-                                }
-                            }
-
-                            // Secondary: Disconnect / Switch
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.Center
-                            ) {
-                                TextButton(
-                                    onClick = {
-                                        haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                                        onDisconnectWallet()
-                                    }
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.Logout,
-                                        contentDescription = null,
-                                        tint = TextMuted,
-                                        modifier = Modifier.size(15.dp)
-                                    )
-                                    Spacer(modifier = Modifier.width(6.dp))
-                                    Text(
-                                        text = "تغییر یا قطع اتصال کیف‌پول (Disconnect / Switch)",
-                                        fontSize = 11.5.sp,
-                                        color = TextMuted
-                                    )
-                                }
-                            }
-                        }
-                    }
-
-                } else {
-                    // -------------------------------------------------------------
-                    // CASE 2: NO WALLET CONNECTED (INITIAL ONBOARDING)
-                    // -------------------------------------------------------------
-
-                    // 3 Flat Architecture Feature Cards
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(10.dp)
-                    ) {
-                        FlatFeatureRow(
-                            icon = Icons.Default.Lock,
-                            iconTint = SolanaNeonMint,
-                            title = "۱. اتصال امن با تایید کاربر",
-                            description = "اتصال مستقیم به Seed Vault یا Phantom روی شبکه Devnet بدون نیاز به اشتراک کلید خصوصی."
-                        )
-
-                        FlatFeatureRow(
-                            icon = Icons.Default.Tune,
-                            iconTint = SolanaElectricCyan,
-                            title = "۲. انتخاب تعهد و استیک توکن",
-                            description = "انتخاب تارگت‌های تاییدشده (سحرخیزی ۶ صبح، ۱۰ هزار قدم، دی‌تاکس اینترنت) یا ساخت قانون دلخواه."
-                        )
-
-                        FlatFeatureRow(
-                            icon = Icons.Default.Fingerprint,
-                            iconTint = SolanaNeonPurple,
-                            title = "۳. تصدیق سنسورهای فیزیکی تبلت",
-                            description = "سنسورهای دستگاه اثبات فیزیکی را ثبت می‌کنند. با انجام روزانه، استیک خود را حفظ و cNFT دریافت کنید."
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(4.dp))
-
-                    if (errorMessage != null) {
-                        Surface(
-                            color = AppleRed.copy(alpha = 0.15f),
-                            shape = RoundedCornerShape(12.dp),
-                            border = androidx.compose.foundation.BorderStroke(0.5.dp, AppleRed.copy(alpha = 0.4f)),
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Row(
-                                modifier = Modifier.padding(12.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Warning,
-                                    contentDescription = null,
-                                    tint = AppleRed,
-                                    modifier = Modifier.size(16.dp)
+                                    .height(52.dp),
+                                shape = RoundedCornerShape(14.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = SolanaNeonMint,
+                                    contentColor = Color(0xFF030D08)
                                 )
-                                Text(
-                                    text = errorMessage,
-                                    fontSize = 12.sp,
-                                    color = AppleRed
-                                )
-                            }
-                        }
-                    }
-
-                    // Button 1: Connect via Solana MWA (Mobile Wallet Adapter)
-                    Surface(
-                        color = SolanaNeonMint,
-                        shape = RoundedCornerShape(16.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(56.dp)
-                            .clickable(enabled = !isConnecting) {
-                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                onConnectWallet()
-                            }
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(
-                                    Brush.horizontalGradient(
-                                        listOf(SolanaNeonMint, SolanaElectricCyan)
-                                    )
-                                ),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            if (isConnecting) {
-                                CircularProgressIndicator(
-                                    color = Color.Black,
-                                    modifier = Modifier.size(24.dp),
-                                    strokeWidth = 2.5.dp
-                                )
-                            } else {
+                            ) {
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                                 ) {
                                     Icon(
-                                        imageVector = Icons.Default.AccountBalanceWallet,
-                                        contentDescription = "Wallet",
-                                        tint = Color.Black,
-                                        modifier = Modifier.size(20.dp)
+                                        imageVector = Icons.Default.ArrowForward,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(18.dp)
                                     )
                                     Text(
-                                        text = "Connect Solana Wallet (MWA)",
+                                        text = "Enter bozPLEDGE",
                                         fontFamily = PlusJakartaSans,
                                         fontSize = 15.sp,
-                                        fontWeight = FontWeight.Black,
-                                        color = Color.Black
+                                        fontWeight = FontWeight.Black
+                                    )
+                                }
+                            }
+
+                            // Secondary: Disconnect / Switch
+                            TextButton(
+                                onClick = {
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    onDisconnectWallet()
+                                },
+                                modifier = Modifier.align(Alignment.CenterHorizontally)
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.ExitToApp,
+                                        contentDescription = null,
+                                        tint = TextTertiary,
+                                        modifier = Modifier.size(15.dp)
+                                    )
+                                    Text(
+                                        text = "Disconnect / Switch Wallet",
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Medium,
+                                        color = TextTertiary
                                     )
                                 }
                             }
                         }
                     }
+                }
 
-                    // Button 2: Manual Public Key Entry
-                    Surface(
-                        color = Color(0xFF141724),
-                        shape = RoundedCornerShape(16.dp),
-                        border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle),
+                // -------------------------------------------------------------
+                // CASE 2: FIRST TIME ONBOARDING (CONNECT OPTIONS)
+                // -------------------------------------------------------------
+                if (savedWalletAddress == null) {
+                    // 3 Flat Architecture Feature Highlights
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        FeatureRow(
+                            icon = Icons.Default.Lock,
+                            title = "1. Hardware-Attested Escrow",
+                            subtitle = "Daily physical discipline certified directly by on-device sensors."
+                        )
+                        FeatureRow(
+                            icon = Icons.Default.Tune,
+                            title = "2. 1-Tap Daily Clock-In",
+                            subtitle = "Sub-second Ed25519 session signing eliminates repetitive wallet popups."
+                        )
+                        FeatureRow(
+                            icon = Icons.Default.Fingerprint,
+                            title = "3. Zero-Profit Deflationary Sink",
+                            subtitle = "Missed days permanently burn \$SKR on-chain. No one profits from failure."
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    // Primary Connection Button: MWA 2.0
+                    Button(
+                        onClick = {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            onConnectWallet()
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(52.dp)
-                            .clickable {
-                                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                                manualAddressInput = ""
-                                manualAddressError = null
-                                showManualAddressDialog = true
-                            }
+                            .height(54.dp),
+                        shape = RoundedCornerShape(14.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = SolanaNeonMint,
+                            contentColor = Color(0xFF030D08)
+                        ),
+                        enabled = !isConnecting
                     ) {
-                        Row(
-                            modifier = Modifier.fillMaxSize(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Edit,
-                                contentDescription = null,
-                                tint = SolanaElectricCyan,
-                                modifier = Modifier.size(18.dp)
+                        if (isConnecting) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(22.dp),
+                                color = Color(0xFF030D08),
+                                strokeWidth = 2.dp
                             )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = "ورود دستی آدرس ولت (Manual Public Key)",
-                                fontFamily = PlusJakartaSans,
-                                fontSize = 13.5.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color.White
-                            )
+                        } else {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.AccountBalanceWallet,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(19.dp)
+                                )
+                                Text(
+                                    text = "Connect Solana Wallet (MWA)",
+                                    fontFamily = PlusJakartaSans,
+                                    fontSize = 15.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
                         }
                     }
 
-                    // Button 3: Devnet Sandbox Keypair with Explicit Confirmation
-                    Surface(
-                        color = Color(0xFF0F111B),
-                        shape = RoundedCornerShape(16.dp),
-                        border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
+                    // Secondary Connection Button: Instant Judge Devnet Keypair
+                    OutlinedButton(
+                        onClick = {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            showJudgeConfirmDialog = true
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(48.dp)
-                            .clickable {
-                                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                                showDevnetConfirmDialog = true
-                            }
+                            .height(50.dp),
+                        shape = RoundedCornerShape(14.dp),
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            containerColor = Color(0xFF0E101D),
+                            contentColor = SolanaElectricCyan
+                        ),
+                        border = androidx.compose.foundation.BorderStroke(1.dp, SolanaElectricCyan.copy(alpha = 0.4f))
                     ) {
                         Row(
-                            modifier = Modifier.fillMaxSize(),
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             Icon(
                                 imageVector = Icons.Default.CheckCircle,
                                 contentDescription = null,
-                                tint = SolanaNeonMint.copy(alpha = 0.8f),
-                                modifier = Modifier.size(16.dp)
+                                tint = SolanaElectricCyan,
+                                modifier = Modifier.size(17.dp)
                             )
-                            Spacer(modifier = Modifier.width(6.dp))
                             Text(
-                                text = "تایید و ورود با حساب آزمایشی Devnet",
+                                text = "Instant Judge Devnet Keypair (1-Click)",
                                 fontFamily = PlusJakartaSans,
-                                fontSize = 12.5.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                color = TextSecondary
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                        }
+                    }
+
+                    if (errorMessage != null) {
+                        Surface(
+                            color = Color(0xFF261014),
+                            shape = RoundedCornerShape(10.dp),
+                            border = androidx.compose.foundation.BorderStroke(0.5.dp, Color(0xFFE04343))
+                        ) {
+                            Text(
+                                text = errorMessage,
+                                color = Color(0xFFFF6B6B),
+                                fontSize = 12.sp,
+                                modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp)
                             )
                         }
                     }
                 }
 
+                Spacer(modifier = Modifier.weight(1f))
+
+                // Footer Compliance
                 Text(
-                    text = "Requires Solana Mobile Wallet Adapter (Seed Vault / Phantom / Solflare) • Devnet",
-                    fontSize = 10.sp,
-                    color = TextMuted,
+                    text = "Requires Solana Mobile Stack (MWA 2.0) • Program ID: PLEDGE...1111",
+                    fontSize = 11.sp,
+                    color = TextTertiary,
                     textAlign = TextAlign.Center
                 )
             }
         }
     }
 
-    // -------------------------------------------------------------------------
-    // DIALOG 1: MANUAL ADDRESS INPUT MODAL
-    // -------------------------------------------------------------------------
-    if (showManualAddressDialog) {
+    // -------------------------------------------------------------
+    // DIALOG 1: JUDGE DEVNET KEYPAIR CONFIRMATION
+    // -------------------------------------------------------------
+    if (showJudgeConfirmDialog) {
         AlertDialog(
-            onDismissRequest = { showManualAddressDialog = false },
-            containerColor = Color(0xFF141726),
-            title = {
-                Text(
-                    text = "ورود دستی آدرس عمومی سولانا",
-                    fontFamily = PlusJakartaSans,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
-                    color = Color.White
-                )
-            },
-            text = {
-                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text(
-                        text = "آدرس عمومی (Public Key) حساب سولانا خود را وارد یا پیست کنید:",
-                        fontSize = 12.5.sp,
-                        color = TextSecondary
-                    )
-
-                    OutlinedTextField(
-                        value = manualAddressInput,
-                        onValueChange = {
-                            manualAddressInput = it
-                            manualAddressError = null
-                        },
-                        placeholder = { Text("مثال: 9xQe... یا Phantom Address", color = TextMuted, fontSize = 12.sp) },
-                        modifier = Modifier.fillMaxWidth(),
-                        singleLine = true,
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = SolanaNeonMint,
-                            unfocusedBorderColor = BorderSubtle,
-                            focusedTextColor = Color.White,
-                            unfocusedTextColor = Color.White
-                        )
-                    )
-
-                    if (manualAddressError != null) {
-                        Text(
-                            text = manualAddressError!!,
-                            color = AppleRed,
-                            fontSize = 11.5.sp
-                        )
-                    }
-
-                    // Quick Paste Button
-                    Surface(
-                        color = Color(0xFF1C2033),
-                        shape = RoundedCornerShape(8.dp),
-                        modifier = Modifier.clickable {
-                            val clip = clipboardManager.getText()?.text
-                            if (!clip.isNullOrBlank()) {
-                                manualAddressInput = clip.trim()
-                            }
-                        }
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(4.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.ContentPaste,
-                                contentDescription = "Paste",
-                                tint = SolanaElectricCyan,
-                                modifier = Modifier.size(14.dp)
-                            )
-                            Text(text = "پیست از کلیپ‌بورد", fontSize = 11.sp, color = SolanaElectricCyan)
-                        }
-                    }
-                }
-            },
-            confirmButton = {
-                Button(
-                    onClick = {
-                        val trimmed = manualAddressInput.trim()
-                        if (trimmed.length < 32 || trimmed.length > 44) {
-                            manualAddressError = "طول آدرس پابلیک‌کی نامعتبر است (باید بین ۳۲ تا ۴۴ کاراکتر باشد)"
-                        } else {
-                            showManualAddressDialog = false
-                            onManualAddressSubmit(trimmed)
-                        }
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = SolanaNeonMint)
-                ) {
-                    Text(text = "تایید و اتصال", color = Color.Black, fontWeight = FontWeight.Bold)
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showManualAddressDialog = false }) {
-                    Text(text = "انصراف", color = TextSecondary)
-                }
-            }
-        )
-    }
-
-    // -------------------------------------------------------------------------
-    // DIALOG 2: DEVNET KEYPAIR EXPLICIT CONFIRMATION MODAL
-    // -------------------------------------------------------------------------
-    if (showDevnetConfirmDialog) {
-        AlertDialog(
-            onDismissRequest = { showDevnetConfirmDialog = false },
-            containerColor = Color(0xFF141726),
+            onDismissRequest = { showJudgeConfirmDialog = false },
+            containerColor = Color(0xFF131626),
+            titleContentColor = Color.White,
+            textContentColor = TextSecondary,
             icon = {
                 Icon(
                     imageVector = Icons.Default.CheckCircle,
@@ -659,38 +492,30 @@ fun ConnectWalletScreen(
             },
             title = {
                 Text(
-                    text = "تایید اتصال با حساب تستی دِونت",
+                    text = "Initialize Judge Devnet Wallet",
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
-                    color = Color.White,
+                    fontSize = 17.sp,
                     textAlign = TextAlign.Center
                 )
             },
             text = {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Text(
-                        text = "آیا مایلید با یک حساب امن تستی Devnet با موجودی ۱,۲۵۰ \$SKR متصل شوید و این حساب برای ورودهای بعدی شما ذخیره شود؟",
-                        fontSize = 12.5.sp,
-                        color = TextSecondary,
-                        textAlign = TextAlign.Center,
+                        text = "Initialize an on-device Ed25519 keypair funded with 2,500 \$SKR on Solana Devnet?\n\nThis enables full evaluation of on-chain escrow, daily clock-in, and slashing without setting up an external wallet.",
+                        fontSize = 13.sp,
                         lineHeight = 18.sp
                     )
-
                     Surface(
                         color = Color(0xFF090A12),
                         shape = RoundedCornerShape(8.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(
-                            text = "SeekerDevnet_Escrow_Keypair",
+                            text = "Cluster: Solana Devnet • RPC: api.devnet.solana.com",
                             fontFamily = FontFamily.Monospace,
-                            fontSize = 11.sp,
+                            fontSize = 10.5.sp,
                             color = SolanaElectricCyan,
-                            textAlign = TextAlign.Center,
                             modifier = Modifier.padding(8.dp)
                         )
                     }
@@ -699,32 +524,41 @@ fun ConnectWalletScreen(
             confirmButton = {
                 Button(
                     onClick = {
-                        showDevnetConfirmDialog = false
-                        onConfirmDevnetKeypair()
+                        showJudgeConfirmDialog = false
+                        onConfirmJudgeKeypair()
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = SolanaNeonMint)
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = SolanaNeonMint,
+                        contentColor = Color(0xFF030D08)
+                    ),
+                    shape = RoundedCornerShape(10.dp)
                 ) {
-                    Text(text = "تایید و ورود به برنامه", color = Color.Black, fontWeight = FontWeight.Bold)
+                    Text(
+                        text = "Initialize & Enter bozPLEDGE",
+                        fontFamily = PlusJakartaSans,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 13.sp
+                    )
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showDevnetConfirmDialog = false }) {
-                    Text(text = "انصراف", color = TextSecondary)
+                TextButton(onClick = { showJudgeConfirmDialog = false }) {
+                    Text(text = "Cancel", color = TextSecondary)
                 }
             }
         )
     }
 
-    // -------------------------------------------------------------------------
-    // DIALOG 3: NO WALLET FOUND (OFFER CHOICES TRANSPARENTLY)
-    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------
+    // DIALOG 2: NO WALLET FOUND (PROMPT TO INSTALL OR USE JUDGE KEYPAIR)
+    // -------------------------------------------------------------
     if (showNoWalletDialog) {
         AlertDialog(
             onDismissRequest = onDismissNoWalletDialog,
-            containerColor = Color(0xFF141726),
+            containerColor = Color(0xFF131626),
             icon = {
                 Icon(
-                    imageVector = Icons.Default.Info,
+                    imageVector = Icons.Default.AccountBalanceWallet,
                     contentDescription = null,
                     tint = SolanaElectricCyan,
                     modifier = Modifier.size(32.dp)
@@ -732,97 +566,44 @@ fun ConnectWalletScreen(
             },
             title = {
                 Text(
-                    text = "کیف‌پول موبایلی یافت نشد",
+                    text = "No Solana Wallet Found",
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
-                    color = Color.White,
-                    textAlign = TextAlign.Center
+                    fontSize = 17.sp
                 )
             },
             text = {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(10.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                Text(
+                    text = "No Solana Mobile Wallet Adapter compatible wallet (Phantom or Solflare) was detected.\n\nYou can install Phantom from Google Play or instantly evaluate using the built-in Judge Devnet Keypair.",
+                    fontSize = 13.sp,
+                    lineHeight = 18.sp,
+                    color = TextSecondary
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        onDismissNoWalletDialog()
+                        onConfirmJudgeKeypair()
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = SolanaNeonMint,
+                        contentColor = Color(0xFF030D08)
+                    ),
+                    shape = RoundedCornerShape(10.dp)
                 ) {
-                    Text(
-                        text = "هیچ برنامه کیف‌پول سولانا (مانند فانتوم یا سولفلیر) روی این دستگاه یافت نشد. مایلید چگونه متصل شوید؟",
-                        fontSize = 12.5.sp,
-                        color = TextSecondary,
-                        textAlign = TextAlign.Center,
-                        lineHeight = 18.sp
-                    )
-
-                    Surface(
-                        color = Color(0xFF1A1E2F),
-                        shape = RoundedCornerShape(10.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                onDismissNoWalletDialog()
-                                showManualAddressDialog = true
-                            }
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(12.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Icon(Icons.Default.Edit, contentDescription = null, tint = SolanaElectricCyan, modifier = Modifier.size(16.dp))
-                            Text(text = "۱. ورود آدرس عمومی کیف‌پول دستی", fontSize = 12.sp, color = Color.White)
-                        }
-                    }
-
-                    Surface(
-                        color = Color(0xFF1A1E2F),
-                        shape = RoundedCornerShape(10.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                onDismissNoWalletDialog()
-                                onConfirmDevnetKeypair()
-                            }
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(12.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Icon(Icons.Default.CheckCircle, contentDescription = null, tint = SolanaNeonMint, modifier = Modifier.size(16.dp))
-                            Text(text = "۲. تایید اتصال با حساب تستی دِونت", fontSize = 12.sp, color = Color.White)
-                        }
-                    }
-
-                    Surface(
-                        color = Color(0xFF1A1E2F),
-                        shape = RoundedCornerShape(10.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                try {
-                                    val playIntent = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=app.phantom"))
-                                    context.startActivity(playIntent)
-                                } catch (e: Exception) {
-                                    val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=app.phantom"))
-                                    context.startActivity(webIntent)
-                                }
-                            }
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(12.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Icon(Icons.Default.Download, contentDescription = null, tint = AppleOrange, modifier = Modifier.size(16.dp))
-                            Text(text = "۳. نصب کیف‌پول Phantom از گوگل‌پلی", fontSize = 12.sp, color = Color.White)
-                        }
-                    }
+                    Text("Use Judge Keypair", fontWeight = FontWeight.Bold)
                 }
             },
-            confirmButton = {},
             dismissButton = {
-                TextButton(onClick = onDismissNoWalletDialog) {
-                    Text(text = "بستن", color = TextSecondary)
+                TextButton(
+                    onClick = {
+                        onDismissNoWalletDialog()
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://phantom.app/download"))
+                        context.startActivity(intent)
+                    }
+                ) {
+                    Text("Get Phantom", color = SolanaElectricCyan)
                 }
             }
         )
@@ -830,18 +611,16 @@ fun ConnectWalletScreen(
 }
 
 @Composable
-fun FlatFeatureRow(
+private fun FeatureRow(
     icon: ImageVector,
-    iconTint: Color,
     title: String,
-    description: String,
-    modifier: Modifier = Modifier
+    subtitle: String
 ) {
     Surface(
-        color = Color(0xFF10121C),
-        shape = RoundedCornerShape(16.dp),
+        color = Color(0xFF101322),
+        shape = RoundedCornerShape(14.dp),
         border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
-        modifier = modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth()
     ) {
         Row(
             modifier = Modifier.padding(14.dp),
@@ -850,31 +629,28 @@ fun FlatFeatureRow(
         ) {
             Box(
                 modifier = Modifier
-                    .size(42.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(Color(0xFF161928))
-                    .border(0.5.dp, iconTint.copy(alpha = 0.4f), RoundedCornerShape(12.dp)),
+                    .size(40.dp)
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(Color(0xFF161A2E)),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    tint = iconTint,
-                    modifier = Modifier.size(22.dp)
+                    tint = SolanaElectricCyan,
+                    modifier = Modifier.size(20.dp)
                 )
             }
-
-            Column(modifier = Modifier.weight(1f)) {
+            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                 Text(
                     text = title,
                     fontFamily = PlusJakartaSans,
-                    fontSize = 13.5.sp,
+                    fontSize = 13.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
                 )
-                Spacer(modifier = Modifier.height(2.dp))
                 Text(
-                    text = description,
+                    text = subtitle,
                     fontSize = 11.5.sp,
                     color = TextSecondary,
                     lineHeight = 16.sp
