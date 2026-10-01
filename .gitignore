@@ -26,7 +26,10 @@ dist/
 id.json
 
 # Temporary scratch & ADB captures
-*.xml
+/*view.xml
+/cw.xml
+/modal.xml
+/dump*.xml
 *.bak
 *.bak2
 tablet_screen*.png

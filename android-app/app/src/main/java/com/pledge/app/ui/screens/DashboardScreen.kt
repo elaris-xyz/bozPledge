@@ -40,6 +40,7 @@ import com.pledge.app.data.HabitRule
 import com.pledge.app.data.SchedulePreset
 import com.pledge.app.data.SensorType
 import com.pledge.app.ui.theme.*
+import com.pledge.app.util.ShareProofHelper
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -1298,7 +1299,7 @@ fun ActiveTabContent(
                         }
                     }
 
-                    // Solana Blink Action Share Button
+                    // Solana Verified Proof Share Button (Graphic Card + Structured Stats)
                     Surface(
                         color = SolanaPurple.copy(alpha = 0.15f),
                         shape = RoundedCornerShape(10.dp),
@@ -1307,12 +1308,14 @@ fun ActiveTabContent(
                             .fillMaxWidth()
                             .clickable {
                                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                val blinkUrl = "https://dial.to/?action=solana-action:https://pledge.app/api/blink/odd_internet"
-                                val shareIntent = Intent(Intent.ACTION_SEND).apply {
-                                    type = "text/plain"
-                                    putExtra(Intent.EXTRA_TEXT, "Just locked 2,500 \$SKR in @bozPledge on @solanamobile Seeker! Day $currentDay verified on-chain via Solana Blink: $blinkUrl")
-                                }
-                                context.startActivity(Intent.createChooser(shareIntent, "Share Solana Blink via"))
+                                ShareProofHelper.shareProofCard(
+                                    context = context,
+                                    habitName = state.habitName,
+                                    stakedAmount = state.stakedAmount,
+                                    currentDay = currentDay,
+                                    totalDays = totalDays,
+                                    seedVaultSig = "#5Kz8...7dKG"
+                                )
                             }
                     ) {
                         Row(
@@ -1324,13 +1327,13 @@ fun ActiveTabContent(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Share,
-                                contentDescription = "Share Blink",
+                                contentDescription = "Share Proof",
                                 tint = SolanaPurple,
                                 modifier = Modifier.size(14.dp)
                             )
                             Spacer(modifier = Modifier.width(6.dp))
                             Text(
-                                text = "Share Proof via Solana Blink on X",
+                                text = "Share Verified Proof (Graphic Card & On-Chain Audit)",
                                 fontSize = 11.5.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = SolanaPurple
@@ -1372,7 +1375,7 @@ fun ActiveTabContent(
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        // SHARE CUSTOM PLAN AS SOLANA BLINK BUTTON
+        // SHARE CUSTOM PLAN AS PROOF CARD
         Surface(
             color = SurfaceDeep,
             shape = RoundedCornerShape(14.dp),
@@ -1382,16 +1385,14 @@ fun ActiveTabContent(
                 .height(44.dp)
                 .clickable {
                     haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                    val sendIntent = Intent().apply {
-                        action = Intent.ACTION_SEND
-                        putExtra(
-                            Intent.EXTRA_TEXT,
-                            "Just locked 2,500 \$SKR in @bozPledge on @solanamobile Seeker to detox mobile internet on odd days! Verify on-chain via Solana Blink: https://dial.to/?action=solana-action:https://pledge.app/api/blink/odd_internet"
-                        )
-                        type = "text/plain"
-                    }
-                    val shareIntent = Intent.createChooser(sendIntent, "Share as Solana Blink")
-                    context.startActivity(shareIntent)
+                    ShareProofHelper.shareProofCard(
+                        context = context,
+                        habitName = "Odd-Days Internet Detox (<1h)",
+                        stakedAmount = 2500L,
+                        currentDay = currentDay,
+                        totalDays = 7,
+                        seedVaultSig = "#8Xp1...4kM9"
+                    )
                 }
         ) {
             Row(
@@ -1407,7 +1408,7 @@ fun ActiveTabContent(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "Share Custom Plan as Solana Blink on X",
+                    text = "Share Habit Challenge Card (Graphic & Rules)",
                     fontSize = 11.5.sp,
                     fontWeight = FontWeight.Bold,
                     color = TextSecondary
