@@ -10,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
 import com.pledge.app.data.CommitmentState
+import com.pledge.app.data.CommitmentStore
 import com.pledge.app.data.HabitRule
 import com.pledge.app.data.HealthConnectManager
 import com.pledge.app.data.SchedulePreset
@@ -62,20 +63,23 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun PledgeAppRoot() {
-        var currentScreen by remember { mutableStateOf(Screen.CONNECT_WALLET) }
         var currentSteps by remember { mutableIntStateOf(8500) }
         var currentInternetMins by remember { mutableIntStateOf(38) }
         var isClockingIn by remember { mutableStateOf(false) }
         var isSettling by remember { mutableStateOf(false) }
         var isDemoMode by remember { mutableStateOf(true) }
         var isConnectingWallet by remember { mutableStateOf(false) }
+        var showNoWalletDialog by remember { mutableStateOf(false) }
+        var walletErrorMessage by remember { mutableStateOf<String?>(null) }
+        var savedWalletAddress by remember { mutableStateOf(solanaManager.connectedPublicKey) }
 
-        // Initial default commitment: Day 0 Fresh Onboarding (User chooses habit & stakes first)
+        // Load persisted commitment or initialize Day 0 Fresh Onboarding
+        val savedCommitment = remember { CommitmentStore.loadCommitment(this@MainActivity) }
         var commitmentState by remember {
             mutableStateOf(
-                CommitmentState(
+                savedCommitment ?: CommitmentState(
                     commitmentId = System.currentTimeMillis(),
-                    authority = "SeekerPledge7xK2",
+                    authority = solanaManager.connectedPublicKey ?: "SeekerPledge7xK2",
                     clockInAuthority = sessionKeyManager.getPublicKeyBase58(),
                     targetSteps = 8000,
                     totalDays = 7,
@@ -99,12 +103,21 @@ class MainActivity : ComponentActivity() {
             )
         }
 
+        // Direct resume: If wallet is already connected AND there is an active pledge, enter Dashboard immediately
+        val initialScreen = remember {
+            if (solanaManager.connectedPublicKey != null && (savedCommitment?.startTimestamp ?: 0L) > 0L) {
+                Screen.DASHBOARD
+            } else {
+                Screen.CONNECT_WALLET
+            }
+        }
+        var currentScreen by remember { mutableStateOf(initialScreen) }
+
         // Live ticker for 30s day window countdown
         LaunchedEffect(commitmentState.startTimestamp, commitmentState.dayDurationSec) {
             while (true) {
                 delay(1000L)
                 if (commitmentState.isActive) {
-                    // Trigger state refresh
                     commitmentState = commitmentState.copy()
                 }
             }
@@ -113,38 +126,75 @@ class MainActivity : ComponentActivity() {
         when (currentScreen) {
             Screen.CONNECT_WALLET -> {
                 ConnectWalletScreen(
+                    savedWalletAddress = savedWalletAddress,
                     onConnectWallet = {
                         lifecycleScope.launch {
                             isConnectingWallet = true
+                            walletErrorMessage = null
                             val res = solanaManager.connectWallet(activityResultSender)
                             isConnectingWallet = false
                             if (res.isSuccess) {
+                                val addr = res.getOrNull()
+                                savedWalletAddress = addr
+                                commitmentState = commitmentState.copy(authority = addr ?: commitmentState.authority)
+                                CommitmentStore.saveCommitment(this@MainActivity, commitmentState)
                                 currentScreen = Screen.DASHBOARD
                                 Toast.makeText(
                                     this@MainActivity,
-                                    "Connected to Devnet: ${solanaManager.connectedPublicKey?.take(4)}...${solanaManager.connectedPublicKey?.takeLast(4)}",
+                                    "کیف‌پول با موفقیت متصل شد: ${addr?.take(4)}...${addr?.takeLast(4)}",
                                     Toast.LENGTH_SHORT
                                 ).show()
                             } else {
-                                Toast.makeText(
-                                    this@MainActivity,
-                                    "MWA not detected. Entering Solana Devnet Sandbox",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                currentScreen = Screen.DASHBOARD
+                                val ex = res.exceptionOrNull()
+                                if (ex is SolanaManager.NoWalletFoundException) {
+                                    showNoWalletDialog = true
+                                } else {
+                                    walletErrorMessage = ex?.message ?: "خطا در اتصال به کیف‌پول"
+                                }
                             }
                         }
                     },
-                    onLaunchDemo = {
-                        isDemoMode = true
+                    onManualAddressSubmit = { address ->
+                        val res = solanaManager.connectManualAddress(address)
+                        if (res.isSuccess) {
+                            val addr = res.getOrNull()
+                            savedWalletAddress = addr
+                            commitmentState = commitmentState.copy(authority = addr ?: commitmentState.authority)
+                            CommitmentStore.saveCommitment(this@MainActivity, commitmentState)
+                            currentScreen = Screen.DASHBOARD
+                            Toast.makeText(
+                                this@MainActivity,
+                                "آدرس عمومی ثبت شد: ${addr?.take(4)}...${addr?.takeLast(4)}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            walletErrorMessage = res.exceptionOrNull()?.message
+                        }
+                    },
+                    onConfirmDevnetKeypair = {
+                        val addr = solanaManager.connectConfirmedTestWallet()
+                        savedWalletAddress = addr
+                        commitmentState = commitmentState.copy(authority = addr)
+                        CommitmentStore.saveCommitment(this@MainActivity, commitmentState)
                         currentScreen = Screen.DASHBOARD
                         Toast.makeText(
                             this@MainActivity,
-                            "Solana Devnet Sandbox Active",
+                            "ورود با حساب Devnet: ${addr.take(8)}...${addr.takeLast(4)}",
                             Toast.LENGTH_SHORT
                         ).show()
                     },
-                    isConnecting = isConnectingWallet
+                    onEnterApp = {
+                        currentScreen = Screen.DASHBOARD
+                    },
+                    onDisconnectWallet = {
+                        solanaManager.clearConnectedWallet()
+                        savedWalletAddress = null
+                        Toast.makeText(this@MainActivity, "اتصال کیف‌پول قطع شد", Toast.LENGTH_SHORT).show()
+                    },
+                    isConnecting = isConnectingWallet,
+                    errorMessage = walletErrorMessage,
+                    showNoWalletDialog = showNoWalletDialog,
+                    onDismissNoWalletDialog = { showNoWalletDialog = false }
                 )
             }
 
@@ -153,7 +203,7 @@ class MainActivity : ComponentActivity() {
                     state = commitmentState,
                     currentSteps = currentSteps,
                     currentInternetMins = currentInternetMins,
-                    walletAddress = solanaManager.connectedPublicKey ?: "Seeker...7xK2",
+                    walletAddress = savedWalletAddress ?: solanaManager.connectedPublicKey ?: "Seeker...7xK2",
                     skrBalance = solanaManager.userSkrBalance,
                     isClockingIn = isClockingIn,
                     isDemoMode = isDemoMode,
@@ -163,14 +213,16 @@ class MainActivity : ComponentActivity() {
                             delay(600) // Fast 1-tap local Ed25519 signature
                             val dayIdx = commitmentState.currentDayIndex
                             val newMask = commitmentState.clockedInBitmap or (1L shl dayIdx)
-                            commitmentState = commitmentState.copy(
+                            val newCommitment = commitmentState.copy(
                                 clockedInBitmap = newMask,
                                 completedDays = commitmentState.completedDays + 1
                             )
+                            commitmentState = newCommitment
+                            CommitmentStore.saveCommitment(this@MainActivity, newCommitment)
                             isClockingIn = false
                             Toast.makeText(
                                 this@MainActivity,
-                                "Verified On-Chain! Day ${dayIdx + 1} Clocked In via Seed Vault",
+                                "ثبت شد! روز ${dayIdx + 1} با امضای انکلاو سخت‌افزاری تایید شد",
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
@@ -179,7 +231,7 @@ class MainActivity : ComponentActivity() {
                         currentScreen = Screen.CREATE_PLEDGE
                     },
                     onSelectPreset = { preset ->
-                        commitmentState = commitmentState.copy(
+                        val newCommitment = commitmentState.copy(
                             rule = preset,
                             totalAmountSKR = when (preset.id) {
                                 "early_6am" -> 5000.0
@@ -193,7 +245,9 @@ class MainActivity : ComponentActivity() {
                             clockedInBitmap = 0L,
                             startTimestamp = System.currentTimeMillis() / 1000L
                         )
-                        Toast.makeText(this@MainActivity, "Activated: ${preset.title}", Toast.LENGTH_SHORT).show()
+                        commitmentState = newCommitment
+                        CommitmentStore.saveCommitment(this@MainActivity, newCommitment)
+                        Toast.makeText(this@MainActivity, "فعال شد: ${preset.title}", Toast.LENGTH_SHORT).show()
                     },
                     onSettle = {
                         currentScreen = Screen.SETTLE
@@ -205,35 +259,38 @@ class MainActivity : ComponentActivity() {
                         currentInternetMins = newMins
                     },
                     onFastForwardDay = {
-                        // Advance timestamp by 1 day
-                        commitmentState = commitmentState.copy(
+                        val newCommitment = commitmentState.copy(
                             startTimestamp = commitmentState.startTimestamp - commitmentState.dayDurationSec
                         )
+                        commitmentState = newCommitment
+                        CommitmentStore.saveCommitment(this@MainActivity, newCommitment)
                     },
                     onConnectWallet = {
-                        lifecycleScope.launch {
-                            val res = solanaManager.connectWallet(activityResultSender)
-                            Toast.makeText(this@MainActivity, "Wallet: ${res.getOrNull()}", Toast.LENGTH_SHORT).show()
-                        }
+                        // Tapping wallet pill opens wallet manager / connection screen
+                        currentScreen = Screen.CONNECT_WALLET
                     },
                     onToggleFreshState = {
                         if (commitmentState.startTimestamp > 0) {
-                            commitmentState = commitmentState.copy(
+                            val resetCommitment = commitmentState.copy(
                                 startTimestamp = 0L,
                                 totalAmountSKR = 0.0,
                                 completedDays = 0,
                                 clockedInBitmap = 0L
                             )
-                            Toast.makeText(this@MainActivity, "Reset to Fresh Day 0 Onboarding", Toast.LENGTH_SHORT).show()
+                            commitmentState = resetCommitment
+                            CommitmentStore.saveCommitment(this@MainActivity, resetCommitment)
+                            Toast.makeText(this@MainActivity, "ریست به تعهد جدید (Day 0)", Toast.LENGTH_SHORT).show()
                         } else {
-                            commitmentState = commitmentState.copy(
+                            val demoCommitment = commitmentState.copy(
                                 startTimestamp = (System.currentTimeMillis() / 1000L) - 30L,
                                 totalAmountSKR = 2500.0,
                                 completedDays = 1,
                                 clockedInBitmap = 0b00001L,
                                 dayDurationSec = 30L
                             )
-                            Toast.makeText(this@MainActivity, "Loaded Active Day 2 Escrow for Judges", Toast.LENGTH_SHORT).show()
+                            commitmentState = demoCommitment
+                            CommitmentStore.saveCommitment(this@MainActivity, demoCommitment)
+                            Toast.makeText(this@MainActivity, "بارگذاری روز ۲ تعهد فعال داوران", Toast.LENGTH_SHORT).show()
                         }
                     }
                 )
@@ -245,13 +302,10 @@ class MainActivity : ComponentActivity() {
                     onBack = { currentScreen = Screen.DASHBOARD },
                     onSubmitCommitment = { totalDays, targetSteps, stakeAmount, demoActive, habitRule ->
                         lifecycleScope.launch {
-                            // Connect wallet if needed
-                            solanaManager.connectWallet(activityResultSender)
-
                             val duration = if (demoActive) 30L else 86400L
-                            commitmentState = CommitmentState(
+                            val newCommitment = CommitmentState(
                                 commitmentId = System.currentTimeMillis(),
-                                authority = solanaManager.connectedPublicKey ?: "Seeker...492b",
+                                authority = savedWalletAddress ?: solanaManager.connectedPublicKey ?: "SeekerUser_Devnet",
                                 clockInAuthority = sessionKeyManager.getPublicKeyBase58(),
                                 targetSteps = targetSteps,
                                 totalDays = totalDays,
@@ -263,11 +317,13 @@ class MainActivity : ComponentActivity() {
                                 clockedInBitmap = 0L,
                                 rule = habitRule
                             )
+                            commitmentState = newCommitment
+                            CommitmentStore.saveCommitment(this@MainActivity, newCommitment)
                             isDemoMode = demoActive
                             currentScreen = Screen.DASHBOARD
                             Toast.makeText(
                                 this@MainActivity,
-                                "Rule Deployed: $stakeAmount \$SKR Staked for ${habitRule.title}!",
+                                "قانون ثبت شد: $stakeAmount \$SKR برای ${habitRule.title}!",
                                 Toast.LENGTH_LONG
                             ).show()
                         }
@@ -283,11 +339,13 @@ class MainActivity : ComponentActivity() {
                         lifecycleScope.launch {
                             isSettling = true
                             delay(800)
-                            commitmentState = commitmentState.copy(settled = true)
+                            val settledCommitment = commitmentState.copy(settled = true)
+                            commitmentState = settledCommitment
+                            CommitmentStore.saveCommitment(this@MainActivity, settledCommitment)
                             isSettling = false
                             Toast.makeText(
                                 this@MainActivity,
-                                "Settled: ${commitmentState.refundAmountSKR.toInt()} \$SKR Refunded, ${commitmentState.burnAmountSKR.toInt()} \$SKR Burned!",
+                                "تسویه شد: ${settledCommitment.refundAmountSKR.toInt()} \$SKR بازگشت، ${settledCommitment.burnAmountSKR.toInt()} \$SKR سوزانده شد!",
                                 Toast.LENGTH_LONG
                             ).show()
                         }

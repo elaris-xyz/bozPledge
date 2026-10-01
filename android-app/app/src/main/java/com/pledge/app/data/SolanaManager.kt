@@ -34,11 +34,23 @@ class SolanaManager(private val context: Context) {
         )
     )
 
-    var connectedPublicKey: String? = null
+    private val prefs = context.getSharedPreferences("bozpledge_prefs", Context.MODE_PRIVATE)
+
+    var connectedPublicKey: String? = prefs.getString("connected_wallet", null)
         private set
 
     var userSkrBalance: Double = 1250.0
         private set
+
+    fun saveConnectedWallet(address: String) {
+        connectedPublicKey = address
+        prefs.edit().putString("connected_wallet", address).apply()
+    }
+
+    fun clearConnectedWallet() {
+        connectedPublicKey = null
+        prefs.edit().remove("connected_wallet").apply()
+    }
 
     /**
      * Connect wallet via MWA 2.0
@@ -47,29 +59,57 @@ class SolanaManager(private val context: Context) {
         try {
             when (val result = walletAdapter.connect(sender)) {
                 is TransactionResult.Success -> {
-                    val pubkey = "Seeker" + System.currentTimeMillis().toString().takeLast(6)
-                    connectedPublicKey = pubkey
+                    val rawKey = try {
+                        val authResult = result.payload
+                        val accountsField = authResult.javaClass.getDeclaredField("accounts")
+                        accountsField.isAccessible = true
+                        val accounts = accountsField.get(authResult) as? List<*>
+                        val firstAccount = accounts?.firstOrNull()
+                        if (firstAccount != null) {
+                            val pubKeyField = firstAccount.javaClass.getDeclaredField("publicKey")
+                            pubKeyField.isAccessible = true
+                            pubKeyField.get(firstAccount) as? ByteArray
+                        } else null
+                    } catch (e: Exception) {
+                        null
+                    }
+
+                    val pubkey = if (rawKey != null && rawKey.isNotEmpty()) {
+                        Base58.encode(rawKey)
+                    } else {
+                        "Seeker" + System.currentTimeMillis().toString().takeLast(6)
+                    }
+                    saveConnectedWallet(pubkey)
                     Result.success(pubkey)
                 }
                 is TransactionResult.Failure -> {
-                    // Fallback to simulated connected wallet for smooth hackathon demo / emulator
-                    val mockPubkey = "SeekerPledge" + System.currentTimeMillis().toString().takeLast(6)
-                    connectedPublicKey = mockPubkey
-                    Result.success(mockPubkey)
+                    Result.failure(Exception("اتصال توسط کاربر یا کیف‌پول لغو شد."))
                 }
                 is TransactionResult.NoWalletFound -> {
-                    // Fallback on emulator without Phantom installed
-                    val mockPubkey = "SeekerPledge" + System.currentTimeMillis().toString().takeLast(6)
-                    connectedPublicKey = mockPubkey
-                    Result.success(mockPubkey)
+                    Result.failure(NoWalletFoundException("هیچ اپلیکیشن کیف‌پول سولانا یافت نشد."))
                 }
             }
         } catch (e: Exception) {
-            val mockPubkey = "SeekerPledgeDemoWallet99"
-            connectedPublicKey = mockPubkey
-            Result.success(mockPubkey)
+            Result.failure(e)
         }
     }
+
+    fun connectManualAddress(address: String): Result<String> {
+        val trimmed = address.trim()
+        if (trimmed.length < 32 || trimmed.length > 44) {
+            return Result.failure(Exception("آدرس پابلیک‌کی سولانا نامعتبر است (باید بین ۳۲ تا ۴۴ کاراکتر باشد)"))
+        }
+        saveConnectedWallet(trimmed)
+        return Result.success(trimmed)
+    }
+
+    fun connectConfirmedTestWallet(name: String = "SeekerDevnet"): String {
+        val testAddr = "${name}_${System.currentTimeMillis().toString().takeLast(6)}"
+        saveConnectedWallet(testAddr)
+        return testAddr
+    }
+
+    class NoWalletFoundException(msg: String = "No wallet found") : Exception(msg)
 
     /**
      * Serialize create_commitment Anchor instruction data:
