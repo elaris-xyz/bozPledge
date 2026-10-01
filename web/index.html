@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>bozPledge | Sovereign Habit & Proof-of-Action Protocol on Solana Mobile</title>
+  <meta name="description" content="Sovereign physical habit commitment protocol on Solana Mobile. Daily physical hardware telemetry, Seed Vault MWA 2.0, and zero-profit deflationary slashing.">
+  <meta name="keywords" content="Solana, Solana Mobile, Seeker, Hackathon, Anchor, Rust, Seed Vault, Jetpack Compose, Kotlin, Health Connect">
+  <meta property="og:title" content="bozPledge | Proof-of-Discipline on Solana Mobile">
+  <meta property="og:description" content="Stake $SKR. Clock in daily through real device hardware sensors. Failures permanently burn tokens on-chain.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://github.com/elaris-xyz/bozPledge">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar" id="navbar">
+    <a href="#" class="nav-brand">
+      <div class="brand-icon">⚡</div>
+      <span>bozPLEDGE</span>
+      <span class="brand-badge">Devnet Live</span>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="#showcase" class="nav-link">Live App</a></li>
+      <li><a href="#pillars" class="nav-link">Architecture</a></li>
+      <li><a href="#slashing" class="nav-link">Game Theory</a></li>
+      <li><a href="#contract" class="nav-link">Anchor Contract</a></li>
+      <li><a href="#judges" class="nav-link">Judge Lab</a></li>
+      <li><a href="#download" class="nav-link">Download</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <a href="https://github.com/elaris-xyz/bozPledge" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" id="navGithubBtn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        <span>GitHub</span>
+      </a>
+      <a href="#download" class="btn btn-primary btn-glow" id="navDownloadBtn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span>Get APK</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero-section">
+    <div class="container">
+      <div class="pill-badge">
+        <span class="pill-dot"></span>
+        <span>Solana Mobile Hackathon: CLOCK IN (Fall 2026)</span>
+      </div>
+
+      <h1 class="hero-title">
+        Proof-of-Discipline on <span class="solana-gradient-text">Solana Mobile</span>.
+      </h1>
+
+      <p class="hero-desc">
+        Stake your conviction in <strong>$SKR</strong>. Clock in daily through raw on-device hardware telemetry. If you fail, <strong>nobody profits</strong> — your forfeited tokens are permanently burned on-chain.
+      </p>
+
+      <div class="hero-ctas">
+        <a href="#download" class="btn btn-primary btn-glow" style="padding: 0.9rem 2rem; font-size: 1.05rem;" id="heroDownloadBtn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span>Download Android APK (v1.0.0)</span>
+        </a>
+
+        <a href="https://github.com/elaris-xyz/bozPledge" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="padding: 0.9rem 1.8rem; font-size: 1.05rem;" id="heroGithubBtn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          <span>Star on GitHub</span>
+        </a>
+
+        <a href="https://explorer.solana.com/address/PLEDGE1111111111111111111111111111111111111?cluster=devnet" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="padding: 0.9rem 1.8rem; font-size: 1.05rem;" id="heroExplorerBtn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <span>Devnet Explorer</span>
+        </a>
+      </div>
+
+      <!-- Quick Metrics Strip -->
+      <div class="stats-bar">
+        <div class="stat-item">
+          <div class="stat-label">Smart Escrow</div>
+          <div class="stat-value">100% PDA</div>
+          <div class="stat-sub">Non-Custodial Anchor Program</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Slashing Penalty</div>
+          <div class="stat-value">Permanent Burn</div>
+          <div class="stat-sub">SPL token::burn instruction</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Signing Speed</div>
+          <div class="stat-value">&lt; 400ms</div>
+          <div class="stat-sub">Android Keystore Ed25519</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Target Hardware</div>
+          <div class="stat-value">Seeker / Tab S7+</div>
+          <div class="stat-sub">Samsung Galaxy Sensor Verified</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Interactive Device Showcase -->
+  <section id="showcase">
+    <div class="container">
+      <div class="showcase-wrapper">
+        <div class="showcase-header">
+          <div class="showcase-title-area">
+            <h2 class="showcase-title">Interactive Tablet Device Showcase</h2>
+            <p class="showcase-sub">Inspected live on Samsung Galaxy Tab S7+ hardware in OLED Pitch Black mode</p>
+          </div>
+
+          <div class="screen-tabs" id="screenTabs">
+            <button class="screen-tab active" data-screen="onboarding">1. Onboarding</button>
+            <button class="screen-tab" data-screen="modal">2. Judge Keypair</button>
+            <button class="screen-tab" data-screen="dashboard">3. Telemetry Dash</button>
+            <button class="screen-tab" data-screen="clockin">4. Clock-In (Pass)</button>
+            <button class="screen-tab" data-screen="judgelab">5. Judge Lab</button>
+            <button class="screen-tab" data-screen="catalog">6. Habit Catalog</button>
+            <button class="screen-tab" data-screen="ranks">7. Leaderboard</button>
+            <button class="screen-tab" data-screen="vault">8. Vault & cNFTs</button>
+          </div>
+        </div>
+
+        <div class="device-presentation">
+          <div class="device-frame">
+            <img id="deviceScreenImg" src="assets/screen_onboarding.png" alt="bozPledge Onboarding Screen" class="device-screen-img">
+          </div>
+
+          <div class="device-meta-panel">
+            <div class="meta-badge" id="metaBadge">Solana Mobile Stack</div>
+            <h3 class="meta-title" id="metaTitle">Dual Judge & MWA 2.0 Onboarding</h3>
+            <p class="meta-desc" id="metaDesc">
+              Designed specifically for hackathon evaluation and production Seeker devices. Judges can launch an instant pre-funded Devnet Ed25519 keypair in 1 tap, or connect any MWA 2.0 wallet (Seed Vault, Phantom, Solflare).
+            </p>
+
+            <ul class="meta-specs" id="metaSpecs">
+              <li><span>Protocol:</span> <strong>Mobile Wallet Adapter 2.0</strong></li>
+              <li><span>Network:</span> <strong>Solana Devnet</strong></li>
+              <li><span>Judge Bypass:</span> <strong>Instant Devnet Keypair</strong></li>
+              <li><span>Security:</span> <strong>Hardware Protected Enclave</strong></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 Innovation Pillars -->
+  <section id="pillars">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Core Technical Pillars</div>
+        <h2 class="section-title">The Phone is the Sovereign Oracle</h2>
+        <p class="section-sub">
+          Eliminating centralized oracles, web APIs, and human cheat vectors through on-device hardware telemetry and Solana smart contracts.
+        </p>
+      </div>
+
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon-box">📱</div>
+          <h3>Hardware Telemetry Oracle</h3>
+          <p>
+            Steps and physical exertion are read directly from Android <code>SensorManager</code> and <code>Health Connect</code> hardware pedometers. Digital detox habits sample Linux socket metrics via <code>NetworkStatsManager</code>. No web servers in between.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-box">🔐</div>
+          <h3>Seed Vault & MWA 2.0</h3>
+          <p>
+            Production integration with Solana Mobile Wallet Adapter 2.0 and Seed Vault. Private keys never leave the secure hardware enclave. User commitments and stake deposits are signed with biometric authorization.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-box">🔥</div>
+          <h3>Zero-Profit Slashing</h3>
+          <p>
+            When a user forfeits a day, <strong>nobody profits</strong>. There are no developer fees taken from discipline failure. Forfeited tokens are directly sent to <code>spl_token::instruction::burn</code>, permanently contracting circulating supply.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-box">⚡</div>
+          <h3>Ephemeral Session Keys</h3>
+          <p>
+            Daily clock-in should be a sub-second ritual, not an obstacle course of repetitive wallet dialogs. An isolated Ed25519 session key stored in Android Keystore authorizes daily progress in under 400 milliseconds.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-box">🐐</div>
+          <h3>The Boz Philosophy</h3>
+          <p>
+            Inspired by the legendary Mountain Goat (Boz) of rugged alpine peaks. Sure-footed balance, unyielding stamina, and zero excuses. bozPledge converts ephemeral motivation into immutable blockchain reality.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-box">🎖️</div>
+          <h3>Soulbound Proof-of-Action cNFTs</h3>
+          <p>
+            Successful streaks mint compressed NFTs (cNFTs) via Bubblegum into the user's wallet. Non-transferable on-chain proof of physical endurance, verifiable by DAOs and Web3 communities.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Slashing Simulator -->
+  <section id="slashing">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Game Theory & Tokenomics</div>
+        <h2 class="section-title">Zero-Profit Slashing Simulator</h2>
+        <p class="section-sub">
+          See the exact mathematical formula implemented in the Anchor Smart Contract:
+          <code>refund = (completed_days / total_days) * stake</code>.
+        </p>
+      </div>
+
+      <div class="calc-wrapper">
+        <div class="calc-inputs">
+          <div class="calc-group">
+            <label for="stakeRange">Staked Capital: <span id="stakeDisplay">1,000 $SKR</span></label>
+            <input type="range" min="100" max="10000" step="100" value="1000" class="range-slider" id="stakeRange">
+          </div>
+
+          <div class="calc-group">
+            <label for="daysRange">Completed Days: <span id="daysDisplay">5 of 7 Days</span></label>
+            <input type="range" min="0" max="7" step="1" value="5" class="range-slider" id="daysRange">
+          </div>
+
+          <div style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">
+            * In bozPledge, forfeited days are burned permanently on-chain. The protocol team takes <strong>0.00%</strong>. Game-theoretic accountability creates natural deflation for all $SKR holders.
+          </div>
+        </div>
+
+        <div class="calc-results">
+          <div class="result-row">
+            <div>
+              <div style="font-weight: 700; font-size: 0.95rem;">Returned to User</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted);" id="resRefundPct">(71% refunded to wallet)</div>
+            </div>
+            <div class="result-val val-green" id="resRefund">714.29 $SKR</div>
+          </div>
+
+          <div class="result-row">
+            <div>
+              <div style="font-weight: 700; font-size: 0.95rem;">Permanently Burned</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted);" id="resBurnPct">(29% burned via SPL Token burn)</div>
+            </div>
+            <div class="result-val val-red" id="resBurn">285.71 $SKR</div>
+          </div>
+
+          <div class="result-row">
+            <div>
+              <div style="font-weight: 700; font-size: 0.95rem;">Developer / Protocol Fee</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted);">Zero rent-seeking</div>
+            </div>
+            <div class="result-val val-zero">0.00 $SKR</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Smart Contract Section -->
+  <section id="contract">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Anchor Smart Contract</div>
+        <h2 class="section-title">Verified on Solana Devnet</h2>
+        <p class="section-sub">
+          Deployed with Program-Derived Address (PDA) escrow vaults and permissionless settlement.
+        </p>
+      </div>
+
+      <div class="contract-box">
+        <div class="contract-info">
+          <div class="contract-pill">
+            <span class="pill-dot"></span>
+            <span>Solana Devnet Program</span>
+          </div>
+          <div style="font-size: 1.1rem; font-weight: 800;">Anchor Program ID</div>
+          <div class="contract-code-row">
+            <span class="contract-code" id="programIdText">PLEDGE1111111111111111111111111111111111111</span>
+            <button class="btn-copy" onclick="copyToClipboard('PLEDGE1111111111111111111111111111111111111', this)">Copy ID</button>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+          <a href="https://explorer.solana.com/address/PLEDGE1111111111111111111111111111111111111?cluster=devnet" target="_blank" rel="noopener noreferrer" class="btn btn-primary" id="contractExplorerBtn">
+            <span>Open in Solana Explorer ↗</span>
+          </a>
+          <a href="https://github.com/elaris-xyz/bozPledge/tree/main/anchor-program" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" id="contractSourceBtn">
+            <span>View Rust Source Code ↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Hackathon Judge Walkthrough -->
+  <section id="judges">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Hackathon Evaluation</div>
+        <h2 class="section-title">60-Second Judge Walkthrough</h2>
+        <p class="section-sub">
+          We built an integrated <strong>Judge Evaluation Lab</strong> directly into the Android app so evaluators can test a complete multi-day cycle in under 1 minute.
+        </p>
+      </div>
+
+      <div class="judge-steps">
+        <div class="judge-step-card">
+          <div class="step-num">01</div>
+          <h4>Launch with 1-Click Keypair</h4>
+          <p>
+            Open the app and tap <strong>"Instant Judge Devnet Keypair"</strong>. Confirm the dialog to spawn a pre-funded Ed25519 keypair loaded with 2,500 $SKR on Devnet.
+          </p>
+        </div>
+
+        <div class="judge-step-card">
+          <div class="step-num">02</div>
+          <h4>Clock In Today (Day 1)</h4>
+          <p>
+            Tap the large circular <strong>"CLOCK IN"</strong> button. The app signs instantly with the local session key, verifying Day 1 with a green checkmark and haptic feedback.
+          </p>
+        </div>
+
+        <div class="judge-step-card">
+          <div class="step-num">03</div>
+          <h4>Open Judge Lab Sheet</h4>
+          <p>
+            Tap the <strong>"Judge Lab"</strong> pill in the top bar. Choose <em>"Trigger Slashing Breach (Missed Day)"</em> or <em>"Advance Time Machine (+1 Day)"</em> to simulate Day 2.
+          </p>
+        </div>
+
+        <div class="judge-step-card">
+          <div class="step-num">04</div>
+          <h4>Verify On-Chain Settle</h4>
+          <p>
+            Navigate to the <strong>Vault</strong> tab to inspect the remaining locked escrow and tap <em>"Solscan / Explorer"</em> to audit the real-time burning transaction.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Download APK Section -->
+  <section id="download">
+    <div class="container">
+      <div class="download-card">
+        <div class="pill-badge" style="background: rgba(0, 255, 163, 0.1);">
+          <span>Ready for Installation</span>
+        </div>
+
+        <h2 class="section-title" style="margin-bottom: 1.25rem;">
+          Download bozPledge APK
+        </h2>
+
+        <p class="hero-desc" style="margin-bottom: 2rem;">
+          Compile-tested on Android 10+ (arm64-v8a) and validated on physical <strong>Samsung Galaxy Tab S7+</strong> and <strong>Solana Seeker</strong>.
+        </p>
+
+        <div style="display: flex; justify-content: center; gap: 1.25rem; flex-wrap: wrap;">
+          <a href="downloads/bozPledge-v1.0.0-debug.apk" download="bozPledge-v1.0.0-debug.apk" class="btn btn-primary btn-glow" style="padding: 1rem 2.5rem; font-size: 1.15rem;" id="downloadApkDirect">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>Download bozPledge APK (v1.0.0)</span>
+          </a>
+
+          <a href="https://github.com/elaris-xyz/bozPledge/releases" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="padding: 1rem 2rem; font-size: 1.15rem;" id="downloadGithubReleases">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            <span>GitHub Releases</span>
+          </a>
+        </div>
+
+        <div class="download-badges">
+          <div class="download-badge">
+            <span>Size:</span> <strong>23.5 MB</strong>
+          </div>
+          <div class="download-badge">
+            <span>Format:</span> <strong>Signed Debug APK</strong>
+          </div>
+          <div class="download-badge">
+            <span>Network:</span> <strong>Solana Devnet</strong>
+          </div>
+          <div class="download-badge">
+            <span>Requirement:</span> <strong>Android 10+</strong>
+          </div>
+        </div>
+
+        <!-- Quick ADB command box -->
+        <div style="margin-top: 2rem; display: inline-flex; align-items: center; gap: 0.75rem; background: rgba(0,0,0,0.6); padding: 0.6rem 1.2rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); font-family: var(--font-mono); font-size: 0.85rem;">
+          <span style="color: var(--text-muted);">$</span>
+          <span>adb install -r bozPledge-v1.0.0-debug.apk</span>
+          <button class="btn-copy" onclick="copyToClipboard('adb install -r bozPledge-v1.0.0-debug.apk', this)">Copy</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="nav-brand">
+          <div class="brand-icon">⚡</div>
+          <span>bozPLEDGE</span>
+        </div>
+
+        <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+          <a href="https://github.com/elaris-xyz/bozPledge" target="_blank" rel="noopener noreferrer" class="nav-link">GitHub Repository</a>
+          <a href="https://github.com/elaris-xyz/bozPledge/blob/main/README.md" target="_blank" rel="noopener noreferrer" class="nav-link">Documentation</a>
+          <a href="https://explorer.solana.com/address/PLEDGE1111111111111111111111111111111111111?cluster=devnet" target="_blank" rel="noopener noreferrer" class="nav-link">Devnet Explorer</a>
+          <a href="downloads/bozPledge-v1.0.0-debug.apk" class="nav-link">Download APK</a>
+        </div>
+      </div>
+
+      <div class="footer-copy">
+        Submitted to the <strong>Third Solana Mobile Hackathon: CLOCK IN (Fall 2026)</strong> • Open Source under MIT License • Built by Elaris XYZ
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
