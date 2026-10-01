@@ -29,7 +29,7 @@ class SolanaManager(private val context: Context) {
     private val walletAdapter = MobileWalletAdapter(
         connectionIdentity = ConnectionIdentity(
             identityUri = Uri.parse("https://pledge.app"),
-            iconUri = Uri.parse("https://pledge.app/icon.png"),
+            iconUri = Uri.parse("icon.png"),
             identityName = "bozPledge"
         )
     )
