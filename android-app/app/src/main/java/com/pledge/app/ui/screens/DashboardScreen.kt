@@ -3519,6 +3519,7 @@ fun JudgeModalBottomSheet(
             }
 
             // Section 4: Solana Devnet Program & Explorer Verification
+            val context = androidx.compose.ui.platform.LocalContext.current
             Surface(
                 color = Color(0xFF0D0F1C),
                 shape = RoundedCornerShape(12.dp),
