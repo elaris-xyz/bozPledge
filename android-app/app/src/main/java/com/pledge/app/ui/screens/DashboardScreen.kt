@@ -3518,6 +3518,57 @@ fun JudgeModalBottomSheet(
                 }
             }
 
+            // Section 4: Solana Devnet Program & Explorer Verification
+            Surface(
+                color = Color(0xFF0D0F1C),
+                shape = RoundedCornerShape(12.dp),
+                border = androidx.compose.foundation.BorderStroke(0.5.dp, SolanaElectricCyan.copy(alpha = 0.35f)),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        val intent = Intent(
+                            Intent.ACTION_VIEW,
+                            android.net.Uri.parse("https://explorer.solana.com/address/PLEDGE1111111111111111111111111111111111111?cluster=devnet")
+                        )
+                        context.startActivity(intent)
+                    }
+            ) {
+                Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "ANCHOR PROGRAM ON DEVNET",
+                            fontSize = 10.5.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = SolanaElectricCyan,
+                            letterSpacing = 0.5.sp
+                        )
+                        Text(
+                            text = "EXPLORER ↗",
+                            fontSize = 9.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = SolanaNeonMint
+                        )
+                    }
+                    Text(
+                        text = "PLEDGE1111111111111111111111111111111111111",
+                        fontFamily = FontFamily.Monospace,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                    Text(
+                        text = "Escrow Vault PDA: [b\"vault\", commitment.key()]",
+                        fontFamily = FontFamily.Monospace,
+                        fontSize = 10.sp,
+                        color = TextSecondary
+                    )
+                }
+            }
+
             Button(
                 onClick = onDismiss,
                 colors = ButtonDefaults.buttonColors(containerColor = SurfaceElevated),

@@ -52,5 +52,6 @@ val GlowPurpleAmbient = Color(0x229945FF)
 // Apple Typography Hierarchy Colors
 val TextPrimary = Color(0xFFFFFFFF)
 val TextSecondary = Color(0xFF8E8E93)
+val TextTertiary = Color(0xFF636366)
 val TextMuted = Color(0xFF636366)
 
