@@ -730,7 +730,7 @@ fun ActiveTabContent(
         Surface(
             color = SurfaceCard,
             shape = RoundedCornerShape(12.dp),
-            border = androidx.compose.foundation.BorderStroke(0.5.dp, SolanaTeal.copy(alpha = 0.35f)),
+            border = androidx.compose.foundation.BorderStroke(0.5.dp, if (isDemoMode) SolanaTeal.copy(alpha = 0.35f) else AppleGreen.copy(alpha = 0.25f)),
             modifier = Modifier.fillMaxWidth()
         ) {
             Row(
@@ -747,18 +747,18 @@ fun ActiveTabContent(
                         modifier = Modifier
                             .size(7.dp)
                             .clip(CircleShape)
-                            .background(SolanaTeal)
+                            .background(if (isDemoMode) SolanaTeal else AppleGreen)
                     )
                     Column {
                         Text(
-                            text = "HACKATHON EVALUATION SANDBOX",
+                            text = if (isDemoMode) "HACKATHON EVALUATION SANDBOX" else "HARDWARE ORACLE ESCROW ACTIVE",
                             fontSize = 9.5.sp,
                             fontWeight = FontWeight.ExtraBold,
-                            color = SolanaTeal,
+                            color = if (isDemoMode) SolanaTeal else AppleGreen,
                             letterSpacing = 0.6.sp
                         )
                         Text(
-                            text = "Day 2 of 7 active escrow pre-loaded with live hardware telemetry.",
+                            text = if (isDemoMode) "Day $currentDay of $totalDays escrow • Judge simulation enabled" else "Day $currentDay of $totalDays • Real hardware sensor attestation active",
                             fontSize = 11.sp,
                             color = TextSecondary
                         )
@@ -1042,13 +1042,15 @@ fun ActiveTabContent(
         // Hero Habit Commitment Card with Circular Neon Ring Meter
         HabitCommitmentHeroCard(
             ruleTitle = state.rule.title,
-            streakDays = 14,
+            streakDays = state.completedDays,
             currentVal = currentVal,
             limitVal = limitVal,
             unit = state.rule.unit,
             progressPercent = progressPercent,
             stakedSKR = state.totalAmountSKR,
-            timeRemainingStr = countdownStr
+            timeRemainingStr = countdownStr,
+            isGoalAchieved = canClockIn,
+            isAlreadyClockedIn = isAlreadyClockedInToday
         )
 
         Spacer(modifier = Modifier.height(14.dp))

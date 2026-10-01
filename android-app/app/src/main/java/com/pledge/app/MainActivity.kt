@@ -295,9 +295,40 @@ class MainActivity : ComponentActivity() {
                         currentScreen = Screen.CONNECT_WALLET
                     },
                     onToggleFreshState = {
-                        isJudgeMode = !isJudgeMode
-                        val msg = if (isJudgeMode) "Judge Sandbox: Active" else "Hardware Oracle Mode: Active"
-                        Toast.makeText(this@MainActivity, msg, Toast.LENGTH_SHORT).show()
+                        if (commitmentState.startTimestamp == 0L) {
+                            isJudgeMode = true
+                            val now = System.currentTimeMillis() / 1000L
+                            val simCommitment = CommitmentState(
+                                commitmentId = System.currentTimeMillis(),
+                                authority = solanaManager.connectedPublicKey ?: "Seeker...7xK2",
+                                clockInAuthority = sessionKeyManager.getPublicKeyBase58(),
+                                targetSteps = 10000,
+                                totalDays = 7,
+                                completedDays = 1,
+                                dayDurationSec = 86400L,
+                                startTimestamp = now - 86400L,
+                                totalAmountSKR = 2500.0,
+                                settled = false,
+                                clockedInBitmap = 1L,
+                                rule = HabitRule(
+                                    id = "steps_10k",
+                                    title = "10,000 Steps Daily",
+                                    sensorType = SensorType.HEALTH_STEPS,
+                                    schedulePreset = SchedulePreset.DAILY,
+                                    activeDaysOfWeek = (1..7).toSet(),
+                                    thresholdLimit = 10000.0,
+                                    unit = "steps",
+                                    isLimitCeiling = false
+                                )
+                            )
+                            commitmentState = simCommitment
+                            CommitmentStore.saveCommitment(this@MainActivity, simCommitment)
+                            Toast.makeText(this@MainActivity, "Judge Sandbox: Day 2 Simulation Loaded!", Toast.LENGTH_SHORT).show()
+                        } else {
+                            isJudgeMode = !isJudgeMode
+                            val msg = if (isJudgeMode) "Judge Sandbox: Active" else "Hardware Oracle Mode: Active"
+                            Toast.makeText(this@MainActivity, msg, Toast.LENGTH_SHORT).show()
+                        }
                     }
                 )
             }

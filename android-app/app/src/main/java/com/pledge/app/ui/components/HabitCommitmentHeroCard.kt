@@ -32,13 +32,15 @@ import com.pledge.app.ui.theme.*
 @Composable
 fun HabitCommitmentHeroCard(
     ruleTitle: String,
-    streakDays: Int = 14,
+    streakDays: Int = 0,
     currentVal: Int,
     limitVal: Int,
     unit: String,
     progressPercent: Int,
     stakedSKR: Double,
     timeRemainingStr: String,
+    isGoalAchieved: Boolean = false,
+    isAlreadyClockedIn: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     val configuration = LocalConfiguration.current
@@ -221,15 +223,20 @@ fun HabitCommitmentHeroCard(
                                 border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
                                 modifier = Modifier.fillMaxWidth()
                             ) {
+                                val (statusTitle, statusColor, statusDesc) = when {
+                                    isAlreadyClockedIn -> Triple("✓ Daily Sensor Proof Certified on Solana", SolanaNeonMint, "Seed Vault Enclave • SHA-256 Hardware Attestation Anchored")
+                                    isGoalAchieved -> Triple("✓ Daily Sensor Goal Achieved • Proof Ready", SolanaNeonMint, "Seed Vault Enclave • Ready to Sign Milestone")
+                                    else -> Triple("⏳ Telemetry In-Progress • Goal Pending", AppleOrange, "$currentVal / $limitVal $unit tracked by Samsung Galaxy hardware")
+                                }
                                 Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                                     Text(
-                                        text = "✓ Daily Sensor Goal Achieved • Proof Ready",
+                                        text = statusTitle,
                                         fontSize = 11.5.sp,
                                         fontWeight = FontWeight.Bold,
-                                        color = SolanaNeonMint
+                                        color = statusColor
                                     )
                                     Text(
-                                        text = "Seed Vault Enclave • SHA-256 Hardware Attestation",
+                                        text = statusDesc,
                                         fontSize = 10.sp,
                                         color = TextSecondary
                                     )
@@ -346,6 +353,35 @@ fun HabitCommitmentHeroCard(
                                 fontWeight = FontWeight.Bold,
                                 color = SolanaNeonMint,
                                 fontFamily = FontFamily.Monospace
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    // Mobile Telemetry Box
+                    Surface(
+                        color = Color(0xFF141724),
+                        shape = RoundedCornerShape(12.dp),
+                        border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        val (statusTitle, statusColor, statusDesc) = when {
+                            isAlreadyClockedIn -> Triple("✓ Daily Sensor Proof Certified on Solana", SolanaNeonMint, "Seed Vault Enclave • SHA-256 Hardware Attestation Anchored")
+                            isGoalAchieved -> Triple("✓ Daily Sensor Goal Achieved • Proof Ready", SolanaNeonMint, "Seed Vault Enclave • Ready to Sign Milestone")
+                            else -> Triple("⏳ Telemetry In-Progress • Goal Pending", AppleOrange, "$currentVal / $limitVal $unit tracked by Samsung Galaxy hardware")
+                        }
+                        Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                            Text(
+                                text = statusTitle,
+                                fontSize = 11.5.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = statusColor
+                            )
+                            Text(
+                                text = statusDesc,
+                                fontSize = 10.sp,
+                                color = TextSecondary
                             )
                         }
                     }
