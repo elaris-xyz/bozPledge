@@ -1,0 +1,70 @@
+name: Deploy Anchor Program to Solana Devnet
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'anchor-program/**'
+      - '.github/workflows/deploy-anchor.yml'
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Build & Deploy Anchor Program
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: 1.79.0
+
+      - name: Install Linux Build Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pkg-config build-essential libudev-dev libssl-dev
+
+      - name: Install Solana CLI v1.18.26
+        run: |
+          sh -c "$(curl -sSfL https://release.anza.xyz/v1.18.26/install)"
+          echo "$HOME/.local/share/solana/install/active_release/bin" >> $GITHUB_PATH
+          export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
+          solana --version
+          cargo-build-sbf --version
+
+      - name: Configure Solana Devnet & Wallet
+        run: |
+          export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
+          solana config set --url https://api.devnet.solana.com
+          mkdir -p ~/.config/solana
+          cp anchor-program/deploy/deployer-keypair.json ~/.config/solana/id.json
+          echo "Deployer Wallet Address:"
+          solana address
+          echo "Devnet SOL Balance:"
+          solana balance
+
+      - name: Build Anchor SBF Program Binary
+        run: |
+          export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
+          cd anchor-program
+          cargo-build-sbf --manifest-path programs/pledge/Cargo.toml
+          ls -lh target/deploy/
+
+      - name: Deploy to Solana Devnet
+        run: |
+          export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
+          echo "Deploying program to Solana Devnet..."
+          solana program deploy \
+            --program-id anchor-program/deploy/pledge-keypair.json \
+            anchor-program/target/deploy/pledge.so \
+            --url https://api.devnet.solana.com
+
+      - name: Verify Live Deployment on Devnet
+        run: |
+          export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
+          echo "Verifying Program on Devnet..."
+          solana program show 68c1eNdHAfNWJhCWhtqumiqzYyFcDNLkfgwKwdFwFRcd --url https://api.devnet.solana.com

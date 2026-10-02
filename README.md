@@ -2,7 +2,7 @@
 ### Sovereign Physical Habit & Proof-of-Action Protocol on Solana Mobile
 **Third Solana Mobile Hackathon: CLOCK IN (Fall 2026)**  
 **Official Repository:** [https://github.com/elaris-xyz/bozPledge](https://github.com/elaris-xyz/bozPledge)  
-**Smart Contract (Devnet):** [`PLEDGE1111111111111111111111111111111111111`](https://explorer.solana.com/address/PLEDGE1111111111111111111111111111111111111?cluster=devnet)  
+**Smart Contract (Devnet):** [`68c1eNdHAfNWJhCWhtqumiqzYyFcDNLkfgwKwdFwFRcd`](https://explorer.solana.com/address/68c1eNdHAfNWJhCWhtqumiqzYyFcDNLkfgwKwdFwFRcd?cluster=devnet)  
 **Target Hardware:** Solana Seeker & Android Devices (Tested live on Samsung Galaxy Tab S7+)
 
 ---
@@ -99,7 +99,7 @@ graph TD
 ## 🔬 Core Components & Implementation
 
 ### 1. Smart Contract (Anchor / Rust)
-* **Program ID:** [`PLEDGE1111111111111111111111111111111111111`](https://explorer.solana.com/address/PLEDGE1111111111111111111111111111111111111?cluster=devnet)
+* **Program ID:** [`68c1eNdHAfNWJhCWhtqumiqzYyFcDNLkfgwKwdFwFRcd`](https://explorer.solana.com/address/68c1eNdHAfNWJhCWhtqumiqzYyFcDNLkfgwKwdFwFRcd?cluster=devnet)
 * **Location:** [`/anchor-program`](./anchor-program)
 * **Key State Accounts:**
   * `Commitment`: PDA derived with seeds `[b"commitment", user.key(), commitment_id.to_le_bytes()]`. Records target metrics, total epoch duration (e.g., 7 days), completed day bitmap, and authorized session key.

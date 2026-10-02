@@ -41,7 +41,7 @@ class SolanaManager(private val context: Context) {
 
     companion object {
         const val RPC_URL = "https://api.devnet.solana.com"
-        const val PROGRAM_ID = "PLEDGE1111111111111111111111111111111111111"
+        const val PROGRAM_ID = "68c1eNdHAfNWJhCWhtqumiqzYyFcDNLkfgwKwdFwFRcd"
         const val SKR_DEVNET_MINT = "SKRmock111111111111111111111111111111111111"
         const val EXPLORER_PROGRAM_URL = "https://explorer.solana.com/address/$PROGRAM_ID?cluster=devnet"
     }

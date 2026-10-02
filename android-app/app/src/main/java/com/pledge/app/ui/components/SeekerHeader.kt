@@ -216,7 +216,7 @@ fun SeekerHeader(
                 .clickable {
                     val intent = android.content.Intent(
                         android.content.Intent.ACTION_VIEW,
-                        android.net.Uri.parse("https://explorer.solana.com/address/PLEDGE1111111111111111111111111111111111111?cluster=devnet")
+                        android.net.Uri.parse("https://explorer.solana.com/address/68c1eNdHAfNWJhCWhtqumiqzYyFcDNLkfgwKwdFwFRcd?cluster=devnet")
                     )
                     context.startActivity(intent)
                 }

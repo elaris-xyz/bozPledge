@@ -6,7 +6,7 @@ pub mod state;
 
 use instructions::*;
 
-declare_id!("PLEDGE1111111111111111111111111111111111111");
+declare_id!("68c1eNdHAfNWJhCWhtqumiqzYyFcDNLkfgwKwdFwFRcd");
 
 #[program]
 pub mod pledge {

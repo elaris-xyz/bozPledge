@@ -3623,7 +3623,7 @@ fun JudgeModalBottomSheet(
                     .clickable {
                         val intent = Intent(
                             Intent.ACTION_VIEW,
-                            android.net.Uri.parse("https://explorer.solana.com/address/PLEDGE1111111111111111111111111111111111111?cluster=devnet")
+                            android.net.Uri.parse("https://explorer.solana.com/address/68c1eNdHAfNWJhCWhtqumiqzYyFcDNLkfgwKwdFwFRcd?cluster=devnet")
                         )
                         context.startActivity(intent)
                     }
@@ -3649,7 +3649,7 @@ fun JudgeModalBottomSheet(
                         )
                     }
                     Text(
-                        text = "PLEDGE1111111111111111111111111111111111111",
+                        text = "68c1eNdHAfNWJhCWhtqumiqzYyFcDNLkfgwKwdFwFRcd",
                         fontFamily = FontFamily.Monospace,
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Bold,
