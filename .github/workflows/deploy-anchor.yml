@@ -26,13 +26,13 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y pkg-config build-essential libudev-dev libssl-dev
 
-      - name: Install Solana CLI v1.18.26
+      - name: Install Solana / Agave CLI
         run: |
-          sh -c "$(curl -sSfL https://release.anza.xyz/v1.18.26/install)"
+          sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)" || sh -c "$(curl -sSfL https://release.anza.xyz/v1.18.26/install)"
           echo "$HOME/.local/share/solana/install/active_release/bin" >> $GITHUB_PATH
           export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
           solana --version
-          cargo-build-sbf --version
+          cargo-build-sbf --version || true
 
       - name: Configure Solana Devnet & Wallet
         run: |
@@ -76,6 +76,9 @@ jobs:
               /bin/bash -c "cargo-build-sbf --manifest-path programs/pledge/Cargo.toml" || true
             if [ -f "programs/pledge/target/deploy/pledge.so" ]; then
               cp programs/pledge/target/deploy/pledge.so target/deploy/pledge.so
+            fi
+            if [ ! -f "target/deploy/pledge.so" ] && [ -f "target/sbf-solana-solana/release/pledge.so" ]; then
+              cp target/sbf-solana-solana/release/pledge.so target/deploy/pledge.so
             fi
           fi
           
