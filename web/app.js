@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { label: "Judge Bypass", val: "Instant Devnet Keypair" },
         { label: "Security", val: "Hardware Protected Enclave" }
       ],
-      src: "assets/screen_onboarding.png"
+      src: "assets/screen_onboarding.webp"
     },
     modal: {
       title: "1-Click Judge Devnet Keypair Initializer",
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { label: "Key Generation", val: "Native Ed25519 Keystore" },
         { label: "Confirmation", val: "Explicit Judge Dialog" }
       ],
-      src: "assets/screen_judge_modal.png"
+      src: "assets/screen_judge_modal.webp"
     },
     dashboard: {
       title: "Hardware Telemetry & Sovereign Habit Card",
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { label: "Daily Target", val: "10,000 Steps" },
         { label: "Hardware Proof", val: "Tamper-Resistant Telemetry" }
       ],
-      src: "assets/screen_dashboard.png"
+      src: "assets/screen_dashboard.webp"
     },
     clockin: {
       title: "1-Tap Daily Clock-In & Seed Vault Certification",
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { label: "Shareable", val: "Solana Blink on X ready" },
         { label: "Signature", val: "Seed Vault Certified #5Kz8..." }
       ],
-      src: "assets/screen_clockedin.png"
+      src: "assets/screen_clockedin.webp"
     },
     judgelab: {
       title: "Judge Evaluation Lab (Time Machine)",
@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { label: "Scenario 3", val: "Advance Time Machine (+1 Day)" },
         { label: "Control", val: "Instant State Injection" }
       ],
-      src: "assets/screen_judge_lab.png"
+      src: "assets/screen_judge_lab.webp"
     },
     catalog: {
       title: "Habit Commitment Catalog & Boz Philosophy",
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { label: "Fitness Oracle", val: "Health Connect Step Cadence" },
         { label: "Philosophy", val: "Uncompromising Mountain Grit" }
       ],
-      src: "assets/screen_catalog.png"
+      src: "assets/screen_catalog.webp"
     },
     ranks: {
       title: "Sovereign Community Ranks & Live Burn Feed",
@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { label: "Protocol Success", val: "94.2% Attested" },
         { label: "Audit Stream", val: "Slot-by-Slot Block Verification" }
       ],
-      src: "assets/screen_ranks.png"
+      src: "assets/screen_ranks.webp"
     },
     vault: {
       title: "Non-Custodial Vault & Soulbound Proof-of-Action cNFTs",
@@ -97,9 +97,17 @@ document.addEventListener('DOMContentLoaded', () => {
         { label: "Transparency", val: "100% Non-Custodial Anchor Program" },
         { label: "Audit Trail", val: "Live Solana Explorer / Solscan Links" }
       ],
-      src: "assets/screen_vault.png"
+      src: "assets/screen_vault.webp"
     }
   };
+
+  // Instant Asset Preloading for Zero Latency
+  const preloadedImages = [];
+  Object.values(screenData).forEach(item => {
+    const img = new Image();
+    img.src = item.src;
+    preloadedImages.push(img);
+  });
 
   // Screen Tab Interactivity
   const tabs = document.querySelectorAll('.screen-tab');
