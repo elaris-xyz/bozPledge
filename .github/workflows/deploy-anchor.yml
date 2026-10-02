@@ -20,8 +20,6 @@ jobs:
 
       - name: Install Rust Toolchain
         uses: dtolnay/rust-toolchain@stable
-        with:
-          toolchain: 1.79.0
 
       - name: Install Linux Build Dependencies
         run: |
@@ -51,6 +49,7 @@ jobs:
         run: |
           export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
           cd anchor-program
+          cargo update -p block-buffer --precise 0.10.4 || true
           cargo-build-sbf --manifest-path programs/pledge/Cargo.toml
           ls -lh target/deploy/
 
