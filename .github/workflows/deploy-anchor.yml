@@ -49,9 +49,35 @@ jobs:
         run: |
           export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
           cd anchor-program
+          # Ensure lockfile is version 3 and present in both locations
           sed -i 's/version = 4/version = 3/' Cargo.lock || true
-          cargo-build-sbf --manifest-path programs/pledge/Cargo.toml
-          ls -lh target/deploy/
+          cp Cargo.lock programs/pledge/Cargo.lock
+          
+          # Build via cargo-build-sbf
+          echo "Running cargo-build-sbf..."
+          cargo-build-sbf --manifest-path programs/pledge/Cargo.toml || true
+          
+          # Ensure binary is in target/deploy/pledge.so
+          mkdir -p target/deploy
+          if [ -f "programs/pledge/target/deploy/pledge.so" ]; then
+            cp programs/pledge/target/deploy/pledge.so target/deploy/pledge.so
+          fi
+          
+          # If not produced, try Docker container build fallback
+          if [ ! -f "target/deploy/pledge.so" ]; then
+            echo "Attempting Docker build fallback with backpackapp/build:v0.30.1..."
+            docker run --rm \
+              -v ${{ github.workspace }}:/work \
+              -w /work/anchor-program \
+              backpackapp/build:v0.30.1 \
+              /bin/bash -c "cargo-build-sbf --manifest-path programs/pledge/Cargo.toml" || true
+            if [ -f "programs/pledge/target/deploy/pledge.so" ]; then
+              cp programs/pledge/target/deploy/pledge.so target/deploy/pledge.so
+            fi
+          fi
+          
+          ls -lh target/deploy/pledge.so
+          test -f target/deploy/pledge.so
 
       - name: Deploy to Solana Devnet
         run: |
@@ -60,6 +86,7 @@ jobs:
           solana program deploy \
             --program-id anchor-program/deploy/pledge-keypair.json \
             anchor-program/target/deploy/pledge.so \
+            --keypair anchor-program/deploy/deployer-keypair.json \
             --url https://api.devnet.solana.com
 
       - name: Verify Live Deployment on Devnet

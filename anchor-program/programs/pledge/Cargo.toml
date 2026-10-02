@@ -19,5 +19,7 @@ default = []
 anchor-lang = "0.30.1"
 anchor-spl = "0.30.1"
 solana-program = "=1.18.26"
-block-buffer = "=0.10.4"
 blake3 = "=1.5.5"
+block-buffer = "=0.10.4"
+bytemuck_derive = "=1.8.1"
+proc-macro-crate = "=3.1.0"
