@@ -1,5 +1,6 @@
 package com.pledge.app.ui.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -19,6 +20,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -52,21 +54,13 @@ fun SeekerHeader(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                Box(
+                Image(
+                    painter = painterResource(id = com.pledge.app.R.drawable.app_logo),
+                    contentDescription = "bozPledge Logo",
                     modifier = Modifier
-                        .size(36.dp)
-                        .clip(RoundedCornerShape(10.dp))
-                        .background(Color(0xFF141624))
-                        .border(1.dp, SolanaNeonMint.copy(alpha = 0.5f), RoundedCornerShape(10.dp)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Shield,
-                        contentDescription = "Seeker Brand",
-                        tint = SolanaNeonMint,
-                        modifier = Modifier.size(20.dp)
-                    )
-                }
+                        .size(38.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                )
 
                 Column {
                     Row(verticalAlignment = Alignment.CenterVertically) {

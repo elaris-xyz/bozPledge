@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/logo.png" width="160" alt="bozPledge Logo" />
+</p>
+
 # ⚡ bozPledge (Clock In)
 ### Sovereign Physical Habit & Proof-of-Action Protocol on Solana Mobile
 **Third Solana Mobile Hackathon: CLOCK IN (Fall 2026)**  

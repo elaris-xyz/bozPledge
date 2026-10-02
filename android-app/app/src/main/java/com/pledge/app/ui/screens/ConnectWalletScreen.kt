@@ -2,6 +2,7 @@ package com.pledge.app.ui.screens
 
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -23,6 +24,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -73,22 +75,12 @@ fun ConnectWalletScreen(
             ) {
                 Spacer(modifier = Modifier.height(6.dp))
 
-                // Brand Logo Mark (Flat Solana Seeker Hex Shield)
-                Box(
-                    modifier = Modifier
-                        .size(68.dp)
-                        .clip(RoundedCornerShape(20.dp))
-                        .background(Color(0xFF141726))
-                        .border(1.5.dp, SolanaNeonMint, RoundedCornerShape(20.dp)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Shield,
-                        contentDescription = "Seeker Shield",
-                        tint = SolanaNeonMint,
-                        modifier = Modifier.size(36.dp)
-                    )
-                }
+                // Brand Logo Mark
+                Image(
+                    painter = painterResource(id = com.pledge.app.R.drawable.app_logo),
+                    contentDescription = "bozPledge Logo",
+                    modifier = Modifier.size(88.dp)
+                )
 
                 // Brand Title & Network Pill
                 Column(
