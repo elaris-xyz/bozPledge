@@ -61,6 +61,7 @@ fun DashboardScreen(
     onFastForwardDay: () -> Unit,
     onConnectWallet: () -> Unit = {},
     onToggleFreshState: () -> Unit = {},
+    onRequestAirdrop: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -75,6 +76,7 @@ fun DashboardScreen(
     var showSlashingDialog by remember { mutableStateOf(false) }
     var showSettlementDialog by remember { mutableStateOf(false) }
     var lastSlashingAmount by remember { mutableDoubleStateOf(357.14) }
+    var pendingPresetToStake by remember { mutableStateOf<HabitRule?>(null) }
 
     // Habit Presets
     val internetDetoxRule = remember {
@@ -257,7 +259,7 @@ fun DashboardScreen(
                             onOpenHowItWorks = { isHowItWorksOpen = true },
                             onClockIn = onClockIn,
                             onCreateNewPledge = onCreateNewPledge,
-                            onSelectPreset = onSelectPreset,
+                            onSelectPreset = { rule -> pendingPresetToStake = rule },
                             onToggleFreshState = onToggleFreshState,
                             internetDetoxRule = internetDetoxRule,
                             early6amRule = early6amRule,
@@ -285,8 +287,7 @@ fun DashboardScreen(
                             state = state,
                             onCreateCustom = onCreateNewPledge,
                             onSelectRule = { rule ->
-                                onSelectPreset(rule)
-                                selectedNavTab = 0 // Switch to active tab so user sees it right away
+                                pendingPresetToStake = rule
                             },
                             internetDetoxRule = internetDetoxRule,
                             early6amRule = early6amRule,
@@ -305,7 +306,8 @@ fun DashboardScreen(
                             walletAddress = walletAddress,
                             stakedAmount = state.totalAmountSKR,
                             skrBalance = skrBalance,
-                            onSettle = onSettle
+                            onSettle = onSettle,
+                            onRequestAirdrop = onRequestAirdrop
                         )
                     }
                 }
@@ -370,6 +372,216 @@ fun DashboardScreen(
             returnedAmount = (state.totalAmountSKR - slashedSKR).coerceAtLeast(0.0),
             burnedAmount = slashedSKR,
             onDismiss = { showSettlementDialog = false }
+        )
+    }
+
+    // Modal 5: Confirm Staking Escrow Dialog
+    pendingPresetToStake?.let { preset ->
+        val requiredStake = when (preset.id) {
+            "early_6am" -> 5000.0
+            "steps_10k" -> 1000.0
+            "screen_detox" -> 1500.0
+            "gym_workout" -> 750.0
+            else -> 2500.0
+        }
+        val isBalanceSufficient = skrBalance >= requiredStake
+
+        AlertDialog(
+            onDismissRequest = { pendingPresetToStake = null },
+            containerColor = SurfaceElevated,
+            titleContentColor = TextPrimary,
+            textContentColor = TextSecondary,
+            title = {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(32.dp)
+                            .clip(CircleShape)
+                            .background(SolanaPurple.copy(alpha = 0.2f))
+                            .border(1.dp, SolanaPurple.copy(alpha = 0.6f), CircleShape),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Lock,
+                            contentDescription = null,
+                            tint = SolanaPurple,
+                            modifier = Modifier.size(16.dp)
+                        )
+                    }
+                    Column {
+                        Text(
+                            text = "Confirm Staking Escrow",
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = TextPrimary
+                        )
+                        Text(
+                            text = "Solana Devnet • Non-Custodial PDA",
+                            fontSize = 10.5.sp,
+                            color = SolanaTeal
+                        )
+                    }
+                }
+            },
+            text = {
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    Surface(
+                        color = SurfaceCard,
+                        shape = RoundedCornerShape(10.dp),
+                        border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Column(modifier = Modifier.padding(10.dp)) {
+                            Text(
+                                text = preset.title,
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = TextPrimary
+                            )
+                            Spacer(modifier = Modifier.height(2.dp))
+                            Text(
+                                text = "Rule: ${preset.sensorType.displayName} • ${preset.schedulePreset.displayName}",
+                                fontSize = 11.sp,
+                                color = TextSecondary
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(text = "Escrow Collateral:", fontSize = 11.5.sp, color = TextSecondary)
+                        Text(
+                            text = "${requiredStake.toInt()} \$SKR",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = AppleGreen
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(text = "Connected Wallet:", fontSize = 11.5.sp, color = TextSecondary)
+                        Text(
+                            text = (walletAddress ?: "Seeker...7xK2").take(12) + "...",
+                            fontSize = 11.5.sp,
+                            fontFamily = FontFamily.Monospace,
+                            color = TextPrimary
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(text = "Current Wallet Balance:", fontSize = 11.5.sp, color = TextSecondary)
+                        Text(
+                            text = "${skrBalance.toInt()} \$SKR",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = if (isBalanceSufficient) TextPrimary else AppleRed
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    if (!isBalanceSufficient) {
+                        Surface(
+                            color = AppleRed.copy(alpha = 0.1f),
+                            shape = RoundedCornerShape(8.dp),
+                            border = androidx.compose.foundation.BorderStroke(0.5.dp, AppleRed.copy(alpha = 0.3f)),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Column(modifier = Modifier.padding(8.dp)) {
+                                Text(
+                                    text = "⚠️ Insufficient \$SKR Balance",
+                                    fontSize = 11.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = AppleRed
+                                )
+                                Text(
+                                    text = "You need ${requiredStake.toInt()} \$SKR to lock this commitment. Tap the faucet below to receive free test tokens instantly.",
+                                    fontSize = 10.5.sp,
+                                    color = TextSecondary
+                                )
+                                Spacer(modifier = Modifier.height(6.dp))
+                                Button(
+                                    onClick = { onRequestAirdrop() },
+                                    colors = ButtonDefaults.buttonColors(containerColor = SolanaTeal),
+                                    shape = RoundedCornerShape(6.dp),
+                                    modifier = Modifier.fillMaxWidth().height(34.dp)
+                                ) {
+                                    Text(
+                                        text = "💧 Request 10,000 \$SKR Faucet",
+                                        fontSize = 11.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color.Black
+                                    )
+                                }
+                            }
+                        }
+                    } else {
+                        Surface(
+                            color = AppleGreen.copy(alpha = 0.1f),
+                            shape = RoundedCornerShape(8.dp),
+                            border = androidx.compose.foundation.BorderStroke(0.5.dp, AppleGreen.copy(alpha = 0.3f)),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(8.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.CheckCircle,
+                                    contentDescription = null,
+                                    tint = AppleGreen,
+                                    modifier = Modifier.size(14.dp)
+                                )
+                                Text(
+                                    text = "Balance Verified. ${(skrBalance - requiredStake).toInt()} \$SKR will remain in wallet.",
+                                    fontSize = 10.5.sp,
+                                    color = AppleGreen
+                                )
+                            }
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                if (isBalanceSufficient) {
+                    Button(
+                        onClick = {
+                            val targetPreset = preset
+                            pendingPresetToStake = null
+                            onSelectPreset(targetPreset)
+                            selectedNavTab = 0
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = AppleGreen),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Text(
+                            text = "Approve & Stake ${requiredStake.toInt()} \$SKR",
+                            color = Color.Black,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 11.5.sp
+                        )
+                    }
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { pendingPresetToStake = null }) {
+                    Text(text = "Cancel", color = TextSecondary, fontSize = 11.5.sp)
+                }
+            }
         )
     }
 }
@@ -832,157 +1044,6 @@ fun ActiveTabContent(
 
 
 
-        // Studio Action Row (Composer & 6 AM Club)
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            // Card 1: Rule Composer
-            Surface(
-                color = SurfaceCard,
-                shape = RoundedCornerShape(16.dp),
-                border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
-                modifier = Modifier
-                    .weight(1f)
-                    .clickable {
-                        haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                        onCreateNewPledge()
-                    }
-            ) {
-                Column(modifier = Modifier.padding(14.dp)) {
-                    Box(
-                        modifier = Modifier
-                            .size(38.dp)
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(Color(0xFF141724))
-                            .border(1.dp, SolanaNeonMint.copy(alpha = 0.4f), RoundedCornerShape(10.dp)),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Tune,
-                            contentDescription = "Composer",
-                            tint = SolanaNeonMint,
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(10.dp))
-                    Text(
-                        text = "Rule Composer",
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = TextPrimary
-                    )
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Text(
-                        text = "Build custom sensor rules & stake",
-                        fontSize = 11.sp,
-                        color = TextSecondary,
-                        lineHeight = 14.sp
-                    )
-                }
-            }
-
-            // Card 2: 6 AM Club
-            Surface(
-                color = SurfaceCard,
-                shape = RoundedCornerShape(16.dp),
-                border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
-                modifier = Modifier
-                    .weight(1f)
-                    .clickable {
-                        haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                        onSelectPreset(early6amRule)
-                    }
-            ) {
-                Column(modifier = Modifier.padding(14.dp)) {
-                    Box(
-                        modifier = Modifier
-                            .size(38.dp)
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(Color(0xFF141724))
-                            .border(1.dp, SolanaElectricCyan.copy(alpha = 0.4f), RoundedCornerShape(10.dp)),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Alarm,
-                            contentDescription = "Alarm",
-                            tint = SolanaElectricCyan,
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(10.dp))
-                    Text(
-                        text = "6 AM Club",
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = TextPrimary
-                    )
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Text(
-                        text = "Wake up before 6 AM • 5k stake",
-                        fontSize = 11.sp,
-                        color = TextSecondary,
-                        lineHeight = 14.sp
-                    )
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        // Horizontal Habit Chips Carousel (Apple Segmented Pills)
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .horizontalScroll(rememberScrollState()),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            chips.forEachIndexed { index, title ->
-                val isSelected = selectedChipIndex == index
-                Surface(
-                    color = if (isSelected) AppleGreen else SurfaceCard,
-                    shape = RoundedCornerShape(50),
-                    border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
-                    modifier = Modifier.clickable {
-                        haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                        onSelectChipIndex(index)
-                        when (index) {
-                            0 -> onSelectPreset(internetDetoxRule)
-                            1 -> onSelectPreset(early6amRule)
-                            2 -> onSelectPreset(stepGoalRule)
-                            3 -> onCreateNewPledge()
-                        }
-                    }
-                ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(6.dp)
-                    ) {
-                        val chipIcon = when(index) {
-                            0 -> Icons.Default.Language
-                            1 -> Icons.Default.Alarm
-                            2 -> Icons.Default.DirectionsWalk
-                            else -> Icons.Default.Add
-                        }
-                        Icon(
-                            imageVector = chipIcon,
-                            contentDescription = null,
-                            tint = if (isSelected) Color.Black else TextSecondary,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Text(
-                            text = title,
-                            fontSize = 12.sp,
-                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                            color = if (isSelected) Color.Black else TextSecondary
-                        )
-                    }
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(12.dp))
 
         // Urgency Loss Aversion Banner (Apple Alert Card)
         Surface(
@@ -1310,8 +1371,8 @@ fun ActiveTabContent(
                                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                 ShareProofHelper.shareProofCard(
                                     context = context,
-                                    habitName = state.habitName,
-                                    stakedAmount = state.stakedAmount,
+                                    habitName = state.rule.title,
+                                    stakedAmount = state.totalAmountSKR.toLong(),
                                     currentDay = currentDay,
                                     totalDays = totalDays,
                                     seedVaultSig = "#5Kz8...7dKG"
@@ -2394,7 +2455,8 @@ fun VaultTabContent(
     walletAddress: String?,
     stakedAmount: Double,
     skrBalance: Double,
-    onSettle: () -> Unit
+    onSettle: () -> Unit,
+    onRequestAirdrop: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
@@ -2487,6 +2549,35 @@ fun VaultTabContent(
                     fontSize = 12.sp,
                     color = TextSecondary
                 )
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Surface(
+                    color = SolanaElectricCyan.copy(alpha = 0.12f),
+                    shape = RoundedCornerShape(10.dp),
+                    border = androidx.compose.foundation.BorderStroke(0.5.dp, SolanaElectricCyan.copy(alpha = 0.4f)),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            onRequestAirdrop()
+                        }
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 10.dp),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "💧 Request 10,000 \$SKR Devnet Faucet",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = SolanaElectricCyan
+                        )
+                    }
+                }
 
                 Spacer(modifier = Modifier.height(16.dp))
 

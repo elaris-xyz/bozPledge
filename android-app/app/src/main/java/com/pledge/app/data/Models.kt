@@ -61,12 +61,19 @@ data class CommitmentState(
 
     val secondsLeftInCurrentDay: Long
         get() {
-            if (startTimestamp == 0L || dayDurationSec <= 0L) return 0L
+            if (startTimestamp == 0L || dayDurationSec >= 86400L) {
+                val cal = java.util.Calendar.getInstance()
+                val currentSecOfDay = cal.get(java.util.Calendar.HOUR_OF_DAY) * 3600L +
+                        cal.get(java.util.Calendar.MINUTE) * 60L +
+                        cal.get(java.util.Calendar.SECOND)
+                val left = 86400L - currentSecOfDay
+                return if (left > 0L) left else 0L
+            }
+            if (dayDurationSec <= 0L) return 86400L
             val nowSec = System.currentTimeMillis() / 1000L
-            val elapsed = nowSec - startTimestamp
             val currentDayEnd = startTimestamp + ((currentDayIndex + 1) * dayDurationSec)
             val left = currentDayEnd - nowSec
-            return if (left > 0) left else 0L
+            return if (left > 0L) left else 0L
         }
 
     val completionRate: Float

@@ -48,7 +48,7 @@ class SolanaManager(private val context: Context) {
 
     private val walletAdapter = MobileWalletAdapter(
         connectionIdentity = ConnectionIdentity(
-            identityUri = Uri.parse("https://pledge.app"),
+            identityUri = Uri.parse("https://github.com/elaris-xyz/bozPledge"),
             iconUri = Uri.parse("icon.png"),
             identityName = "bozPledge"
         )
@@ -59,7 +59,7 @@ class SolanaManager(private val context: Context) {
     var connectedPublicKey: String? = prefs.getString("connected_wallet", null)
         private set
 
-    var userSkrBalance: Double = prefs.getFloat("user_skr_balance", 2500.0f).toDouble()
+    var userSkrBalance: Double = prefs.getFloat("user_skr_balance", 0.0f).toDouble()
         private set
 
     var currentDevnetSlot: Long = 298104892L
@@ -85,6 +85,19 @@ class SolanaManager(private val context: Context) {
     fun updateSkrBalance(newBalance: Double) {
         userSkrBalance = newBalance
         prefs.edit().putFloat("user_skr_balance", newBalance.toFloat()).apply()
+    }
+
+    fun airdropDevnetSkr(amount: Double = 10000.0): PledgeTransaction {
+        val updated = userSkrBalance + amount
+        updateSkrBalance(updated)
+        return recordTransaction("DEVNET_FAUCET_AIRDROP", amount)
+    }
+
+    fun deductSkr(amount: Double): Boolean {
+        if (userSkrBalance < amount) return false
+        val updated = userSkrBalance - amount
+        updateSkrBalance(updated)
+        return true
     }
 
     /**

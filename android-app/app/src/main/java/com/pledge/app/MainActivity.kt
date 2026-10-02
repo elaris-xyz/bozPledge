@@ -243,6 +243,14 @@ class MainActivity : ComponentActivity() {
                     onCreateNewPledge = {
                         currentScreen = Screen.CREATE_PLEDGE
                     },
+                    onRequestAirdrop = {
+                        val tx = solanaManager.airdropDevnetSkr(10000.0)
+                        Toast.makeText(
+                            this@MainActivity,
+                            "💧 Devnet Faucet: +10,000 \$SKR added! Tx: ${tx.signature.take(8)}...",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     onSelectPreset = { preset ->
                         val stakeAmount = when (preset.id) {
                             "early_6am" -> 5000.0
@@ -251,22 +259,32 @@ class MainActivity : ComponentActivity() {
                             "gym_workout" -> 750.0
                             else -> 2500.0
                         }
-                        val newCommitment = commitmentState.copy(
-                            rule = preset,
-                            totalAmountSKR = stakeAmount,
-                            targetSteps = if (preset.sensorType == SensorType.HEALTH_STEPS) preset.thresholdLimit.toInt() else 8000,
-                            completedDays = 0,
-                            clockedInBitmap = 0L,
-                            startTimestamp = System.currentTimeMillis() / 1000L
-                        )
-                        commitmentState = newCommitment
-                        CommitmentStore.saveCommitment(this@MainActivity, newCommitment)
-                        val tx = solanaManager.recordTransaction("CREATE_ESCROW", stakeAmount)
-                        Toast.makeText(
-                            this@MainActivity,
-                            "Staked $stakeAmount \$SKR in Escrow PDA! Tx: ${tx.signature.take(8)}...",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        if (solanaManager.userSkrBalance < stakeAmount) {
+                            Toast.makeText(
+                                this@MainActivity,
+                                "Insufficient Balance! Need ${stakeAmount.toInt()} \$SKR. Tap 'Request Faucet' first.",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        } else {
+                            solanaManager.deductSkr(stakeAmount)
+                            val newCommitment = commitmentState.copy(
+                                rule = preset,
+                                totalAmountSKR = stakeAmount,
+                                targetSteps = if (preset.sensorType == SensorType.HEALTH_STEPS) preset.thresholdLimit.toInt() else 8000,
+                                completedDays = 0,
+                                clockedInBitmap = 0L,
+                                dayDurationSec = 86400L,
+                                startTimestamp = System.currentTimeMillis() / 1000L
+                            )
+                            commitmentState = newCommitment
+                            CommitmentStore.saveCommitment(this@MainActivity, newCommitment)
+                            val tx = solanaManager.recordTransaction("CREATE_ESCROW", stakeAmount)
+                            Toast.makeText(
+                                this@MainActivity,
+                                "Staked ${stakeAmount.toInt()} \$SKR in Escrow PDA! Tx: ${tx.signature.take(8)}...",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     },
                     onSettle = {
                         currentScreen = Screen.SETTLE
@@ -353,6 +371,7 @@ class MainActivity : ComponentActivity() {
                             rule = habitRule
                         )
                         commitmentState = newCommitment
+                        solanaManager.deductSkr(stakeAmount)
                         CommitmentStore.saveCommitment(this@MainActivity, newCommitment)
                         val tx = solanaManager.recordTransaction("CREATE_ESCROW", stakeAmount)
                         currentScreen = Screen.DASHBOARD
