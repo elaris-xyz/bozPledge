@@ -62,6 +62,9 @@ jobs:
           if [ -f "programs/pledge/target/deploy/pledge.so" ]; then
             cp programs/pledge/target/deploy/pledge.so target/deploy/pledge.so
           fi
+          if [ ! -f "target/deploy/pledge.so" ] && [ -f "target/sbf-solana-solana/release/pledge.so" ]; then
+            cp target/sbf-solana-solana/release/pledge.so target/deploy/pledge.so
+          fi
           
           # If not produced, try Docker container build fallback
           if [ ! -f "target/deploy/pledge.so" ]; then
