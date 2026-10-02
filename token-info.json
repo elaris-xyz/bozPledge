@@ -1,0 +1,16 @@
+{
+  "name": "bozPledge SKR (Hackathon)",
+  "symbol": "SKR",
+  "decimals": 9,
+  "mint": "F4L7W4qgFAuU2iyg5ePBENXTHeZyTPor4tJMfhUHqfgQ",
+  "mintAuthority": "C3pX6GYetQMAzDifjrr1NUhhEiYheRh8gqXnmN6TBfXp",
+  "treasuryAta": "Hm5oZ8PFXN299xXNJDELvwy2hcXAbeMQvDZbZ718BsXV",
+  "initialSupply": 100000000,
+  "cluster": "devnet",
+  "mintTx": "sgZC4gmWCzK6qG8FGHcLieoeqxUEHJGswfAqB6UbRuNvYjgNY2cbsT4qgXB5ktbNaKKpk3vWZFVUCFpVKQmrQM2",
+  "metadataPda": "JA4TzchrctWV11bT9gtwzUH8ppsMi2yx1FNpTtjHQZGo",
+  "metadataTx": "4uGReXVQt6iaZHbVDSedSrYA9GTtUzVxSgxy7wEzDCn9DDBHyhXXCYBGx6UVCC6JYayK4TSNoYWtdDCbhSv7y1ob",
+  "metadataUri": "https://raw.githubusercontent.com/elaris-xyz/bozPledge/main/assets/token-metadata.json",
+  "explorerUrl": "https://explorer.solana.com/address/F4L7W4qgFAuU2iyg5ePBENXTHeZyTPor4tJMfhUHqfgQ?cluster=devnet",
+  "createdAt": "2026-10-02T21:02:06Z"
+}

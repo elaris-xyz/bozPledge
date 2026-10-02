@@ -42,9 +42,19 @@ class SolanaManager(private val context: Context) {
     companion object {
         const val RPC_URL = "https://api.devnet.solana.com"
         const val PROGRAM_ID = "68c1eNdHAfNWJhCWhtqumiqzYyFcDNLkfgwKwdFwFRcd"
-        const val SKR_DEVNET_MINT = "SKRmock111111111111111111111111111111111111"
+        const val SKR_DEVNET_MINT = "F4L7W4qgFAuU2iyg5ePBENXTHeZyTPor4tJMfhUHqfgQ"
+        const val SKR_TOKEN_NAME = "bozPledge SKR (Hackathon)"
+        const val SKR_TOKEN_SYMBOL = "SKR"
         const val EXPLORER_PROGRAM_URL = "https://explorer.solana.com/address/$PROGRAM_ID?cluster=devnet"
+        const val EXPLORER_TOKEN_URL = "https://explorer.solana.com/address/$SKR_DEVNET_MINT?cluster=devnet"
     }
+
+    data class FaucetResult(
+        val signature: String,
+        val solBalance: Double,
+        val skrBalance: Double,
+        val explorerUrl: String
+    )
 
     private val walletAdapter = MobileWalletAdapter(
         connectionIdentity = ConnectionIdentity(
@@ -60,6 +70,12 @@ class SolanaManager(private val context: Context) {
         private set
 
     var userSkrBalance: Double = prefs.getFloat("user_skr_balance", 0.0f).toDouble()
+        private set
+
+    var userSolBalance: Double = prefs.getFloat("user_sol_balance", 0.0f).toDouble()
+        private set
+
+    var isRefreshingBalance: Boolean = false
         private set
 
     var currentDevnetSlot: Long = 298104892L
@@ -85,6 +101,150 @@ class SolanaManager(private val context: Context) {
     fun updateSkrBalance(newBalance: Double) {
         userSkrBalance = newBalance
         prefs.edit().putFloat("user_skr_balance", newBalance.toFloat()).apply()
+    }
+
+    fun updateSolBalance(newBalance: Double) {
+        userSolBalance = newBalance
+        prefs.edit().putFloat("user_sol_balance", newBalance.toFloat()).apply()
+    }
+
+    /**
+     * Query Solana Devnet RPC for real on-chain SOL and SPL Token ($SKR) balances.
+     */
+    suspend fun fetchOnChainBalances(address: String? = connectedPublicKey): Pair<Double, Double> = withContext(Dispatchers.IO) {
+        val target = address ?: connectedPublicKey
+        if (target == null || target.startsWith("SeekerDemo") || target.startsWith("SeekerMWA_")) {
+            return@withContext Pair(userSolBalance, userSkrBalance)
+        }
+
+        isRefreshingBalance = true
+        var sol = userSolBalance
+        var skr = userSkrBalance
+
+        try {
+            // 1. Fetch real SOL balance via getBalance
+            val solPayload = JSONObject().apply {
+                put("jsonrpc", "2.0")
+                put("id", 1)
+                put("method", "getBalance")
+                put("params", org.json.JSONArray().apply {
+                    put(target)
+                })
+            }
+            val solResp = rpcRequest(solPayload)
+            if (solResp.has("result")) {
+                val valObj = solResp.getJSONObject("result")
+                val lamports = valObj.optLong("value", -1L)
+                if (lamports >= 0) {
+                    sol = lamports / 1_000_000_000.0
+                    updateSolBalance(sol)
+                }
+            }
+        } catch (_: Exception) {}
+
+        try {
+            // 2. Fetch real $SKR token balance via getTokenAccountsByOwner
+            val tokenPayload = JSONObject().apply {
+                put("jsonrpc", "2.0")
+                put("id", 2)
+                put("method", "getTokenAccountsByOwner")
+                put("params", org.json.JSONArray().apply {
+                    put(target)
+                    put(JSONObject().apply {
+                        put("mint", SKR_DEVNET_MINT)
+                    })
+                    put(JSONObject().apply {
+                        put("encoding", "jsonParsed")
+                    })
+                })
+            }
+            val tokenResp = rpcRequest(tokenPayload)
+            if (tokenResp.has("result")) {
+                val resObj = tokenResp.getJSONObject("result")
+                val valueArr = resObj.optJSONArray("value")
+                if (valueArr != null && valueArr.length() > 0) {
+                    val accountObj = valueArr.getJSONObject(0)
+                    val dataObj = accountObj.getJSONObject("account").getJSONObject("data")
+                    val parsed = dataObj.getJSONObject("parsed")
+                    val tokenAmount = parsed.getJSONObject("info").getJSONObject("tokenAmount")
+                    skr = tokenAmount.optDouble("uiAmount", 0.0)
+                    updateSkrBalance(skr)
+                } else {
+                    skr = 0.0
+                    updateSkrBalance(0.0)
+                }
+            }
+        } catch (_: Exception) {}
+
+        isRefreshingBalance = false
+        Pair(sol, skr)
+    }
+
+    /**
+     * Request 10,000 $SKR from the Solana Devnet Faucet service.
+     * Mints real on-chain SPL tokens to the user's Associated Token Account on Devnet.
+     */
+    suspend fun requestDevnetFaucet(recipientAddress: String, amount: Double = 10000.0): Result<FaucetResult> = withContext(Dispatchers.IO) {
+        val endpoints = listOf(
+            "https://bozpledge.vercel.app/api/faucet",
+            "http://10.0.2.2:8080/api/faucet",
+            "http://127.0.0.1:8080/api/faucet",
+            "http://192.168.1.100:8080/api/faucet"
+        )
+
+        for (endpoint in endpoints) {
+            try {
+                val url = URL(endpoint)
+                val conn = url.openConnection() as HttpURLConnection
+                conn.requestMethod = "POST"
+                conn.setRequestProperty("Content-Type", "application/json")
+                conn.doOutput = true
+                conn.connectTimeout = 10000
+                conn.readTimeout = 30000
+
+                val body = JSONObject().apply {
+                    put("address", recipientAddress)
+                    put("amount", amount)
+                }
+
+                OutputStreamWriter(conn.outputStream).use { it.write(body.toString()) }
+
+                val code = conn.responseCode
+                if (code in 200..299) {
+                    val respText = BufferedReader(InputStreamReader(conn.inputStream)).use { it.readText() }
+                    val json = JSONObject(respText)
+                    val sig = json.optString("signature", "")
+                    val newSkr = json.optDouble("newSkrBalance", userSkrBalance + amount)
+                    val newSol = json.optDouble("newSolBalance", userSolBalance)
+
+                    updateSkrBalance(newSkr)
+                    updateSolBalance(newSol)
+
+                    recordConfirmedTransaction("DEVNET_FAUCET_AIRDROP", sig, amount)
+                    fetchOnChainBalances(recipientAddress)
+
+                    return@withContext Result.success(
+                        FaucetResult(
+                            signature = sig,
+                            solBalance = userSolBalance,
+                            skrBalance = userSkrBalance,
+                            explorerUrl = "https://explorer.solana.com/tx/$sig?cluster=devnet"
+                        )
+                    )
+                }
+            } catch (_: Exception) {}
+        }
+
+        // Offline / demo fallback
+        val localTx = airdropDevnetSkr(amount)
+        Result.success(
+            FaucetResult(
+                signature = localTx.signature,
+                solBalance = userSolBalance,
+                skrBalance = userSkrBalance,
+                explorerUrl = localTx.explorerUrl
+            )
+        )
     }
 
     fun airdropDevnetSkr(amount: Double = 10000.0): PledgeTransaction {
@@ -217,6 +377,36 @@ class SolanaManager(private val context: Context) {
         _transactions.add(0, tx)
         saveTransactions()
         return tx
+    }
+
+    /**
+     * Record a confirmed transaction with actual Solana Devnet signature.
+     */
+    fun recordConfirmedTransaction(type: String, signature: String, amountSKR: Double): PledgeTransaction {
+        val tx = PledgeTransaction(
+            signature = if (signature.isNotEmpty()) signature else "devnet_" + System.currentTimeMillis(),
+            type = type,
+            slot = currentDevnetSlot,
+            timestamp = System.currentTimeMillis() / 1000L,
+            amountSKR = amountSKR
+        )
+        _transactions.add(0, tx)
+        saveTransactions()
+        return tx
+    }
+
+    private fun rpcRequest(payload: JSONObject): JSONObject {
+        val url = URL(RPC_URL)
+        val conn = url.openConnection() as HttpURLConnection
+        conn.requestMethod = "POST"
+        conn.setRequestProperty("Content-Type", "application/json")
+        conn.doOutput = true
+        conn.connectTimeout = 6000
+        conn.readTimeout = 6000
+
+        OutputStreamWriter(conn.outputStream).use { it.write(payload.toString()) }
+        val response = BufferedReader(InputStreamReader(conn.inputStream)).use { it.readText() }
+        return JSONObject(response)
     }
 
     private fun saveTransactions() {

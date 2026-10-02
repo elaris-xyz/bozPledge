@@ -305,7 +305,7 @@
             <span class="pill-dot"></span>
             <span>Solana Devnet Program</span>
           </div>
-          <div style="font-size: 1.1rem; font-weight: 800;">Anchor Program ID</div>
+          <div style="font-size: 1.1rem; font-weight: 800;">Anchor Smart Contract ID</div>
           <div class="contract-code-row">
             <span class="contract-code" id="programIdText">68c1eNdHAfNWJhCWhtqumiqzYyFcDNLkfgwKwdFwFRcd</span>
             <button class="btn-copy" onclick="copyToClipboard('68c1eNdHAfNWJhCWhtqumiqzYyFcDNLkfgwKwdFwFRcd', this)">Copy ID</button>
@@ -319,6 +319,60 @@
           <a href="https://github.com/elaris-xyz/bozPledge/tree/main/anchor-program" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" id="contractSourceBtn">
             <span>View Rust Source Code ↗</span>
           </a>
+        </div>
+      </div>
+
+      <!-- Official $SKR SPL Token Box -->
+      <div class="contract-box" style="margin-top: 1.5rem; border-color: rgba(20, 241, 149, 0.4);">
+        <div class="contract-info">
+          <div class="contract-pill" style="background: rgba(20, 241, 149, 0.15); color: var(--solana-green);">
+            <span class="pill-dot"></span>
+            <span>Official SPL Token • Metaplex Verified</span>
+          </div>
+          <div style="font-size: 1.1rem; font-weight: 800; display: flex; align-items: center; gap: 0.5rem;">
+            <img src="assets/logo.png" style="width: 24px; height: 24px; border-radius: 50%;" alt="SKR Token">
+            <span>bozPledge SKR (Hackathon Seeker)</span>
+          </div>
+          <div class="contract-code-row">
+            <span class="contract-code" id="tokenMintText">F4L7W4qgFAuU2iyg5ePBENXTHeZyTPor4tJMfhUHqfgQ</span>
+            <button class="btn-copy" onclick="copyToClipboard('F4L7W4qgFAuU2iyg5ePBENXTHeZyTPor4tJMfhUHqfgQ', this)">Copy Mint</button>
+          </div>
+          <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.25rem;">
+            Symbol: <strong>$SKR</strong> • Decimals: <strong>9</strong> • Supply: <strong>100,000,000</strong> • Authority: <strong>C3pX...fXp</strong>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+          <a href="https://explorer.solana.com/address/F4L7W4qgFAuU2iyg5ePBENXTHeZyTPor4tJMfhUHqfgQ?cluster=devnet" target="_blank" rel="noopener noreferrer" class="btn btn-primary" id="tokenExplorerBtn">
+            <span>View Token on Explorer ↗</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Instant 10,000 $SKR Web Faucet -->
+      <div class="contract-box" style="margin-top: 1.5rem; background: linear-gradient(135deg, rgba(16, 22, 34, 0.95), rgba(12, 16, 25, 0.98)); border-color: rgba(0, 194, 255, 0.35);">
+        <div style="width: 100%;">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <span style="font-size: 1.4rem;">💧</span>
+              <h3 style="font-size: 1.25rem; font-weight: 800; color: #fff;">Instant Devnet Faucet (10,000 $SKR)</h3>
+            </div>
+            <span class="contract-pill" style="background: rgba(0, 194, 255, 0.15); color: #00c2ff;">
+              Auto-Funds 10,000 $SKR + 0.1 SOL Rent
+            </span>
+          </div>
+          <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.25rem;">
+            Test the app live on Phantom, Solflare, or Seeker. Enter your Solana Devnet address below to mint test tokens directly into your Associated Token Account on-chain.
+          </p>
+
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <input type="text" id="faucetWalletInput" placeholder="Enter Solana Devnet Address (e.g. C3pX6GYetQMAzDifjrr1NUhhEiYheRh8gqXnmN6TBfXp)" style="flex: 1; min-width: 280px; padding: 0.85rem 1.25rem; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.15); border-radius: var(--radius-md); color: #fff; font-family: var(--font-mono); font-size: 0.9rem;">
+            <button id="faucetSubmitBtn" onclick="requestWebFaucet()" class="btn btn-primary" style="padding: 0.85rem 1.75rem; white-space: nowrap;">
+              <span>Mint 10,000 $SKR 💧</span>
+            </button>
+          </div>
+
+          <div id="faucetResultBox" style="display: none; margin-top: 1rem; padding: 1rem 1.25rem; border-radius: var(--radius-md); font-size: 0.9rem; line-height: 1.5;"></div>
         </div>
       </div>
     </div>

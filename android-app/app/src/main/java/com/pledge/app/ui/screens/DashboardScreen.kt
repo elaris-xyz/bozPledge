@@ -50,6 +50,7 @@ fun DashboardScreen(
     currentInternetMins: Int = 38,
     walletAddress: String?,
     skrBalance: Double,
+    solBalance: Double = 0.0,
     isClockingIn: Boolean,
     isDemoMode: Boolean,
     onClockIn: () -> Unit,
@@ -239,8 +240,11 @@ fun DashboardScreen(
             // 1. TOP SEEKER HEADER (Cinema Grade Hardware Status)
             SeekerHeader(
                 walletAddress = walletAddress,
+                solBalance = solBalance,
+                skrBalance = skrBalance,
                 onConnectWallet = onConnectWallet,
-                onOpenJudgeLab = { isJudgeSheetOpen = true }
+                onOpenJudgeLab = { isJudgeSheetOpen = true },
+                onRequestAirdrop = onRequestAirdrop
             )
 
             // Main Content Area switched by selectedNavTab

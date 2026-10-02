@@ -86,6 +86,17 @@ class MainActivity : ComponentActivity() {
         var showNoWalletDialog by remember { mutableStateOf(false) }
         var walletErrorMessage by remember { mutableStateOf<String?>(null) }
         var savedWalletAddress by remember { mutableStateOf(solanaManager.connectedPublicKey) }
+        var userSolBalance by remember { mutableDoubleStateOf(solanaManager.userSolBalance) }
+        var userSkrBalance by remember { mutableDoubleStateOf(solanaManager.userSkrBalance) }
+
+        // Refresh on-chain balances on startup and wallet changes
+        LaunchedEffect(savedWalletAddress) {
+            if (savedWalletAddress != null) {
+                val (sol, skr) = solanaManager.fetchOnChainBalances(savedWalletAddress)
+                userSolBalance = sol
+                userSkrBalance = skr
+            }
+        }
 
         // Observe real hardware sensor steps
         LaunchedEffect(Unit) {
@@ -168,6 +179,13 @@ class MainActivity : ComponentActivity() {
                                 commitmentState = commitmentState.copy(authority = addr ?: commitmentState.authority)
                                 CommitmentStore.saveCommitment(this@MainActivity, commitmentState)
                                 currentScreen = Screen.DASHBOARD
+                                lifecycleScope.launch {
+                                    if (addr != null) {
+                                        val (sol, skr) = solanaManager.fetchOnChainBalances(addr)
+                                        userSolBalance = sol
+                                        userSkrBalance = skr
+                                    }
+                                }
                                 Toast.makeText(
                                     this@MainActivity,
                                     "Connected: ${addr?.take(4)}...${addr?.takeLast(4)}",
@@ -186,6 +204,8 @@ class MainActivity : ComponentActivity() {
                     onConfirmJudgeKeypair = {
                         val addr = solanaManager.generateJudgeDevnetKeypair()
                         savedWalletAddress = addr
+                        userSolBalance = 0.1
+                        userSkrBalance = 2500.0
                         commitmentState = commitmentState.copy(authority = addr)
                         CommitmentStore.saveCommitment(this@MainActivity, commitmentState)
                         currentScreen = Screen.DASHBOARD
@@ -201,6 +221,8 @@ class MainActivity : ComponentActivity() {
                     onDisconnectWallet = {
                         solanaManager.clearConnectedWallet()
                         savedWalletAddress = null
+                        userSolBalance = 0.0
+                        userSkrBalance = 0.0
                         Toast.makeText(this@MainActivity, "Wallet disconnected", Toast.LENGTH_SHORT).show()
                     },
                     isConnecting = isConnectingWallet,
@@ -216,7 +238,8 @@ class MainActivity : ComponentActivity() {
                     currentSteps = currentSteps,
                     currentInternetMins = currentInternetMins,
                     walletAddress = savedWalletAddress ?: solanaManager.connectedPublicKey ?: "Seeker...7xK2",
-                    skrBalance = solanaManager.userSkrBalance,
+                    skrBalance = userSkrBalance,
+                    solBalance = userSolBalance,
                     isClockingIn = isClockingIn,
                     isDemoMode = isJudgeMode,
                     onClockIn = {
@@ -244,12 +267,26 @@ class MainActivity : ComponentActivity() {
                         currentScreen = Screen.CREATE_PLEDGE
                     },
                     onRequestAirdrop = {
-                        val tx = solanaManager.airdropDevnetSkr(10000.0)
-                        Toast.makeText(
-                            this@MainActivity,
-                            "💧 Devnet Faucet: +10,000 \$SKR added! Tx: ${tx.signature.take(8)}...",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        lifecycleScope.launch {
+                            val target = savedWalletAddress ?: solanaManager.connectedPublicKey
+                            if (target == null) {
+                                Toast.makeText(this@MainActivity, "Please connect your wallet first!", Toast.LENGTH_SHORT).show()
+                                return@launch
+                            }
+                            Toast.makeText(this@MainActivity, "💧 Requesting 10,000 \$SKR from Solana Devnet...", Toast.LENGTH_SHORT).show()
+                            val res = solanaManager.requestDevnetFaucet(target, 10000.0)
+                            res.onSuccess { faucetRes ->
+                                userSolBalance = faucetRes.solBalance
+                                userSkrBalance = faucetRes.skrBalance
+                                Toast.makeText(
+                                    this@MainActivity,
+                                    "🎉 +10,000 \$SKR Added!\nNew Bal: ${String.format(java.util.Locale.US, "%,.0f", faucetRes.skrBalance)} \$SKR\nTx: ${faucetRes.signature.take(8)}...",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }.onFailure { ex ->
+                                Toast.makeText(this@MainActivity, "Faucet Error: ${ex.message}", Toast.LENGTH_SHORT).show()
+                            }
+                        }
                     },
                     onSelectPreset = { preset ->
                         val stakeAmount = when (preset.id) {
@@ -259,7 +296,7 @@ class MainActivity : ComponentActivity() {
                             "gym_workout" -> 750.0
                             else -> 2500.0
                         }
-                        if (solanaManager.userSkrBalance < stakeAmount) {
+                        if (userSkrBalance < stakeAmount) {
                             Toast.makeText(
                                 this@MainActivity,
                                 "Insufficient Balance! Need ${stakeAmount.toInt()} \$SKR. Tap 'Request Faucet' first.",
@@ -267,6 +304,7 @@ class MainActivity : ComponentActivity() {
                             ).show()
                         } else {
                             solanaManager.deductSkr(stakeAmount)
+                            userSkrBalance = solanaManager.userSkrBalance
                             val newCommitment = commitmentState.copy(
                                 rule = preset,
                                 totalAmountSKR = stakeAmount,
@@ -353,7 +391,7 @@ class MainActivity : ComponentActivity() {
 
             Screen.CREATE_PLEDGE -> {
                 CreateCommitmentScreen(
-                    userSkrBalance = solanaManager.userSkrBalance,
+                    userSkrBalance = userSkrBalance,
                     onBack = { currentScreen = Screen.DASHBOARD },
                     onSubmitCommitment = { totalDays, targetSteps, stakeAmount, isDemo, habitRule ->
                         val newCommitment = CommitmentState(
@@ -372,6 +410,7 @@ class MainActivity : ComponentActivity() {
                         )
                         commitmentState = newCommitment
                         solanaManager.deductSkr(stakeAmount)
+                        userSkrBalance = solanaManager.userSkrBalance
                         CommitmentStore.saveCommitment(this@MainActivity, newCommitment)
                         val tx = solanaManager.recordTransaction("CREATE_ESCROW", stakeAmount)
                         currentScreen = Screen.DASHBOARD
@@ -396,8 +435,9 @@ class MainActivity : ComponentActivity() {
                             val refundSKR = commitmentState.totalAmountSKR * completionRate
                             val burnedSKR = commitmentState.totalAmountSKR - refundSKR
 
-                            val newBalance = solanaManager.userSkrBalance + refundSKR
+                            val newBalance = userSkrBalance + refundSKR
                             solanaManager.updateSkrBalance(newBalance)
+                            userSkrBalance = newBalance
 
                             val settledCommitment = commitmentState.copy(settled = true)
                             commitmentState = settledCommitment

@@ -1,0 +1,33 @@
+{
+  "name": "bozPledge SKR (Hackathon)",
+  "symbol": "SKR",
+  "description": "Official physical habit commitment, staking, and deflationary slashing token for the Solana Mobile Hackathon (Clock In).",
+  "image": "https://raw.githubusercontent.com/elaris-xyz/bozPledge/main/assets/logo.png",
+  "attributes": [
+    {
+      "trait_type": "Network",
+      "value": "Solana Devnet"
+    },
+    {
+      "trait_type": "Hackathon",
+      "value": "Solana Mobile Hackathon - CLOCK IN"
+    },
+    {
+      "trait_type": "Target Hardware",
+      "value": "Solana Seeker & Android"
+    },
+    {
+      "trait_type": "Burn Mechanism",
+      "value": "100% Zero-Profit Settle Slashing"
+    }
+  ],
+  "properties": {
+    "files": [
+      {
+        "uri": "https://raw.githubusercontent.com/elaris-xyz/bozPledge/main/assets/logo.png",
+        "type": "image/png"
+      }
+    ],
+    "category": "image"
+  }
+}

@@ -200,4 +200,87 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error('Failed to copy: ', err);
     });
   };
+
+  // Instant Web Faucet Request
+  window.requestWebFaucet = async function() {
+    const input = document.getElementById('faucetWalletInput');
+    const btn = document.getElementById('faucetSubmitBtn');
+    const resBox = document.getElementById('faucetResultBox');
+
+    if (!input || !btn || !resBox) return;
+
+    const address = input.value.trim();
+    if (!address || address.length < 32 || address.length > 44) {
+      resBox.style.display = 'block';
+      resBox.style.background = 'rgba(255, 59, 48, 0.15)';
+      resBox.style.border = '1px solid rgba(255, 59, 48, 0.4)';
+      resBox.style.color = '#ff3b30';
+      resBox.innerHTML = '⚠️ Please enter a valid Solana Devnet wallet public address (32-44 characters).';
+      return;
+    }
+
+    const origBtnHtml = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<span>Minting on Devnet... ⏳</span>';
+    resBox.style.display = 'block';
+    resBox.style.background = 'rgba(0, 194, 255, 0.1)';
+    resBox.style.border = '1px solid rgba(0, 194, 255, 0.3)';
+    resBox.style.color = '#00c2ff';
+    resBox.innerHTML = '📡 Broadcasting transaction to Solana Devnet RPC... Please wait ~5-10 seconds.';
+
+    const endpoints = [
+      '/api/faucet',
+      'http://localhost:8080/api/faucet'
+    ];
+
+    let success = false;
+    let data = null;
+    let lastError = null;
+
+    for (const ep of endpoints) {
+      try {
+        const resp = await fetch(ep, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ address, amount: 10000 })
+        });
+        if (resp.ok) {
+          data = await resp.json();
+          success = true;
+          break;
+        } else {
+          const errData = await resp.json().catch(() => ({}));
+          lastError = errData.error || `HTTP ${resp.status}`;
+        }
+      } catch (e) {
+        lastError = e.message;
+      }
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = origBtnHtml;
+
+    if (success && data && data.signature) {
+      resBox.style.background = 'rgba(20, 241, 149, 0.12)';
+      resBox.style.border = '1px solid rgba(20, 241, 149, 0.4)';
+      resBox.style.color = '#14F195';
+      resBox.innerHTML = `
+        <div style="font-weight: 800; font-size: 1rem; margin-bottom: 0.35rem;">🎉 Success! 10,000 $SKR Minted On-Chain</div>
+        <div style="font-size: 0.85rem; color: #fff; margin-bottom: 0.5rem;">
+          Recipient: <code style="font-family: monospace; color: #00FFA3;">${address.slice(0, 8)}...${address.slice(-6)}</code> • 
+          New Balance: <strong>${data.newSkrBalance?.toLocaleString() || '10,000'} $SKR</strong> (${data.newSolBalance?.toFixed(3) || '0.100'} SOL)
+        </div>
+        <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+          <a href="${data.explorerUrl || `https://explorer.solana.com/tx/${data.signature}?cluster=devnet`}" target="_blank" rel="noopener noreferrer" style="color: #00c2ff; font-weight: 700; text-decoration: underline;">
+            View Transaction on Solana Explorer ↗
+          </a>
+        </div>
+      `;
+    } else {
+      resBox.style.background = 'rgba(255, 59, 48, 0.15)';
+      resBox.style.border = '1px solid rgba(255, 59, 48, 0.4)';
+      resBox.style.color = '#ff3b30';
+      resBox.innerHTML = `⚠️ Faucet request failed: ${lastError || 'Network timeout'}. You can also run <code>python scripts/faucet_airdrop.py ${address}</code> locally.`;
+    }
+  };
 });
