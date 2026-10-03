@@ -108,18 +108,26 @@ class MainActivity : ComponentActivity() {
         var isClockingIn by remember { mutableStateOf(false) }
         var isSettling by remember { mutableStateOf(false) }
         var isConnectingWallet by remember { mutableStateOf(false) }
+        var isRefreshingBalances by remember { mutableStateOf(false) }
         var showNoWalletDialog by remember { mutableStateOf(false) }
         var walletErrorMessage by remember { mutableStateOf<String?>(null) }
-        var savedWalletAddress by remember { mutableStateOf(solanaManager.connectedPublicKey) }
+        var savedWalletAddress by remember {
+            val initial = solanaManager.connectedPublicKey
+            mutableStateOf(if (initial != null && solanaManager.isValidSolanaAddress(initial)) initial else null)
+        }
         var userSolBalance by remember { mutableDoubleStateOf(solanaManager.userSolBalance) }
         var userSkrBalance by remember { mutableDoubleStateOf(solanaManager.userSkrBalance) }
 
-        // Refresh on-chain balances on startup and wallet changes
+        // Refresh on-chain balances on startup, wallet changes, and every 12s in background
         LaunchedEffect(savedWalletAddress) {
-            if (savedWalletAddress != null) {
-                val (sol, skr) = solanaManager.fetchOnChainBalances(savedWalletAddress)
-                userSolBalance = sol
-                userSkrBalance = skr
+            while (isActive) {
+                val addr = savedWalletAddress
+                if (addr != null && solanaManager.isValidSolanaAddress(addr)) {
+                    val (sol, skr) = solanaManager.fetchOnChainBalances(addr)
+                    userSolBalance = sol
+                    userSkrBalance = skr
+                }
+                delay(12_000L)
             }
         }
 
@@ -279,11 +287,31 @@ class MainActivity : ComponentActivity() {
                     state = commitmentState,
                     currentSteps = currentSteps,
                     currentInternetMins = currentInternetMins,
-                    walletAddress = savedWalletAddress ?: solanaManager.connectedPublicKey ?: "Seeker...7xK2",
+                    walletAddress = savedWalletAddress ?: solanaManager.connectedPublicKey,
                     skrBalance = userSkrBalance,
                     solBalance = userSolBalance,
                     isClockingIn = isClockingIn,
                     isDemoMode = isJudgeMode,
+                    onRefreshBalances = {
+                        lifecycleScope.launch {
+                            val target = savedWalletAddress ?: solanaManager.connectedPublicKey
+                            if (target != null && solanaManager.isValidSolanaAddress(target)) {
+                                isRefreshingBalances = true
+                                val (sol, skr) = solanaManager.fetchOnChainBalances(target)
+                                userSolBalance = sol
+                                userSkrBalance = skr
+                                isRefreshingBalances = false
+                                Toast.makeText(
+                                    this@MainActivity,
+                                    "✓ Devnet Synced: ${String.format(java.util.Locale.US, "%.3f", sol)} SOL • ${String.format(java.util.Locale.US, "%,.0f", skr)} \$SKR",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else {
+                                Toast.makeText(this@MainActivity, "Please connect a Devnet wallet first.", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    },
+                    isRefreshingBalances = isRefreshingBalances,
                     onClockIn = {
                         lifecycleScope.launch {
                             isClockingIn = true

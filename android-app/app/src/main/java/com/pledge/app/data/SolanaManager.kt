@@ -85,7 +85,18 @@ class SolanaManager(private val context: Context) {
     val transactions: List<PledgeTransaction> get() = _transactions.toList()
 
     init {
+        // Discard any legacy dummy fallback address so user connects their real Devnet wallet
+        if (connectedPublicKey != null && !isValidSolanaAddress(connectedPublicKey)) {
+            clearConnectedWallet()
+        }
         loadTransactions()
+    }
+
+    fun isValidSolanaAddress(address: String?): Boolean {
+        if (address.isNullOrBlank()) return false
+        val trimmed = address.trim()
+        val base58Regex = Regex("^[1-9A-HJ-NP-Za-km-z]{32,44}$")
+        return base58Regex.matches(trimmed)
     }
 
     fun saveConnectedWallet(address: String) {
@@ -113,7 +124,7 @@ class SolanaManager(private val context: Context) {
      */
     suspend fun fetchOnChainBalances(address: String? = connectedPublicKey): Pair<Double, Double> = withContext(Dispatchers.IO) {
         val target = address ?: connectedPublicKey
-        if (target == null || target.startsWith("SeekerDemo") || target.startsWith("SeekerMWA_")) {
+        if (target == null || !isValidSolanaAddress(target)) {
             return@withContext Pair(userSolBalance, userSkrBalance)
         }
 
@@ -121,60 +132,83 @@ class SolanaManager(private val context: Context) {
         var sol = userSolBalance
         var skr = userSkrBalance
 
-        try {
-            // 1. Fetch real SOL balance via getBalance
-            val solPayload = JSONObject().apply {
-                put("jsonrpc", "2.0")
-                put("id", 1)
-                put("method", "getBalance")
-                put("params", org.json.JSONArray().apply {
-                    put(target)
-                })
-            }
-            val solResp = rpcRequest(solPayload)
-            if (solResp.has("result")) {
-                val valObj = solResp.getJSONObject("result")
-                val lamports = valObj.optLong("value", -1L)
-                if (lamports >= 0) {
-                    sol = lamports / 1_000_000_000.0
-                    updateSolBalance(sol)
-                }
-            }
-        } catch (_: Exception) {}
+        val rpcEndpoints = listOf(
+            "https://api.devnet.solana.com",
+            "https://rpc.ankr.com/solana_devnet"
+        )
 
-        try {
-            // 2. Fetch real $SKR token balance via getTokenAccountsByOwner
-            val tokenPayload = JSONObject().apply {
-                put("jsonrpc", "2.0")
-                put("id", 2)
-                put("method", "getTokenAccountsByOwner")
-                put("params", org.json.JSONArray().apply {
-                    put(target)
-                    put(JSONObject().apply {
-                        put("mint", SKR_DEVNET_MINT)
+        // 1. Fetch real SOL balance via getBalance
+        for (rpc in rpcEndpoints) {
+            try {
+                val solPayload = JSONObject().apply {
+                    put("jsonrpc", "2.0")
+                    put("id", 1)
+                    put("method", "getBalance")
+                    put("params", org.json.JSONArray().apply {
+                        put(target)
+                        put(JSONObject().apply {
+                            put("commitment", "confirmed")
+                        })
                     })
-                    put(JSONObject().apply {
-                        put("encoding", "jsonParsed")
-                    })
-                })
-            }
-            val tokenResp = rpcRequest(tokenPayload)
-            if (tokenResp.has("result")) {
-                val resObj = tokenResp.getJSONObject("result")
-                val valueArr = resObj.optJSONArray("value")
-                if (valueArr != null && valueArr.length() > 0) {
-                    val accountObj = valueArr.getJSONObject(0)
-                    val dataObj = accountObj.getJSONObject("account").getJSONObject("data")
-                    val parsed = dataObj.getJSONObject("parsed")
-                    val tokenAmount = parsed.getJSONObject("info").getJSONObject("tokenAmount")
-                    skr = tokenAmount.optDouble("uiAmount", 0.0)
-                    updateSkrBalance(skr)
-                } else {
-                    skr = 0.0
-                    updateSkrBalance(0.0)
                 }
+                val solResp = rpcRequestToUrl(rpc, solPayload)
+                if (solResp.has("result")) {
+                    val res = solResp.get("result")
+                    val lamports = when (res) {
+                        is JSONObject -> res.optLong("value", -1L)
+                        is Number -> res.toLong()
+                        else -> -1L
+                    }
+                    if (lamports >= 0) {
+                        sol = lamports / 1_000_000_000.0
+                        updateSolBalance(sol)
+                        break
+                    }
+                }
+            } catch (e: Exception) {
+                android.util.Log.w("SolanaManager", "getBalance on $rpc failed: ${e.message}")
             }
-        } catch (_: Exception) {}
+        }
+
+        // 2. Fetch real $SKR token balance via getTokenAccountsByOwner
+        for (rpc in rpcEndpoints) {
+            try {
+                val tokenPayload = JSONObject().apply {
+                    put("jsonrpc", "2.0")
+                    put("id", 2)
+                    put("method", "getTokenAccountsByOwner")
+                    put("params", org.json.JSONArray().apply {
+                        put(target)
+                        put(JSONObject().apply {
+                            put("mint", SKR_DEVNET_MINT)
+                        })
+                        put(JSONObject().apply {
+                            put("encoding", "jsonParsed")
+                            put("commitment", "confirmed")
+                        })
+                    })
+                }
+                val tokenResp = rpcRequestToUrl(rpc, tokenPayload)
+                if (tokenResp.has("result")) {
+                    val resObj = tokenResp.getJSONObject("result")
+                    val valueArr = resObj.optJSONArray("value")
+                    if (valueArr != null && valueArr.length() > 0) {
+                        val accountObj = valueArr.getJSONObject(0)
+                        val dataObj = accountObj.optJSONObject("account")?.optJSONObject("data")
+                        val parsed = dataObj?.optJSONObject("parsed")
+                        val tokenAmount = parsed?.optJSONObject("info")?.optJSONObject("tokenAmount")
+                        val onChainSkr = tokenAmount?.optDouble("uiAmount", -1.0) ?: -1.0
+                        if (onChainSkr >= 0.0) {
+                            skr = onChainSkr
+                            updateSkrBalance(skr)
+                            break
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                android.util.Log.w("SolanaManager", "getTokenAccounts on $rpc failed: ${e.message}")
+            }
+        }
 
         isRefreshingBalance = false
         Pair(sol, skr)
@@ -291,15 +325,14 @@ class SolanaManager(private val context: Context) {
             when (val result = walletAdapter.connect(sender)) {
                 is TransactionResult.Success -> {
                     val pubkey = extractPublicKeyFromMwa(result)
-                    if (pubkey != null && pubkey.length in 32..44) {
+                    if (pubkey != null && isValidSolanaAddress(pubkey)) {
+                        android.util.Log.i("SolanaManager", "MWA Connection successful: $pubkey")
                         saveConnectedWallet(pubkey)
                         fetchOnChainBalances(pubkey)
                         Result.success(pubkey)
                     } else {
-                        // Fallback if extraction returned empty
-                        val fallback = "SeekerWallet_" + System.currentTimeMillis().toString().takeLast(6)
-                        saveConnectedWallet(fallback)
-                        Result.success(fallback)
+                        android.util.Log.e("SolanaManager", "MWA returned success but public key could not be extracted: $result")
+                        Result.failure(Exception("Could not retrieve Solana public key from wallet. Please try again or paste address."))
                     }
                 }
                 is TransactionResult.Failure -> {
@@ -315,51 +348,83 @@ class SolanaManager(private val context: Context) {
     }
 
     private fun extractPublicKeyFromMwa(result: TransactionResult.Success<*>): String? {
-        val payload = result.payload ?: return null
+        val candidates = mutableListOf<Any>()
+        candidates.add(result)
 
-        // 1. Try checking payload.publicKey directly
+        // 1. Inspect authResult (direct property or getter)
         try {
-            for (mName in listOf("getPublicKey", "publicKey", "getAddress", "address")) {
-                val prop = payload.javaClass.methods.firstOrNull { it.name.equals(mName, ignoreCase = true) }
-                    ?: payload.javaClass.fields.firstOrNull { it.name.equals(mName, ignoreCase = true) }
-                if (prop != null) {
-                    val v = if (prop is java.lang.reflect.Method) prop.invoke(payload) else (prop as java.lang.reflect.Field).get(payload)
-                    parseToSolanaAddress(v)?.let { return it }
+            for (m in result.javaClass.methods) {
+                if (m.name.equals("getAuthResult", ignoreCase = true) && m.parameterTypes.isEmpty()) {
+                    m.invoke(result)?.let { candidates.add(it) }
+                }
+            }
+            for (f in result.javaClass.fields) {
+                if (f.name.equals("authResult", ignoreCase = true)) {
+                    f.get(result)?.let { candidates.add(it) }
                 }
             }
         } catch (_: Exception) {}
 
-        // 2. Try checking payload.accounts (Array, List, or Iterable)
+        // 2. Inspect successPayload or payload
         try {
-            for (accName in listOf("getAccounts", "accounts")) {
-                val prop = payload.javaClass.methods.firstOrNull { it.name.equals(accName, ignoreCase = true) }
-                    ?: payload.javaClass.fields.firstOrNull { it.name.equals(accName, ignoreCase = true) }
-                if (prop != null) {
-                    val accountsObj = if (prop is java.lang.reflect.Method) prop.invoke(payload) else (prop as java.lang.reflect.Field).get(payload)
-                    if (accountsObj != null) {
-                        val firstAccount: Any? = when {
-                            accountsObj.javaClass.isArray -> {
-                                if (java.lang.reflect.Array.getLength(accountsObj) > 0) java.lang.reflect.Array.get(accountsObj, 0) else null
-                            }
-                            accountsObj is List<*> -> accountsObj.firstOrNull()
-                            accountsObj is Iterable<*> -> accountsObj.firstOrNull()
-                            else -> null
-                        }
+            for (m in result.javaClass.methods) {
+                if ((m.name.equals("getSuccessPayload", ignoreCase = true) || m.name.equals("getPayload", ignoreCase = true)) && m.parameterTypes.isEmpty()) {
+                    m.invoke(result)?.let { candidates.add(it) }
+                }
+            }
+            for (f in result.javaClass.fields) {
+                if (f.name.equals("successPayload", ignoreCase = true) || f.name.equals("payload", ignoreCase = true)) {
+                    f.get(result)?.let { candidates.add(it) }
+                }
+            }
+        } catch (_: Exception) {}
 
-                        if (firstAccount != null) {
-                            for (mName in listOf("getPublicKey", "publicKey", "getAddress", "address")) {
-                                val m = firstAccount.javaClass.methods.firstOrNull { it.name.equals(mName, ignoreCase = true) }
-                                    ?: firstAccount.javaClass.fields.firstOrNull { it.name.equals(mName, ignoreCase = true) }
-                                if (m != null) {
-                                    val v = if (m is java.lang.reflect.Method) m.invoke(firstAccount) else (m as java.lang.reflect.Field).get(firstAccount)
-                                    parseToSolanaAddress(v)?.let { return it }
+        // 3. Search all candidates for valid Solana address
+        for (cand in candidates) {
+            parseToSolanaAddress(cand)?.let { return it }
+
+            // Methods returning public key or address directly
+            try {
+                for (m in cand.javaClass.methods) {
+                    if (m.parameterTypes.isEmpty() && (m.name.equals("getPublicKey", ignoreCase = true) ||
+                                m.name.equals("publicKey", ignoreCase = true) ||
+                                m.name.equals("getAddress", ignoreCase = true) ||
+                                m.name.equals("address", ignoreCase = true))) {
+                        val v = m.invoke(cand)
+                        parseToSolanaAddress(v)?.let { return it }
+                    }
+                }
+            } catch (_: Exception) {}
+
+            // Accounts collection (Array, List, Iterable)
+            try {
+                for (m in cand.javaClass.methods) {
+                    if (m.parameterTypes.isEmpty() && (m.name.equals("getAccounts", ignoreCase = true) || m.name.equals("accounts", ignoreCase = true))) {
+                        val accs = m.invoke(cand)
+                        if (accs != null) {
+                            val firstAcc: Any? = when {
+                                accs.javaClass.isArray -> if (java.lang.reflect.Array.getLength(accs) > 0) java.lang.reflect.Array.get(accs, 0) else null
+                                accs is List<*> -> accs.firstOrNull()
+                                accs is Iterable<*> -> accs.firstOrNull()
+                                else -> null
+                            }
+                            if (firstAcc != null) {
+                                parseToSolanaAddress(firstAcc)?.let { return it }
+                                for (am in firstAcc.javaClass.methods) {
+                                    if (am.parameterTypes.isEmpty() && (am.name.equals("getPublicKey", ignoreCase = true) ||
+                                                am.name.equals("publicKey", ignoreCase = true) ||
+                                                am.name.equals("getAddress", ignoreCase = true) ||
+                                                am.name.equals("address", ignoreCase = true))) {
+                                        val v = am.invoke(firstAcc)
+                                        parseToSolanaAddress(v)?.let { return it }
+                                    }
                                 }
                             }
                         }
                     }
                 }
-            }
-        } catch (_: Exception) {}
+            } catch (_: Exception) {}
+        }
 
         return null
     }
@@ -371,7 +436,8 @@ class SolanaManager(private val context: Context) {
         }
         if (value is String) {
             val trimmed = value.trim()
-            if (trimmed.length in 32..44 && !trimmed.contains(" ") && !trimmed.contains("/") && !trimmed.contains("+")) {
+            val base58Regex = Regex("^[1-9A-HJ-NP-Za-km-z]{32,44}$")
+            if (base58Regex.matches(trimmed)) {
                 return trimmed
             }
             if (trimmed.length == 44 && (trimmed.contains("/") || trimmed.contains("+") || trimmed.endsWith("="))) {
@@ -478,16 +544,21 @@ class SolanaManager(private val context: Context) {
     }
 
     private fun rpcRequest(payload: JSONObject): JSONObject {
-        val url = URL(RPC_URL)
+        return rpcRequestToUrl(RPC_URL, payload)
+    }
+
+    private fun rpcRequestToUrl(rpcUrl: String, payload: JSONObject): JSONObject {
+        val url = URL(rpcUrl)
         val conn = url.openConnection() as HttpURLConnection
         conn.requestMethod = "POST"
         conn.setRequestProperty("Content-Type", "application/json")
         conn.doOutput = true
-        conn.connectTimeout = 6000
-        conn.readTimeout = 6000
+        conn.connectTimeout = 7000
+        conn.readTimeout = 7000
 
         OutputStreamWriter(conn.outputStream).use { it.write(payload.toString()) }
-        val response = BufferedReader(InputStreamReader(conn.inputStream)).use { it.readText() }
+        val stream = if (conn.responseCode in 200..299) conn.inputStream else (conn.errorStream ?: conn.inputStream)
+        val response = BufferedReader(InputStreamReader(stream)).use { it.readText() }
         return JSONObject(response)
     }
 

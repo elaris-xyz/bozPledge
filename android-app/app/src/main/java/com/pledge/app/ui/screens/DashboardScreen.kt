@@ -63,6 +63,8 @@ fun DashboardScreen(
     onConnectWallet: () -> Unit = {},
     onToggleFreshState: () -> Unit = {},
     onRequestAirdrop: () -> Unit = {},
+    onRefreshBalances: () -> Unit = {},
+    isRefreshingBalances: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -244,7 +246,9 @@ fun DashboardScreen(
                 skrBalance = skrBalance,
                 onConnectWallet = onConnectWallet,
                 onOpenJudgeLab = { isJudgeSheetOpen = true },
-                onRequestAirdrop = onRequestAirdrop
+                onRequestAirdrop = onRequestAirdrop,
+                onRefreshBalances = onRefreshBalances,
+                isRefreshingBalances = isRefreshingBalances
             )
 
             // Main Content Area switched by selectedNavTab
@@ -649,16 +653,36 @@ fun Day0BlueprintCard(
             }
 
             Surface(
-                color = AppleGreen,
-                shape = RoundedCornerShape(50)
+                shape = RoundedCornerShape(50),
+                color = Color.Transparent,
+                border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF14F195).copy(alpha = 0.5f)),
+                modifier = Modifier
+                    .clip(RoundedCornerShape(50))
+                    .background(
+                        androidx.compose.ui.graphics.Brush.horizontalGradient(
+                            listOf(Color(0xFF14F195), Color(0xFF00DC82))
+                        )
+                    )
             ) {
-                Text(
-                    text = "Stake & Start",
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    color = Color.Black,
-                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
-                )
+                Row(
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 7.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Bolt,
+                        contentDescription = null,
+                        tint = Color(0xFF030D08),
+                        modifier = Modifier.size(13.dp)
+                    )
+                    Text(
+                        text = "Stake & Start",
+                        fontFamily = PlusJakartaSans,
+                        fontSize = 11.5.sp,
+                        fontWeight = FontWeight.Black,
+                        color = Color(0xFF030D08)
+                    )
+                }
             }
         }
     }

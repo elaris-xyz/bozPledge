@@ -18,40 +18,44 @@ val DarkBorder = Color(0x14FFFFFF) // 8% white divider
 val BorderSubtle = Color(0x14FFFFFF)
 val BorderMedium = Color(0x26FFFFFF) // 15% white
 
-// Apple HIG Accents (Apple Fitness & iOS Standard)
-val AppleGreen = Color(0xFF30D158) // Apple Fitness Green
-val AppleTeal = Color(0xFF64D2FF)
-val AppleBlue = Color(0xFF0A84FF)
-val ApplePurple = Color(0xFFBF5AF2)
+// Apple HIG Accents (Upgraded to Solana Brand Palette)
+val AppleGreen = Color(0xFF14F195) // Official Solana Electric Mint #14F195
+val AppleTeal = Color(0xFF00F0FF)  // Solana Cyan
+val AppleBlue = Color(0xFF2870ED)
+val ApplePurple = Color(0xFF9945FF) // Official Solana Purple #9945FF
 val AppleOrange = Color(0xFFFF9F0A)
 val AppleRed = Color(0xFFFF453A)
 val AppleYellow = Color(0xFFFFD60A)
 
-// Solana Brand / Legacy Aliases for seamless compatibility
-val SolanaMint = AppleGreen
-val SolanaGreen = AppleGreen
-val SolanaPurple = ApplePurple
-val SolanaTeal = AppleTeal
+// Solana Official Brand Identity
+val SolanaMint = Color(0xFF14F195)
+val SolanaGreen = Color(0xFF14F195)
+val SolanaPurple = Color(0xFF9945FF)
+val SolanaTeal = Color(0xFF00F0FF)
 val CrimsonBurn = AppleRed
 val FlameBurn = AppleRed
 val FlameRed = AppleRed
 val GoldGenesis = AppleOrange
 val GoldReward = AppleOrange
-val SuccessGreen = AppleGreen
+val SuccessGreen = Color(0xFF14F195)
 
 // Solana Seeker Signature Cyber-Luxury Accents
 val SolanaNeonMint = Color(0xFF14F195)
 val SolanaNeonPurple = Color(0xFF9945FF)
 val SolanaElectricCyan = Color(0xFF00F0FF)
+val SolanaDarkObsidian = Color(0xFF080A11)
+val SolanaCardSurface = Color(0xFF0E121E)
+val SolanaCardBorder = Color(0x3314F195)
 val SolanaGoldAmber = Color(0xFFFFD60A)
-val DarkGlassSurface = Color(0xCC1A1A22)
+val DarkGlassSurface = Color(0xCC101424)
 val DarkGlassBorder = Color(0x33FFFFFF)
 val GlowGreenAmbient = Color(0x2214F195)
 val GlowPurpleAmbient = Color(0x229945FF)
 
-// Apple Typography Hierarchy Colors
+// Typography Hierarchy Colors
 val TextPrimary = Color(0xFFFFFFFF)
 val TextSecondary = Color(0xFF8E8E93)
 val TextTertiary = Color(0xFF636366)
 val TextMuted = Color(0xFF636366)
+
 

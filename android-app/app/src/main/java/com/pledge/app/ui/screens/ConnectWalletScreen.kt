@@ -272,35 +272,43 @@ fun ConnectWalletScreen(
                                 }
                             }
 
-                            // Primary CTA: Enter bozPLEDGE
-                            Button(
-                                onClick = {
-                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                    onEnterApp()
-                                },
+                            // Primary CTA: Enter bozPLEDGE (Solana Gradient Button)
+                            Surface(
+                                shape = RoundedCornerShape(14.dp),
+                                color = Color.Transparent,
+                                border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF14F195).copy(alpha = 0.5f)),
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(52.dp),
-                                shape = RoundedCornerShape(14.dp),
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = SolanaNeonMint,
-                                    contentColor = Color(0xFF030D08)
-                                )
+                                    .height(52.dp)
+                                    .clip(RoundedCornerShape(14.dp))
+                                    .background(
+                                        androidx.compose.ui.graphics.Brush.horizontalGradient(
+                                            listOf(Color(0xFF14F195), Color(0xFF00DC82))
+                                        )
+                                    )
+                                    .clickable {
+                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                        onEnterApp()
+                                    }
                             ) {
                                 Row(
+                                    modifier = Modifier.fillMaxSize(),
                                     verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                    horizontalArrangement = Arrangement.Center
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.ArrowForward,
                                         contentDescription = null,
+                                        tint = Color(0xFF030D08),
                                         modifier = Modifier.size(18.dp)
                                     )
+                                    Spacer(modifier = Modifier.width(8.dp))
                                     Text(
                                         text = "Enter bozPLEDGE",
                                         fontFamily = PlusJakartaSans,
                                         fontSize = 15.sp,
-                                        fontWeight = FontWeight.Black
+                                        fontWeight = FontWeight.Black,
+                                        color = Color(0xFF030D08)
                                     )
                                 }
                             }
@@ -363,44 +371,59 @@ fun ConnectWalletScreen(
 
                     Spacer(modifier = Modifier.height(4.dp))
 
-                    // Primary Connection Button: MWA 2.0
-                    Button(
-                        onClick = {
-                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                            onConnectWallet()
-                        },
+                    // Primary Connection Button: MWA 2.0 with Solana Brand Gradient
+                    Surface(
+                        shape = RoundedCornerShape(14.dp),
+                        color = Color.Transparent,
+                        border = androidx.compose.foundation.BorderStroke(
+                            1.dp,
+                            androidx.compose.ui.graphics.Brush.horizontalGradient(
+                                listOf(SolanaNeonPurple.copy(alpha = 0.6f), Color(0xFF14F195).copy(alpha = 0.7f))
+                            )
+                        ),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(54.dp),
-                        shape = RoundedCornerShape(14.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = SolanaNeonMint,
-                            contentColor = Color(0xFF030D08)
-                        ),
-                        enabled = !isConnecting
-                    ) {
-                        if (isConnecting) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(22.dp),
-                                color = Color(0xFF030D08),
-                                strokeWidth = 2.dp
+                            .height(54.dp)
+                            .clip(RoundedCornerShape(14.dp))
+                            .background(
+                                androidx.compose.ui.graphics.Brush.horizontalGradient(
+                                    listOf(SolanaNeonPurple, Color(0xFF14F195))
+                                )
                             )
-                        } else {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.AccountBalanceWallet,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(19.dp)
+                            .clickable(enabled = !isConnecting) {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                onConnectWallet()
+                            }
+                    ) {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            if (isConnecting) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(22.dp),
+                                    color = Color(0xFF030D08),
+                                    strokeWidth = 2.dp
                                 )
-                                Text(
-                                    text = "Connect Solana Wallet (MWA)",
-                                    fontFamily = PlusJakartaSans,
-                                    fontSize = 15.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
+                            } else {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.AccountBalanceWallet,
+                                        contentDescription = null,
+                                        tint = Color(0xFF030D08),
+                                        modifier = Modifier.size(19.dp)
+                                    )
+                                    Text(
+                                        text = "Connect Solana Wallet (MWA)",
+                                        fontFamily = PlusJakartaSans,
+                                        fontSize = 15.sp,
+                                        fontWeight = FontWeight.Black,
+                                        color = Color(0xFF030D08)
+                                    )
+                                }
                             }
                         }
                     }
