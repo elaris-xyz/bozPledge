@@ -437,6 +437,7 @@ fun ConnectWalletScreen(
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.SemiBold
                             )
+                        }
                     }
 
                     // Tertiary Connection Button: Enter / Paste Devnet Address Directly
