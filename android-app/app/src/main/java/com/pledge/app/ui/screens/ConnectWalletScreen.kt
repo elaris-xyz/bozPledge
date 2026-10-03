@@ -39,6 +39,7 @@ fun ConnectWalletScreen(
     onConfirmJudgeKeypair: () -> Unit,
     onEnterApp: () -> Unit,
     onDisconnectWallet: () -> Unit,
+    onConnectCustomAddress: (String) -> Unit = {},
     isConnecting: Boolean = false,
     errorMessage: String? = null,
     showNoWalletDialog: Boolean = false,
@@ -51,6 +52,9 @@ fun ConnectWalletScreen(
     val clipboardManager = LocalClipboardManager.current
 
     var showJudgeConfirmDialog by remember { mutableStateOf(false) }
+    var showCustomAddressDialog by remember { mutableStateOf(false) }
+    var customAddressInput by remember { mutableStateOf("") }
+    var customAddressError by remember { mutableStateOf<String?>(null) }
 
     Box(
         modifier = modifier
@@ -433,6 +437,42 @@ fun ConnectWalletScreen(
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.SemiBold
                             )
+                    }
+
+                    // Tertiary Connection Button: Enter / Paste Devnet Address Directly
+                    OutlinedButton(
+                        onClick = {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            customAddressInput = ""
+                            customAddressError = null
+                            showCustomAddressDialog = true
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp),
+                        shape = RoundedCornerShape(14.dp),
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            containerColor = Color(0xFF090B14),
+                            contentColor = TextSecondary
+                        ),
+                        border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle)
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Edit,
+                                contentDescription = null,
+                                tint = TextSecondary,
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Text(
+                                text = "Enter / Paste Solana Address (Direct)",
+                                fontFamily = PlusJakartaSans,
+                                fontSize = 13.5.sp,
+                                fontWeight = FontWeight.Medium
+                            )
                         }
                     }
 
@@ -536,6 +576,115 @@ fun ConnectWalletScreen(
             dismissButton = {
                 TextButton(onClick = { showJudgeConfirmDialog = false }) {
                     Text(text = "Cancel", color = TextSecondary)
+                }
+            }
+        )
+    }
+
+    // -------------------------------------------------------------
+    // DIALOG: CUSTOM SOLANA DEVNET ADDRESS INPUT
+    // -------------------------------------------------------------
+    if (showCustomAddressDialog) {
+        AlertDialog(
+            onDismissRequest = { showCustomAddressDialog = false },
+            containerColor = Color(0xFF131626),
+            titleContentColor = Color.White,
+            textContentColor = TextSecondary,
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.AccountBalanceWallet,
+                    contentDescription = null,
+                    tint = SolanaElectricCyan,
+                    modifier = Modifier.size(30.dp)
+                )
+            },
+            title = {
+                Text(
+                    text = "Connect Solana Devnet Address",
+                    fontFamily = PlusJakartaSans,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 17.sp,
+                    textAlign = TextAlign.Center
+                )
+            },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Text(
+                        text = "Enter or paste your 32-44 character Solana Devnet wallet public address (e.g. Phantom, Solflare, or Seeker):",
+                        fontSize = 13.sp,
+                        lineHeight = 18.sp
+                    )
+
+                    OutlinedTextField(
+                        value = customAddressInput,
+                        onValueChange = {
+                            customAddressInput = it.trim()
+                            customAddressError = null
+                        },
+                        placeholder = {
+                            Text("e.g. C3pX6GYetQMAzDifjrr1NUhhEiYheRh8gqXnmN6TBfXp", fontSize = 12.sp, color = TextTertiary)
+                        },
+                        trailingIcon = {
+                            IconButton(onClick = {
+                                val clipText = clipboardManager.getText()?.text?.trim() ?: ""
+                                if (clipText.isNotEmpty()) {
+                                    customAddressInput = clipText
+                                    customAddressError = null
+                                }
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Default.ContentPaste,
+                                    contentDescription = "Paste",
+                                    tint = SolanaNeonMint,
+                                    modifier = Modifier.size(18.dp)
+                                )
+                            }
+                        },
+                        singleLine = true,
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedTextColor = Color.White,
+                            unfocusedTextColor = Color.White,
+                            focusedBorderColor = SolanaElectricCyan,
+                            unfocusedBorderColor = BorderSubtle,
+                            focusedContainerColor = Color(0xFF090A12),
+                            unfocusedContainerColor = Color(0xFF090A12)
+                        ),
+                        shape = RoundedCornerShape(10.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    if (customAddressError != null) {
+                        Text(
+                            text = customAddressError ?: "",
+                            color = Color(0xFFFF6B6B),
+                            fontSize = 11.5.sp
+                        )
+                    }
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        val trimmed = customAddressInput.trim()
+                        if (trimmed.length in 32..44 && !trimmed.contains(" ") && !trimmed.contains("/")) {
+                            showCustomAddressDialog = false
+                            onConnectCustomAddress(trimmed)
+                        } else {
+                            customAddressError = "Please enter a valid 32-44 char Solana Base58 address."
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = SolanaNeonMint,
+                        contentColor = Color(0xFF030D08)
+                    ),
+                    shape = RoundedCornerShape(10.dp)
+                ) {
+                    Text("Connect", fontWeight = FontWeight.Bold)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showCustomAddressDialog = false }) {
+                    Text("Cancel", color = TextSecondary)
                 }
             }
         )

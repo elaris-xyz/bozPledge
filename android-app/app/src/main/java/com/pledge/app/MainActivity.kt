@@ -52,7 +52,7 @@ class MainActivity : ComponentActivity() {
         hardwareTelemetry = HardwareTelemetry(this)
         activityResultSender = ActivityResultSender(this)
 
-        hardwareTelemetry.startListening()
+        requestSensorsPermission()
 
         setContent {
             PledgeTheme {
@@ -66,9 +66,34 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        hardwareTelemetry.startListening()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        hardwareTelemetry.stopListening()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         hardwareTelemetry.stopListening()
+    }
+
+    private fun requestSensorsPermission() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            if (checkSelfPermission(android.Manifest.permission.ACTIVITY_RECOGNITION) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(arrayOf(android.Manifest.permission.ACTIVITY_RECOGNITION), 1001)
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 1001 && grantResults.isNotEmpty() && grantResults[0] == android.content.pm.PackageManager.PERMISSION_GRANTED) {
+            hardwareTelemetry.startListening()
+        }
     }
 
     @Composable
@@ -143,9 +168,9 @@ class MainActivity : ComponentActivity() {
             )
         }
 
-        // Direct resume: If wallet is connected AND active pledge exists, enter Dashboard directly
+        // Direct resume: If wallet is connected, enter Dashboard directly
         val initialScreen = remember {
-            if (solanaManager.connectedPublicKey != null && (savedCommitment?.startTimestamp ?: 0L) > 0L) {
+            if (solanaManager.connectedPublicKey != null) {
                 Screen.DASHBOARD
             } else {
                 Screen.CONNECT_WALLET
@@ -212,6 +237,23 @@ class MainActivity : ComponentActivity() {
                         Toast.makeText(
                             this@MainActivity,
                             "Devnet Judge Keypair initialized: ${addr.take(6)}...${addr.takeLast(4)}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    },
+                    onConnectCustomAddress = { customAddress ->
+                        savedWalletAddress = customAddress
+                        solanaManager.saveConnectedWallet(customAddress)
+                        commitmentState = commitmentState.copy(authority = customAddress)
+                        CommitmentStore.saveCommitment(this@MainActivity, commitmentState)
+                        currentScreen = Screen.DASHBOARD
+                        lifecycleScope.launch {
+                            val (sol, skr) = solanaManager.fetchOnChainBalances(customAddress)
+                            userSolBalance = sol
+                            userSkrBalance = skr
+                        }
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Connected: ${customAddress.take(4)}...${customAddress.takeLast(4)}",
                             Toast.LENGTH_SHORT
                         ).show()
                     },

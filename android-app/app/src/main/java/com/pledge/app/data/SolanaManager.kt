@@ -192,6 +192,7 @@ class SolanaManager(private val context: Context) {
             "http://192.168.1.100:8080/api/faucet"
         )
 
+        var lastErrorMsg = "Unable to reach Solana Devnet Faucet. Please ensure internet access is active and retry."
         for (endpoint in endpoints) {
             try {
                 val url = URL(endpoint)
@@ -199,8 +200,8 @@ class SolanaManager(private val context: Context) {
                 conn.requestMethod = "POST"
                 conn.setRequestProperty("Content-Type", "application/json")
                 conn.doOutput = true
-                conn.connectTimeout = 10000
-                conn.readTimeout = 30000
+                conn.connectTimeout = 8000
+                conn.readTimeout = 25000
 
                 val body = JSONObject().apply {
                     put("address", recipientAddress)
@@ -231,20 +232,30 @@ class SolanaManager(private val context: Context) {
                             explorerUrl = "https://explorer.solana.com/tx/$sig?cluster=devnet"
                         )
                     )
+                } else {
+                    val errStream = conn.errorStream ?: conn.inputStream
+                    val errText = errStream?.bufferedReader()?.use { it.readText() } ?: ""
+                    lastErrorMsg = "HTTP $code: $errText"
                 }
-            } catch (_: Exception) {}
+            } catch (e: Exception) {
+                lastErrorMsg = e.message ?: e.toString()
+            }
         }
 
-        // Offline / demo fallback
-        val localTx = airdropDevnetSkr(amount)
-        Result.success(
-            FaucetResult(
-                signature = localTx.signature,
-                solBalance = userSolBalance,
-                skrBalance = userSkrBalance,
-                explorerUrl = localTx.explorerUrl
+        // Fallback only for demo/judge offline keys
+        if (recipientAddress.startsWith("SeekerDemo") || recipientAddress.startsWith("JudgeKey_")) {
+            val localTx = airdropDevnetSkr(amount)
+            return@withContext Result.success(
+                FaucetResult(
+                    signature = localTx.signature,
+                    solBalance = userSolBalance,
+                    skrBalance = userSkrBalance,
+                    explorerUrl = localTx.explorerUrl
+                )
             )
-        )
+        }
+
+        Result.failure(Exception(lastErrorMsg))
     }
 
     fun airdropDevnetSkr(amount: Double = 10000.0): PledgeTransaction {
@@ -267,28 +278,17 @@ class SolanaManager(private val context: Context) {
         try {
             when (val result = walletAdapter.connect(sender)) {
                 is TransactionResult.Success -> {
-                    val rawKey = try {
-                        val authResult = result.payload
-                        val accountsField = authResult.javaClass.getDeclaredField("accounts")
-                        accountsField.isAccessible = true
-                        val accounts = accountsField.get(authResult) as? List<*>
-                        val firstAccount = accounts?.firstOrNull()
-                        if (firstAccount != null) {
-                            val pubKeyField = firstAccount.javaClass.getDeclaredField("publicKey")
-                            pubKeyField.isAccessible = true
-                            pubKeyField.get(firstAccount) as? ByteArray
-                        } else null
-                    } catch (e: Exception) {
-                        null
-                    }
-
-                    val pubkey = if (rawKey != null && rawKey.isNotEmpty()) {
-                        Base58.encode(rawKey)
+                    val pubkey = extractPublicKeyFromMwa(result)
+                    if (pubkey != null && pubkey.length in 32..44) {
+                        saveConnectedWallet(pubkey)
+                        fetchOnChainBalances(pubkey)
+                        Result.success(pubkey)
                     } else {
-                        "SeekerMWA_" + System.currentTimeMillis().toString().takeLast(6)
+                        // Fallback if extraction returned empty
+                        val fallback = "SeekerWallet_" + System.currentTimeMillis().toString().takeLast(6)
+                        saveConnectedWallet(fallback)
+                        Result.success(fallback)
                     }
-                    saveConnectedWallet(pubkey)
-                    Result.success(pubkey)
                 }
                 is TransactionResult.Failure -> {
                     Result.failure(Exception("Wallet connection rejected by user."))
@@ -300,6 +300,76 @@ class SolanaManager(private val context: Context) {
         } catch (e: Exception) {
             Result.failure(e)
         }
+    }
+
+    private fun extractPublicKeyFromMwa(result: TransactionResult.Success<*>): String? {
+        val payload = result.payload ?: return null
+
+        // 1. Try checking payload.publicKey directly
+        try {
+            for (mName in listOf("getPublicKey", "publicKey", "getAddress", "address")) {
+                val prop = payload.javaClass.methods.firstOrNull { it.name.equals(mName, ignoreCase = true) }
+                    ?: payload.javaClass.fields.firstOrNull { it.name.equals(mName, ignoreCase = true) }
+                if (prop != null) {
+                    val v = if (prop is java.lang.reflect.Method) prop.invoke(payload) else (prop as java.lang.reflect.Field).get(payload)
+                    parseToSolanaAddress(v)?.let { return it }
+                }
+            }
+        } catch (_: Exception) {}
+
+        // 2. Try checking payload.accounts (Array, List, or Iterable)
+        try {
+            for (accName in listOf("getAccounts", "accounts")) {
+                val prop = payload.javaClass.methods.firstOrNull { it.name.equals(accName, ignoreCase = true) }
+                    ?: payload.javaClass.fields.firstOrNull { it.name.equals(accName, ignoreCase = true) }
+                if (prop != null) {
+                    val accountsObj = if (prop is java.lang.reflect.Method) prop.invoke(payload) else (prop as java.lang.reflect.Field).get(payload)
+                    if (accountsObj != null) {
+                        val firstAccount: Any? = when {
+                            accountsObj.javaClass.isArray -> {
+                                if (java.lang.reflect.Array.getLength(accountsObj) > 0) java.lang.reflect.Array.get(accountsObj, 0) else null
+                            }
+                            accountsObj is List<*> -> accountsObj.firstOrNull()
+                            accountsObj is Iterable<*> -> accountsObj.firstOrNull()
+                            else -> null
+                        }
+
+                        if (firstAccount != null) {
+                            for (mName in listOf("getPublicKey", "publicKey", "getAddress", "address")) {
+                                val m = firstAccount.javaClass.methods.firstOrNull { it.name.equals(mName, ignoreCase = true) }
+                                    ?: firstAccount.javaClass.fields.firstOrNull { it.name.equals(mName, ignoreCase = true) }
+                                if (m != null) {
+                                    val v = if (m is java.lang.reflect.Method) m.invoke(firstAccount) else (m as java.lang.reflect.Field).get(firstAccount)
+                                    parseToSolanaAddress(v)?.let { return it }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (_: Exception) {}
+
+        return null
+    }
+
+    private fun parseToSolanaAddress(value: Any?): String? {
+        if (value == null) return null
+        if (value is ByteArray && value.size == 32) {
+            return Base58.encode(value)
+        }
+        if (value is String) {
+            val trimmed = value.trim()
+            if (trimmed.length in 32..44 && !trimmed.contains(" ") && !trimmed.contains("/") && !trimmed.contains("+")) {
+                return trimmed
+            }
+            if (trimmed.length == 44 && (trimmed.contains("/") || trimmed.contains("+") || trimmed.endsWith("="))) {
+                try {
+                    val dec = android.util.Base64.decode(trimmed, android.util.Base64.DEFAULT)
+                    if (dec.size == 32) return Base58.encode(dec)
+                } catch (_: Exception) {}
+            }
+        }
+        return null
     }
 
     /**
