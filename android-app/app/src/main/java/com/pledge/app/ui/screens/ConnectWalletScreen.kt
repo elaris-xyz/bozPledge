@@ -313,7 +313,48 @@ fun ConnectWalletScreen(
                                 }
                             }
 
-                            // Secondary: Disconnect / Switch
+                            // Direct Switch Action Buttons
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                OutlinedButton(
+                                    onClick = {
+                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                        onConnectWallet()
+                                    },
+                                    modifier = Modifier.weight(1f).height(44.dp),
+                                    shape = RoundedCornerShape(12.dp),
+                                    colors = ButtonDefaults.outlinedButtonColors(
+                                        containerColor = Color(0xFF131728),
+                                        contentColor = SolanaNeonPurple
+                                    ),
+                                    border = androidx.compose.foundation.BorderStroke(1.dp, SolanaNeonPurple.copy(alpha = 0.5f))
+                                ) {
+                                    Text("Switch MWA", fontSize = 11.5.sp, fontWeight = FontWeight.Bold, color = Color(0xFFC48BFF))
+                                }
+
+                                OutlinedButton(
+                                    onClick = {
+                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                        customAddressInput = ""
+                                        customAddressError = null
+                                        showCustomAddressDialog = true
+                                    },
+                                    modifier = Modifier.weight(1f).height(44.dp),
+                                    shape = RoundedCornerShape(12.dp),
+                                    colors = ButtonDefaults.outlinedButtonColors(
+                                        containerColor = Color(0xFF0F121E),
+                                        contentColor = SolanaElectricCyan
+                                    ),
+                                    border = androidx.compose.foundation.BorderStroke(1.dp, SolanaElectricCyan.copy(alpha = 0.4f))
+                                ) {
+                                    Text("Paste Address", fontSize = 11.5.sp, fontWeight = FontWeight.Bold, color = SolanaElectricCyan)
+                                }
+                            }
+
+                            // Secondary: Disconnect Wallet
                             TextButton(
                                 onClick = {
                                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
@@ -332,7 +373,7 @@ fun ConnectWalletScreen(
                                         modifier = Modifier.size(15.dp)
                                     )
                                     Text(
-                                        text = "Disconnect / Switch Wallet",
+                                        text = "Disconnect Wallet",
                                         fontSize = 12.sp,
                                         fontWeight = FontWeight.Medium,
                                         color = TextTertiary

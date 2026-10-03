@@ -58,4 +58,16 @@ val TextSecondary = Color(0xFF8E8E93)
 val TextTertiary = Color(0xFF636366)
 val TextMuted = Color(0xFF636366)
 
+// Official Solana Gradients & Button Text
+val SolanaSignatureGradient = androidx.compose.ui.graphics.Brush.horizontalGradient(
+    listOf(Color(0xFF9945FF), Color(0xFF14F195))
+)
+val SolanaMintCyanGradient = androidx.compose.ui.graphics.Brush.horizontalGradient(
+    listOf(Color(0xFF14F195), Color(0xFF00F0FF))
+)
+val SolanaGlassBorderGradient = androidx.compose.ui.graphics.Brush.horizontalGradient(
+    listOf(Color(0x999945FF), Color(0x6600F0FF), Color(0x9914F195))
+)
+val SolanaButtonTextDark = Color(0xFF030D08)
+
 

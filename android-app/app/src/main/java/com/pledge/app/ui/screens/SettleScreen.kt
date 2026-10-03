@@ -117,40 +117,76 @@ fun SettleScreen(
         Spacer(modifier = Modifier.height(32.dp))
 
         if (!state.settled) {
-            Button(
-                onClick = onSettleConfirmed,
-                colors = ButtonDefaults.buttonColors(containerColor = if (state.completedDays == state.totalDays) AppleGreen else AppleRed),
-                shape = RoundedCornerShape(50),
+            val isSuccess = state.completedDays == state.totalDays
+            Surface(
+                color = if (isSuccess) Color.Transparent else Color(0xFF241014),
+                shape = RoundedCornerShape(16.dp),
+                border = androidx.compose.foundation.BorderStroke(
+                    1.dp,
+                    if (isSuccess) Color(0xFF14F195).copy(alpha = 0.8f) else AppleRed.copy(alpha = 0.8f)
+                ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(52.dp)
-            ) {
-                if (isSettling) {
-                    CircularProgressIndicator(color = Color.Black, modifier = Modifier.size(24.dp))
-                } else {
-                    Text(
-                        text = "Execute Settle On-Chain",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 14.5.sp,
-                        color = if (state.completedDays == state.totalDays) Color.Black else Color.White
+                    .height(54.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    .then(
+                        if (isSuccess) Modifier.background(SolanaSignatureGradient) else Modifier
                     )
+                    .clickable(enabled = !isSettling) {
+                        onSettleConfirmed()
+                    }
+            ) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (isSettling) {
+                        CircularProgressIndicator(
+                            color = if (isSuccess) SolanaButtonTextDark else Color.White,
+                            modifier = Modifier.size(24.dp),
+                            strokeWidth = 2.5.dp
+                        )
+                    } else {
+                        Text(
+                            text = "Execute Settle On-Chain",
+                            fontWeight = FontWeight.Black,
+                            fontFamily = PlusJakartaSans,
+                            fontSize = 15.sp,
+                            color = if (isSuccess) SolanaButtonTextDark else Color.White
+                        )
+                    }
                 }
             }
         } else {
-            Button(
-                onClick = onDone,
-                colors = ButtonDefaults.buttonColors(containerColor = ApplePurple),
-                shape = RoundedCornerShape(50),
+            Surface(
+                color = Color.Transparent,
+                shape = RoundedCornerShape(16.dp),
+                border = androidx.compose.foundation.BorderStroke(1.dp, SolanaNeonPurple.copy(alpha = 0.8f)),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(52.dp)
+                    .height(54.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(
+                        Brush.horizontalGradient(
+                            listOf(SolanaNeonPurple, Color(0xFF6B26DF))
+                        )
+                    )
+                    .clickable {
+                        onDone()
+                    }
             ) {
-                Text(
-                    text = "Start Next Commitment",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 14.5.sp,
-                    color = Color.White
-                )
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Start Next Commitment",
+                        fontWeight = FontWeight.Black,
+                        fontFamily = PlusJakartaSans,
+                        fontSize = 15.sp,
+                        color = Color.White
+                    )
+                }
             }
         }
     }

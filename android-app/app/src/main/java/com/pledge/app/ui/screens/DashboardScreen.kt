@@ -1173,11 +1173,11 @@ fun ActiveTabContent(
                     )
 
                     Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        // Next Day Simulation button
+                        // Next Day Simulation button (Sleek Cyber Cyan Pill)
                         Surface(
-                            color = AppleGreen.copy(alpha = 0.15f),
-                            shape = RoundedCornerShape(8.dp),
-                            border = androidx.compose.foundation.BorderStroke(0.5.dp, AppleGreen.copy(alpha = 0.3f)),
+                            color = Color(0xFF0C1322),
+                            shape = RoundedCornerShape(20.dp),
+                            border = androidx.compose.foundation.BorderStroke(1.dp, SolanaElectricCyan.copy(alpha = 0.5f)),
                             modifier = Modifier.clickable {
                                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                 if (currentDay >= totalDays) {
@@ -1188,32 +1188,54 @@ fun ActiveTabContent(
                                 }
                             }
                         ) {
-                            Text(
-                                text = "Advance Day",
-                                fontSize = 10.5.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = AppleGreen,
-                                modifier = Modifier.padding(horizontal = 7.dp, vertical = 3.dp)
-                            )
+                            Row(
+                                modifier = Modifier.padding(horizontal = 9.dp, vertical = 4.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.FastForward,
+                                    contentDescription = null,
+                                    tint = SolanaElectricCyan,
+                                    modifier = Modifier.size(11.dp)
+                                )
+                                Text(
+                                    text = "Sim Day +1",
+                                    fontSize = 10.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = SolanaElectricCyan
+                                )
+                            }
                         }
 
-                        // Slash & Burn button
+                        // Slash & Burn button (Sleek Cyber Crimson Pill)
                         Surface(
-                            color = AppleRed.copy(alpha = 0.15f),
-                            shape = RoundedCornerShape(8.dp),
-                            border = androidx.compose.foundation.BorderStroke(0.5.dp, AppleRed.copy(alpha = 0.3f)),
+                            color = Color(0xFF1E0E14),
+                            shape = RoundedCornerShape(20.dp),
+                            border = androidx.compose.foundation.BorderStroke(1.dp, AppleRed.copy(alpha = 0.5f)),
                             modifier = Modifier.clickable {
                                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                 onTriggerSlashing()
                             }
                         ) {
-                            Text(
-                                text = "Slash Stake",
-                                fontSize = 10.5.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = AppleRed,
-                                modifier = Modifier.padding(horizontal = 7.dp, vertical = 3.dp)
-                            )
+                            Row(
+                                modifier = Modifier.padding(horizontal = 9.dp, vertical = 4.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.LocalFireDepartment,
+                                    contentDescription = null,
+                                    tint = AppleRed,
+                                    modifier = Modifier.size(11.dp)
+                                )
+                                Text(
+                                    text = "Test Slash",
+                                    fontSize = 10.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = AppleRed
+                                )
+                            }
                         }
                     }
                 }
@@ -1231,19 +1253,29 @@ fun ActiveTabContent(
 
                         Box(
                             modifier = Modifier
-                                .size(28.dp)
+                                .size(30.dp)
                                 .clip(CircleShape)
-                                .background(
-                                    when {
-                                        isClockedIn -> AppleGreen.copy(alpha = 0.2f)
-                                        isFailed -> AppleRed.copy(alpha = 0.2f)
-                                        isCurrent -> AppleGreen
-                                        isPast -> AppleRed.copy(alpha = 0.2f)
-                                        else -> SurfaceElevated
+                                .then(
+                                    if (isCurrent) {
+                                        Modifier.background(SolanaSignatureGradient)
+                                    } else {
+                                        Modifier.background(
+                                            when {
+                                                isClockedIn -> SolanaNeonMint.copy(alpha = 0.18f)
+                                                isFailed -> AppleRed.copy(alpha = 0.18f)
+                                                isPast -> AppleRed.copy(alpha = 0.18f)
+                                                else -> SurfaceElevated
+                                            }
+                                        )
                                     }
                                 )
                                 .then(
-                                    if (isFailed) Modifier.border(1.dp, AppleRed, CircleShape) else Modifier
+                                    when {
+                                        isCurrent -> Modifier.border(1.5.dp, SolanaElectricCyan, CircleShape)
+                                        isClockedIn -> Modifier.border(1.dp, SolanaNeonMint.copy(alpha = 0.6f), CircleShape)
+                                        isFailed -> Modifier.border(1.dp, AppleRed, CircleShape)
+                                        else -> Modifier
+                                    }
                                 ),
                             contentAlignment = Alignment.Center
                         ) {
@@ -1251,22 +1283,22 @@ fun ActiveTabContent(
                                 Icon(
                                     imageVector = Icons.Default.Check,
                                     contentDescription = "Done",
-                                    tint = AppleGreen,
-                                    modifier = Modifier.size(13.dp)
+                                    tint = SolanaNeonMint,
+                                    modifier = Modifier.size(14.dp)
                                 )
                             } else if (isFailed || isPast) {
                                 Icon(
                                     imageVector = Icons.Default.Close,
                                     contentDescription = "Failed",
                                     tint = AppleRed,
-                                    modifier = Modifier.size(11.dp)
+                                    modifier = Modifier.size(12.dp)
                                 )
                             } else {
                                 Text(
                                     text = "${i + 1}",
-                                    fontSize = 10.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = if (isCurrent) Color.Black else TextMuted
+                                    fontSize = 11.sp,
+                                    fontWeight = FontWeight.Black,
+                                    color = if (isCurrent) Color(0xFF030D08) else TextMuted
                                 )
                             }
                         }

@@ -83,8 +83,8 @@ module.exports = async function handler(req, res) {
       );
     }
 
-    // 2. Check/Derive Associated Token Account
-    const recipientAta = await getAssociatedTokenAddress(MINT_PUBKEY, recipientPubkey);
+    // 2. Check/Derive Associated Token Account (supports on-curve wallets and off-curve judge keys)
+    const recipientAta = await getAssociatedTokenAddress(MINT_PUBKEY, recipientPubkey, true);
     const ataAccount = await connection.getAccountInfo(recipientAta);
 
     if (!ataAccount) {

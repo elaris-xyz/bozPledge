@@ -172,7 +172,7 @@ fun SeedVaultAuthCard(
                                 )
                                 .border(
                                     2.dp,
-                                    if (isAlreadyClockedInToday) AppleGreen else SolanaNeonMint,
+                                    if (isAlreadyClockedInToday) SolanaNeonMint else SolanaNeonMint,
                                     CircleShape
                                 )
                                 .clickable(enabled = canClockIn && !isAlreadyClockedInToday && !isClockingIn) {
@@ -191,7 +191,7 @@ fun SeedVaultAuthCard(
                                 Icon(
                                     imageVector = if (isAlreadyClockedInToday) Icons.Default.CheckCircle else Icons.Default.Fingerprint,
                                     contentDescription = "Seed Vault Biometric",
-                                    tint = if (isAlreadyClockedInToday) AppleGreen else SolanaNeonMint,
+                                    tint = if (isAlreadyClockedInToday) SolanaNeonMint else SolanaNeonMint,
                                     modifier = Modifier.size(38.dp)
                                 )
                             }
@@ -217,18 +217,18 @@ fun SeedVaultAuthCard(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Glowing Luxury Sign & Commit CTA Button
+                // Glowing Luxury Sign & Commit CTA Button (Solana Signature Gradient)
                 Surface(
                     color = when {
-                        isAlreadyClockedInToday -> AppleGreen.copy(alpha = 0.18f)
+                        isAlreadyClockedInToday -> SolanaNeonMint.copy(alpha = 0.15f)
                         canClockIn -> Color.Transparent
-                        else -> SurfaceElevated
+                        else -> Color(0xFF101322)
                     },
-                    shape = RoundedCornerShape(50),
+                    shape = RoundedCornerShape(16.dp),
                     border = androidx.compose.foundation.BorderStroke(
                         1.dp,
                         when {
-                            isAlreadyClockedInToday -> AppleGreen.copy(alpha = 0.4f)
+                            isAlreadyClockedInToday -> SolanaNeonMint.copy(alpha = 0.6f)
                             canClockIn -> SolanaNeonMint
                             else -> BorderSubtle
                         }
@@ -246,11 +246,7 @@ fun SeedVaultAuthCard(
                             .fillMaxSize()
                             .then(
                                 if (canClockIn && !isAlreadyClockedInToday) {
-                                    Modifier.background(
-                                        Brush.horizontalGradient(
-                                            listOf(SolanaNeonMint, SolanaElectricCyan)
-                                        )
-                                    )
+                                    Modifier.background(SolanaSignatureGradient)
                                 } else Modifier
                             ),
                         contentAlignment = Alignment.Center
@@ -266,7 +262,7 @@ fun SeedVaultAuthCard(
                                 Icon(
                                     imageVector = if (isAlreadyClockedInToday) Icons.Default.CheckCircle else Icons.Default.Lock,
                                     contentDescription = null,
-                                    tint = if (canClockIn && !isAlreadyClockedInToday) Color.Black else if (isAlreadyClockedInToday) AppleGreen else TextMuted,
+                                    tint = if (canClockIn && !isAlreadyClockedInToday) SolanaButtonTextDark else if (isAlreadyClockedInToday) SolanaNeonMint else TextMuted,
                                     modifier = Modifier.size(16.dp)
                                 )
                                 Text(
@@ -279,7 +275,7 @@ fun SeedVaultAuthCard(
                                     fontSize = 13.5.sp,
                                     fontWeight = FontWeight.Black,
                                     letterSpacing = 0.5.sp,
-                                    color = if (canClockIn && !isAlreadyClockedInToday) Color.Black else if (isAlreadyClockedInToday) AppleGreen else TextMuted
+                                    color = if (canClockIn && !isAlreadyClockedInToday) SolanaButtonTextDark else if (isAlreadyClockedInToday) SolanaNeonMint else TextMuted
                                 )
                             }
                             Text(

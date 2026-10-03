@@ -633,13 +633,16 @@ fun CreateCommitmentScreen(
 
             Spacer(modifier = Modifier.height(18.dp))
 
-            // Deploy Button (Solid Apple Fitness Green Capsule)
+            // Deploy Button (Solana Signature Gradient Capsule)
             Surface(
-                color = AppleGreen,
-                shape = RoundedCornerShape(50),
+                color = Color.Transparent,
+                shape = RoundedCornerShape(16.dp),
+                border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF14F195).copy(alpha = 0.8f)),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(52.dp)
+                    .height(54.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(SolanaSignatureGradient)
                     .clickable {
                         val stepsTarget = activeRule.thresholdLimit.toInt()
                         onSubmitCommitment(selectedDays, stepsTarget, stakeAmount, isDemoMode, activeRule)
@@ -650,12 +653,12 @@ fun CreateCommitmentScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "DEPLOY SMART ESCROW (${String.format("%,.0f", stakeAmount)} \$SKR)",
-                        color = Color.Black,
+                        text = "DEPLOY SMART ESCROW (${String.format(java.util.Locale.US, "%,.0f", stakeAmount)} \$SKR)",
+                        color = Color(0xFF030D08),
                         fontFamily = PlusJakartaSans,
-                        fontWeight = FontWeight.ExtraBold,
-                        fontSize = 13.5.sp,
-                        letterSpacing = 0.4.sp
+                        fontWeight = FontWeight.Black,
+                        fontSize = 14.sp,
+                        letterSpacing = 0.5.sp
                     )
                 }
             }

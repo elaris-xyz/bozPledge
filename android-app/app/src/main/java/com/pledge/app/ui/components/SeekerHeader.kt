@@ -151,11 +151,11 @@ fun SeekerHeader(
 
                 // Wallet Address Pill (Clickable to view/switch wallet)
                 Surface(
-                    color = if (isValidAddress) SolanaNeonMint.copy(alpha = 0.12f) else Color(0xFF141724),
+                    color = if (isValidAddress) Color(0xFF131A29) else Color(0xFF1A1324),
                     shape = RoundedCornerShape(50),
                     border = androidx.compose.foundation.BorderStroke(
-                        0.5.dp,
-                        if (isValidAddress) SolanaNeonMint.copy(alpha = 0.45f) else BorderSubtle
+                        1.dp,
+                        if (isValidAddress) SolanaNeonMint.copy(alpha = 0.6f) else SolanaNeonPurple.copy(alpha = 0.6f)
                     ),
                     modifier = Modifier.clickable {
                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)
@@ -163,22 +163,28 @@ fun SeekerHeader(
                     }
                 ) {
                     Row(
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                        modifier = Modifier.padding(horizontal = 9.dp, vertical = 4.5.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
-                        Box(
-                            modifier = Modifier
-                                .size(5.dp)
-                                .clip(CircleShape)
-                                .background(if (isValidAddress) SolanaNeonMint else Color(0xFFFF9F0A))
+                        Icon(
+                            imageVector = Icons.Default.AccountBalanceWallet,
+                            contentDescription = null,
+                            tint = if (isValidAddress) SolanaNeonMint else SolanaNeonPurple,
+                            modifier = Modifier.size(11.dp)
                         )
                         Text(
                             text = if (isValidAddress) "${walletAddress?.take(4)}...${walletAddress?.takeLast(4)}" else "Connect Wallet",
                             fontFamily = PlusJakartaSans,
-                            fontSize = 9.5.sp,
+                            fontSize = 10.sp,
                             fontWeight = FontWeight.Bold,
                             color = if (isValidAddress) SolanaNeonMint else Color(0xFFFFD60A)
+                        )
+                        Icon(
+                            imageVector = Icons.Default.ArrowDropDown,
+                            contentDescription = null,
+                            tint = if (isValidAddress) SolanaNeonMint else SolanaNeonPurple,
+                            modifier = Modifier.size(12.dp)
                         )
                     }
                 }
@@ -217,311 +223,354 @@ fun SeekerHeader(
         }
 
         // -------------------------------------------------------------
-        // ROW 2: REDESIGNED CYBER-SOLANA GLASS BALANCE RIBBON
+        // ROW 2: UNIFIED CYBER-SOLANA GLASS COMMAND CARD
         // -------------------------------------------------------------
         Surface(
-            color = Color(0xFF0D101C),
-            shape = RoundedCornerShape(16.dp),
+            color = Color(0xFF090C16),
+            shape = RoundedCornerShape(20.dp),
             border = androidx.compose.foundation.BorderStroke(
-                1.dp,
-                Brush.horizontalGradient(
-                    listOf(
-                        SolanaNeonPurple.copy(alpha = 0.5f),
-                        SolanaElectricCyan.copy(alpha = 0.35f),
-                        SolanaNeonMint.copy(alpha = 0.6f)
-                    )
-                )
+                1.2.dp,
+                SolanaGlassBorderGradient
             ),
             modifier = Modifier.fillMaxWidth()
         ) {
-            Column(modifier = Modifier.padding(horizontal = 14.dp, vertical = 11.dp)) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    // 1. SOL Gas Balance Pillar
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        verticalArrangement = Arrangement.spacedBy(2.dp)
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(4.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.LocalGasStation,
-                                contentDescription = null,
-                                tint = SolanaElectricCyan,
-                                modifier = Modifier.size(12.dp)
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        Brush.verticalGradient(
+                            listOf(
+                                Color(0xFF131728).copy(alpha = 0.9f),
+                                Color(0xFF080A12)
                             )
-                            Text(
-                                text = "SOL DEVNET GAS",
-                                fontSize = 9.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color(0xFF8FA0B8),
-                                letterSpacing = 0.6.sp
-                            )
-                        }
-
-                        Row(
-                            verticalAlignment = Alignment.Bottom,
-                            horizontalArrangement = Arrangement.spacedBy(4.dp)
-                        ) {
-                            Text(
-                                text = String.format(java.util.Locale.US, "%.3f", solBalance),
-                                fontFamily = PlusJakartaSans,
-                                fontSize = 17.sp,
-                                fontWeight = FontWeight.Black,
-                                color = Color.White
-                            )
-                            Text(
-                                text = "SOL",
-                                fontFamily = PlusJakartaSans,
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.ExtraBold,
-                                color = SolanaElectricCyan,
-                                modifier = Modifier.padding(bottom = 1.5.dp)
-                            )
-                        }
-
-                        Text(
-                            text = if (solBalance > 0.0) "Ready for Tx" else "Needs Gas",
-                            fontSize = 8.5.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = if (solBalance > 0.0) SolanaElectricCyan else Color(0xFFFF9F0A)
                         )
-                    }
-
-                    // Vertical Divider
-                    Box(
-                        modifier = Modifier
-                            .width(1.dp)
-                            .height(40.dp)
-                            .background(Color(0x22FFFFFF))
                     )
-
-                    Spacer(modifier = Modifier.width(10.dp))
-
-                    // 2. $SKR Staked Collateral Pillar
-                    Column(
-                        modifier = Modifier.weight(1.2f),
-                        verticalArrangement = Arrangement.spacedBy(2.dp)
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(4.dp)
-                        ) {
-                            Image(
-                                painter = painterResource(id = com.pledge.app.R.drawable.app_logo),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .size(12.dp)
-                                    .clip(CircleShape)
-                            )
-                            Text(
-                                text = "STAKE ASSET",
-                                fontSize = 9.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color(0xFF8FA0B8),
-                                letterSpacing = 0.6.sp
-                            )
-                        }
-
-                        Row(
-                            verticalAlignment = Alignment.Bottom,
-                            horizontalArrangement = Arrangement.spacedBy(4.dp)
-                        ) {
-                            Text(
-                                text = String.format(java.util.Locale.US, "%,.0f", skrBalance),
-                                fontFamily = PlusJakartaSans,
-                                fontSize = 17.sp,
-                                fontWeight = FontWeight.Black,
-                                color = SolanaNeonMint
-                            )
-                            Text(
-                                text = "\$SKR",
-                                fontFamily = PlusJakartaSans,
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.ExtraBold,
-                                color = SolanaNeonMint,
-                                modifier = Modifier.padding(bottom = 1.5.dp)
-                            )
-                        }
-
-                        Text(
-                            text = "SPL Token Mint",
-                            fontSize = 8.5.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = TextSecondary
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.width(8.dp))
-
-                    // 3. Action Buttons (Faucet + Refresh)
+                    .padding(horizontal = 16.dp, vertical = 13.dp)
+            ) {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    // Main Top Row
                     Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        // Faucet Button (Solana Gradient Pill)
-                        Surface(
-                            shape = RoundedCornerShape(10.dp),
-                            color = Color.Transparent,
-                            border = androidx.compose.foundation.BorderStroke(
-                                1.dp,
-                                Brush.horizontalGradient(listOf(SolanaNeonPurple, SolanaNeonMint))
-                            ),
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(10.dp))
-                                .background(
-                                    Brush.horizontalGradient(
-                                        listOf(
-                                            SolanaNeonPurple.copy(alpha = 0.85f),
-                                            SolanaNeonMint.copy(alpha = 0.95f)
-                                        )
-                                    )
-                                )
-                                .clickable(enabled = !isRequestingAirdrop) {
-                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                    onRequestAirdrop()
-                                }
+                        // 1. SOL Devnet Gas Tile
+                        Column(
+                            modifier = Modifier.weight(1.1f),
+                            verticalArrangement = Arrangement.spacedBy(3.dp)
                         ) {
                             Row(
-                                modifier = Modifier.padding(horizontal = 9.dp, vertical = 7.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(5.dp)
+                            ) {
+                                Surface(
+                                    shape = CircleShape,
+                                    color = SolanaElectricCyan.copy(alpha = 0.18f),
+                                    border = androidx.compose.foundation.BorderStroke(0.5.dp, SolanaElectricCyan.copy(alpha = 0.5f))
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.LocalGasStation,
+                                        contentDescription = null,
+                                        tint = SolanaElectricCyan,
+                                        modifier = Modifier.size(13.dp).padding(2.dp)
+                                    )
+                                }
+                                Text(
+                                    text = "SOL DEVNET GAS",
+                                    fontFamily = PlusJakartaSans,
+                                    fontSize = 9.5.sp,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    color = Color(0xFFA0B4D0),
+                                    letterSpacing = 0.7.sp
+                                )
+                            }
+
+                            Row(
+                                verticalAlignment = Alignment.Bottom,
+                                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                Text(
+                                    text = String.format(java.util.Locale.US, "%.3f", solBalance),
+                                    fontFamily = PlusJakartaSans,
+                                    fontSize = 21.sp,
+                                    fontWeight = FontWeight.Black,
+                                    letterSpacing = (-0.5).sp,
+                                    color = Color.White
+                                )
+                                Text(
+                                    text = "SOL",
+                                    fontFamily = PlusJakartaSans,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    color = SolanaElectricCyan,
+                                    modifier = Modifier.padding(bottom = 2.dp)
+                                )
+                            }
+
+                            Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(4.dp)
                             ) {
-                                if (isRequestingAirdrop) {
-                                    CircularProgressIndicator(
-                                        modifier = Modifier.size(13.dp),
-                                        color = Color.White,
-                                        strokeWidth = 2.dp
-                                    )
-                                    Text(
-                                        text = "Minting...",
-                                        fontSize = 11.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        color = Color.White
-                                    )
-                                } else {
-                                    Icon(
-                                        imageVector = Icons.Default.Bolt,
-                                        contentDescription = null,
-                                        tint = Color(0xFF030D08),
-                                        modifier = Modifier.size(14.dp)
-                                    )
-                                    Text(
-                                        text = "+10k \$SKR",
-                                        fontFamily = PlusJakartaSans,
-                                        fontSize = 11.sp,
-                                        fontWeight = FontWeight.Black,
-                                        color = Color(0xFF030D08)
-                                    )
-                                }
-                            }
-                        }
-
-                        // Sync / Refresh Button
-                        val infiniteTransition = rememberInfiniteTransition(label = "spin")
-                        val rotation by infiniteTransition.animateFloat(
-                            initialValue = 0f,
-                            targetValue = 360f,
-                            animationSpec = infiniteRepeatable(
-                                animation = tween(900, easing = LinearEasing),
-                                repeatMode = RepeatMode.Restart
-                            ),
-                            label = "spinRot"
-                        )
-
-                        Surface(
-                            color = Color(0xFF141724),
-                            shape = RoundedCornerShape(10.dp),
-                            border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x33FFFFFF)),
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(10.dp))
-                                .clickable(enabled = !isRefreshingBalances) {
-                                    haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                                    onRefreshBalances()
-                                }
-                        ) {
-                            Box(
-                                modifier = Modifier.padding(8.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Refresh,
-                                    contentDescription = "Refresh Balances",
-                                    tint = SolanaElectricCyan,
+                                Box(
                                     modifier = Modifier
-                                        .size(16.dp)
-                                        .rotate(if (isRefreshingBalances) rotation else 0f)
+                                        .size(5.dp)
+                                        .clip(CircleShape)
+                                        .background(if (solBalance > 0.0) SolanaNeonMint else Color(0xFFFF9F0A))
+                                )
+                                Text(
+                                    text = if (solBalance > 0.0) "Ready for Gas" else "Needs Gas Airdrop",
+                                    fontSize = 9.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = if (solBalance > 0.0) SolanaNeonMint else Color(0xFFFF9F0A)
                                 )
                             }
                         }
-                    }
-                }
-            }
-        }
 
-        // -------------------------------------------------------------
-        // ROW 3: LIVE SOLANA DEVNET TELEMETRY & VERIFIED MINT LINKS
-        // -------------------------------------------------------------
-        Surface(
-            color = Color(0xFF070912),
-            shape = RoundedCornerShape(8.dp),
-            border = androidx.compose.foundation.BorderStroke(0.5.dp, Color(0xFF141726)),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 10.dp, vertical = 5.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // Program ID link
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    modifier = Modifier.clickable {
-                        val intent = android.content.Intent(
-                            android.content.Intent.ACTION_VIEW,
-                            android.net.Uri.parse("https://explorer.solana.com/address/68c1eNdHAfNWJhCWhtqumiqzYyFcDNLkfgwKwdFwFRcd?cluster=devnet")
+                        // Vertical Luminous Solana Divider
+                        Box(
+                            modifier = Modifier
+                                .width(1.dp)
+                                .height(48.dp)
+                                .background(
+                                    Brush.verticalGradient(
+                                        listOf(
+                                            SolanaNeonPurple.copy(alpha = 0.3f),
+                                            SolanaElectricCyan.copy(alpha = 0.6f),
+                                            SolanaNeonMint.copy(alpha = 0.3f)
+                                        )
+                                    )
+                                )
                         )
-                        context.startActivity(intent)
-                    }
-                ) {
-                    Box(modifier = Modifier.size(4.dp).clip(CircleShape).background(SolanaElectricCyan))
-                    Text(
-                        text = "PROGRAM: 68c1...FRcd ↗",
-                        fontSize = 8.5.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = SolanaElectricCyan,
-                        fontFamily = FontFamily.Monospace
-                    )
-                }
 
-                // SPL Token Mint link
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    modifier = Modifier.clickable {
-                        val intent = android.content.Intent(
-                            android.content.Intent.ACTION_VIEW,
-                            android.net.Uri.parse("https://explorer.solana.com/address/F4L7W4qgFAuU2iyg5ePBENXTHeZyTPor4tJMfhUHqfgQ?cluster=devnet")
-                        )
-                        context.startActivity(intent)
+                        Spacer(modifier = Modifier.width(12.dp))
+
+                        // 2. $SKR Staked Collateral Tile
+                        Column(
+                            modifier = Modifier.weight(1.25f),
+                            verticalArrangement = Arrangement.spacedBy(3.dp)
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(5.dp)
+                            ) {
+                                Image(
+                                    painter = painterResource(id = com.pledge.app.R.drawable.app_logo),
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .size(14.dp)
+                                        .clip(CircleShape)
+                                )
+                                Text(
+                                    text = "STAKE ASSET",
+                                    fontFamily = PlusJakartaSans,
+                                    fontSize = 9.5.sp,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    color = Color(0xFFA0B4D0),
+                                    letterSpacing = 0.7.sp
+                                )
+                            }
+
+                            Row(
+                                verticalAlignment = Alignment.Bottom,
+                                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                Text(
+                                    text = String.format(java.util.Locale.US, "%,.0f", skrBalance),
+                                    fontFamily = PlusJakartaSans,
+                                    fontSize = 21.sp,
+                                    fontWeight = FontWeight.Black,
+                                    letterSpacing = (-0.5).sp,
+                                    color = SolanaNeonMint
+                                )
+                                Text(
+                                    text = "\$SKR",
+                                    fontFamily = PlusJakartaSans,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    color = SolanaNeonMint,
+                                    modifier = Modifier.padding(bottom = 2.dp)
+                                )
+                            }
+
+                            Text(
+                                text = "SPL Token • Escrow Asset",
+                                fontSize = 9.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = TextSecondary
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.width(8.dp))
+
+                        // 3. Action Buttons (Faucet + Refresh)
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            // Solana Gradient Faucet Pill (+10k $SKR & SOL Gas)
+                            Surface(
+                                shape = RoundedCornerShape(12.dp),
+                                color = Color.Transparent,
+                                border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF14F195).copy(alpha = 0.8f)),
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .background(SolanaSignatureGradient)
+                                    .clickable(enabled = !isRequestingAirdrop) {
+                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                        onRequestAirdrop()
+                                    }
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                ) {
+                                    if (isRequestingAirdrop) {
+                                        CircularProgressIndicator(
+                                            modifier = Modifier.size(13.dp),
+                                            color = Color(0xFF030D08),
+                                            strokeWidth = 2.dp
+                                        )
+                                        Text(
+                                            text = "Minting...",
+                                            fontSize = 11.sp,
+                                            fontWeight = FontWeight.Black,
+                                            color = Color(0xFF030D08)
+                                        )
+                                    } else {
+                                        Icon(
+                                            imageVector = Icons.Default.Bolt,
+                                            contentDescription = null,
+                                            tint = Color(0xFF030D08),
+                                            modifier = Modifier.size(14.dp)
+                                        )
+                                        Text(
+                                            text = "+10k & Gas",
+                                            fontFamily = PlusJakartaSans,
+                                            fontSize = 11.sp,
+                                            fontWeight = FontWeight.Black,
+                                            color = Color(0xFF030D08)
+                                        )
+                                    }
+                                }
+                            }
+
+                            // Refresh Button (Glass with Solana Cyan glow)
+                            val infiniteTransition = rememberInfiniteTransition(label = "spin")
+                            val rotation by infiniteTransition.animateFloat(
+                                initialValue = 0f,
+                                targetValue = 360f,
+                                animationSpec = infiniteRepeatable(
+                                    animation = tween(900, easing = LinearEasing),
+                                    repeatMode = RepeatMode.Restart
+                                ),
+                                label = "spinRot"
+                            )
+
+                            Surface(
+                                color = Color(0xFF101424),
+                                shape = RoundedCornerShape(12.dp),
+                                border = androidx.compose.foundation.BorderStroke(1.dp, SolanaElectricCyan.copy(alpha = 0.45f)),
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .clickable(enabled = !isRefreshingBalances) {
+                                        haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                                        onRefreshBalances()
+                                    }
+                            ) {
+                                Box(
+                                    modifier = Modifier.padding(9.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Refresh,
+                                        contentDescription = "Refresh Balances",
+                                        tint = SolanaElectricCyan,
+                                        modifier = Modifier
+                                            .size(17.dp)
+                                            .rotate(if (isRefreshingBalances) rotation else 0f)
+                                    )
+                                }
+                            }
+                        }
                     }
-                ) {
-                    Box(modifier = Modifier.size(4.dp).clip(CircleShape).background(SolanaNeonMint))
-                    Text(
-                        text = "MINT: F4L7...qfgQ ↗",
-                        fontSize = 8.5.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = SolanaNeonMint,
-                        fontFamily = FontFamily.Monospace
+
+                    // Hairline separator inside the same card
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(0.5.dp)
+                            .background(Color(0x22FFFFFF))
                     )
+
+                    // Integrated Sub-Strip (Program, Mint, Wallet Switcher)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        // Program ID link
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            modifier = Modifier.clickable {
+                                val intent = android.content.Intent(
+                                    android.content.Intent.ACTION_VIEW,
+                                    android.net.Uri.parse("https://explorer.solana.com/address/68c1eNdHAfNWJhCWhtqumiqzYyFcDNLkfgwKwdFwFRcd?cluster=devnet")
+                                )
+                                context.startActivity(intent)
+                            }
+                        ) {
+                            Box(modifier = Modifier.size(5.dp).clip(CircleShape).background(SolanaElectricCyan))
+                            Text(
+                                text = "PROGRAM: 68c1...FRcd ↗",
+                                fontSize = 9.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = SolanaElectricCyan,
+                                fontFamily = FontFamily.Monospace
+                            )
+                        }
+
+                        // SPL Token Mint link
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            modifier = Modifier.clickable {
+                                val intent = android.content.Intent(
+                                    android.content.Intent.ACTION_VIEW,
+                                    android.net.Uri.parse("https://explorer.solana.com/address/F4L7W4qgFAuU2iyg5ePBENXTHeZyTPor4tJMfhUHqfgQ?cluster=devnet")
+                                )
+                                context.startActivity(intent)
+                            }
+                        ) {
+                            Box(modifier = Modifier.size(5.dp).clip(CircleShape).background(SolanaNeonMint))
+                            Text(
+                                text = "MINT: F4L7...qfgQ ↗",
+                                fontSize = 9.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = SolanaNeonMint,
+                                fontFamily = FontFamily.Monospace
+                            )
+                        }
+
+                        // Switch Wallet Action Pill
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            modifier = Modifier.clickable {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                onConnectWallet()
+                            }
+                        ) {
+                            Text(
+                                text = if (isValidAddress) "WALLET: ${walletAddress?.take(4)}...${walletAddress?.takeLast(4)} ⇄" else "CONNECT WALLET ⇄",
+                                fontSize = 9.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFFC48BFF),
+                                fontFamily = FontFamily.Monospace
+                            )
+                        }
+                    }
                 }
             }
         }
