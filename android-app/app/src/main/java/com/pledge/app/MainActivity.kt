@@ -120,7 +120,7 @@ class MainActivity : ComponentActivity() {
 
         // Refresh on-chain balances on startup, wallet changes, and every 12s in background
         LaunchedEffect(savedWalletAddress) {
-            while (isActive) {
+            while (true) {
                 val addr = savedWalletAddress
                 if (addr != null && solanaManager.isValidSolanaAddress(addr)) {
                     val (sol, skr) = solanaManager.fetchOnChainBalances(addr)
