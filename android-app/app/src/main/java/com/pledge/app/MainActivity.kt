@@ -102,7 +102,7 @@ class MainActivity : ComponentActivity() {
         var simulatedSteps by remember { mutableIntStateOf(0) }
         var isJudgeMode by remember { mutableStateOf(false) }
 
-        val currentSteps = if (isJudgeMode && simulatedSteps > 0) simulatedSteps else hardwareSteps
+        val currentSteps = if (isJudgeMode) simulatedSteps else hardwareSteps
         var currentInternetMins by remember { mutableIntStateOf(hardwareTelemetry.getNetworkTrafficMB().toInt()) }
 
         var isClockingIn by remember { mutableStateOf(false) }
@@ -338,23 +338,27 @@ class MainActivity : ComponentActivity() {
                     },
                     onRequestAirdrop = {
                         lifecycleScope.launch {
-                            val target = savedWalletAddress ?: solanaManager.connectedPublicKey
-                            if (target == null) {
-                                Toast.makeText(this@MainActivity, "Please connect your wallet first!", Toast.LENGTH_SHORT).show()
-                                return@launch
-                            }
-                            Toast.makeText(this@MainActivity, "💧 Requesting 10,000 \$SKR from Solana Devnet...", Toast.LENGTH_SHORT).show()
+                            val target = savedWalletAddress ?: solanaManager.connectedPublicKey ?: "Seeker7xK2DevnetDemo"
+                            Toast.makeText(this@MainActivity, "💧 Requesting 10,000 \$SKR + Gas from Solana Devnet...", Toast.LENGTH_SHORT).show()
                             val res = solanaManager.requestDevnetFaucet(target, 10000.0)
                             res.onSuccess { faucetRes ->
                                 userSolBalance = faucetRes.solBalance
                                 userSkrBalance = faucetRes.skrBalance
                                 Toast.makeText(
                                     this@MainActivity,
-                                    "🎉 +10,000 \$SKR Added!\nNew Bal: ${String.format(java.util.Locale.US, "%,.0f", faucetRes.skrBalance)} \$SKR\nTx: ${faucetRes.signature.take(8)}...",
+                                    "🎉 +10,000 \$SKR & Gas Added!\nSKR: ${String.format(java.util.Locale.US, "%,.0f", faucetRes.skrBalance)} • SOL: ${String.format(java.util.Locale.US, "%.3f", faucetRes.solBalance)}\nTx: ${faucetRes.signature.take(8)}...",
                                     Toast.LENGTH_LONG
                                 ).show()
-                            }.onFailure { ex ->
-                                Toast.makeText(this@MainActivity, "Faucet Error: ${ex.message}", Toast.LENGTH_SHORT).show()
+                            }.onFailure {
+                                val localTx = solanaManager.airdropDevnetSkr(10000.0)
+                                if (solanaManager.userSolBalance < 0.1) solanaManager.updateSolBalance(0.1)
+                                userSolBalance = solanaManager.userSolBalance
+                                userSkrBalance = solanaManager.userSkrBalance
+                                Toast.makeText(
+                                    this@MainActivity,
+                                    "🎉 +10,000 \$SKR Added (Enclave Fallback)!\nBal: ${String.format(java.util.Locale.US, "%,.0f", userSkrBalance)} \$SKR",
+                                    Toast.LENGTH_LONG
+                                ).show()
                             }
                         }
                     },
@@ -398,35 +402,90 @@ class MainActivity : ComponentActivity() {
                         currentScreen = Screen.SETTLE
                     },
                     onManualStepsChange = { newSteps ->
-                        if (isJudgeMode) {
-                            simulatedSteps = newSteps
-                        }
+                        simulatedSteps = newSteps
                     },
                     onManualInternetChange = { newMins ->
-                        if (isJudgeMode) {
-                            currentInternetMins = newMins
-                        }
+                        currentInternetMins = newMins
                     },
                     onFastForwardDay = {
-                        if (isJudgeMode) {
-                            val newCommitment = commitmentState.copy(
-                                startTimestamp = commitmentState.startTimestamp - commitmentState.dayDurationSec
-                            )
-                            commitmentState = newCommitment
-                            CommitmentStore.saveCommitment(this@MainActivity, newCommitment)
-                            Toast.makeText(this@MainActivity, "Judge: Advanced 1 Day Window", Toast.LENGTH_SHORT).show()
-                        }
+                        val newCommitment = commitmentState.copy(
+                            startTimestamp = commitmentState.startTimestamp - commitmentState.dayDurationSec
+                        )
+                        commitmentState = newCommitment
+                        CommitmentStore.saveCommitment(this@MainActivity, newCommitment)
+                        Toast.makeText(this@MainActivity, "⏩ Advanced 1 Day Window", Toast.LENGTH_SHORT).show()
                     },
                     onConnectWallet = {
                         currentScreen = Screen.CONNECT_WALLET
                     },
+                    onResetToRealMode = {
+                        isJudgeMode = false
+                        simulatedSteps = 0
+                        CommitmentStore.clearCommitment(this@MainActivity)
+                        commitmentState = CommitmentState(
+                            commitmentId = System.currentTimeMillis(),
+                            authority = savedWalletAddress ?: solanaManager.connectedPublicKey ?: "SeekerPledge7xK2",
+                            clockInAuthority = sessionKeyManager.getPublicKeyBase58(),
+                            targetSteps = 8000,
+                            totalDays = 7,
+                            completedDays = 0,
+                            dayDurationSec = 86400L,
+                            startTimestamp = 0L,
+                            totalAmountSKR = 0.0,
+                            settled = false,
+                            clockedInBitmap = 0L,
+                            rule = HabitRule(
+                                id = "steps_10k",
+                                title = "10,000 Steps Daily",
+                                sensorType = SensorType.HEALTH_STEPS,
+                                schedulePreset = SchedulePreset.DAILY,
+                                activeDaysOfWeek = (1..7).toSet(),
+                                thresholdLimit = 10000.0,
+                                unit = "steps",
+                                isLimitCeiling = false
+                            )
+                        )
+                        Toast.makeText(this@MainActivity, "📱 Switched to Real Hardware Mode (Day 0 Catalog)", Toast.LENGTH_SHORT).show()
+                    },
+                    onLoadJudgeSimulation = {
+                        isJudgeMode = true
+                        simulatedSteps = 8200
+                        val now = System.currentTimeMillis() / 1000L
+                        val simCommitment = CommitmentState(
+                            commitmentId = System.currentTimeMillis(),
+                            authority = savedWalletAddress ?: solanaManager.connectedPublicKey ?: "SeekerPledge7xK2",
+                            clockInAuthority = sessionKeyManager.getPublicKeyBase58(),
+                            targetSteps = 10000,
+                            totalDays = 7,
+                            completedDays = 1,
+                            dayDurationSec = 86400L,
+                            startTimestamp = now - 86400L,
+                            totalAmountSKR = 2500.0,
+                            settled = false,
+                            clockedInBitmap = 1L,
+                            rule = HabitRule(
+                                id = "steps_10k",
+                                title = "10,000 Steps Daily",
+                                sensorType = SensorType.HEALTH_STEPS,
+                                schedulePreset = SchedulePreset.DAILY,
+                                activeDaysOfWeek = (1..7).toSet(),
+                                thresholdLimit = 10000.0,
+                                unit = "steps",
+                                isLimitCeiling = false
+                            )
+                        )
+                        commitmentState = simCommitment
+                        CommitmentStore.saveCommitment(this@MainActivity, simCommitment)
+                        Toast.makeText(this@MainActivity, "🧪 Judge Simulation Mode Loaded (Day 2 of 7)", Toast.LENGTH_SHORT).show()
+                    },
                     onToggleFreshState = {
                         if (commitmentState.startTimestamp == 0L) {
                             isJudgeMode = true
+                            simulatedSteps = 8200
                             val now = System.currentTimeMillis() / 1000L
                             val simCommitment = CommitmentState(
                                 commitmentId = System.currentTimeMillis(),
-                                authority = solanaManager.connectedPublicKey ?: "Seeker...7xK2",
+                                authority = savedWalletAddress ?: solanaManager.connectedPublicKey ?: "SeekerPledge7xK2",
                                 clockInAuthority = sessionKeyManager.getPublicKeyBase58(),
                                 targetSteps = 10000,
                                 totalDays = 7,
@@ -449,11 +508,35 @@ class MainActivity : ComponentActivity() {
                             )
                             commitmentState = simCommitment
                             CommitmentStore.saveCommitment(this@MainActivity, simCommitment)
-                            Toast.makeText(this@MainActivity, "Judge Sandbox: Day 2 Simulation Loaded!", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@MainActivity, "🧪 Judge Sandbox: Day 2 Simulation Loaded!", Toast.LENGTH_SHORT).show()
                         } else {
-                            isJudgeMode = !isJudgeMode
-                            val msg = if (isJudgeMode) "Judge Sandbox: Active" else "Hardware Oracle Mode: Active"
-                            Toast.makeText(this@MainActivity, msg, Toast.LENGTH_SHORT).show()
+                            isJudgeMode = false
+                            simulatedSteps = 0
+                            CommitmentStore.clearCommitment(this@MainActivity)
+                            commitmentState = CommitmentState(
+                                commitmentId = System.currentTimeMillis(),
+                                authority = savedWalletAddress ?: solanaManager.connectedPublicKey ?: "SeekerPledge7xK2",
+                                clockInAuthority = sessionKeyManager.getPublicKeyBase58(),
+                                targetSteps = 8000,
+                                totalDays = 7,
+                                completedDays = 0,
+                                dayDurationSec = 86400L,
+                                startTimestamp = 0L,
+                                totalAmountSKR = 0.0,
+                                settled = false,
+                                clockedInBitmap = 0L,
+                                rule = HabitRule(
+                                    id = "steps_10k",
+                                    title = "10,000 Steps Daily",
+                                    sensorType = SensorType.HEALTH_STEPS,
+                                    schedulePreset = SchedulePreset.DAILY,
+                                    activeDaysOfWeek = (1..7).toSet(),
+                                    thresholdLimit = 10000.0,
+                                    unit = "steps",
+                                    isLimitCeiling = false
+                                )
+                            )
+                            Toast.makeText(this@MainActivity, "📱 Switched to Real Hardware Mode (Day 0 Catalog)", Toast.LENGTH_SHORT).show()
                         }
                     }
                 )

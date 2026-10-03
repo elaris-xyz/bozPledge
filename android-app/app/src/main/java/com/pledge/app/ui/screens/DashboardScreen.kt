@@ -62,6 +62,8 @@ fun DashboardScreen(
     onFastForwardDay: () -> Unit,
     onConnectWallet: () -> Unit = {},
     onToggleFreshState: () -> Unit = {},
+    onResetToRealMode: () -> Unit = {},
+    onLoadJudgeSimulation: () -> Unit = {},
     onRequestAirdrop: () -> Unit = {},
     onRefreshBalances: () -> Unit = {},
     isRefreshingBalances: Boolean = false,
@@ -269,6 +271,9 @@ fun DashboardScreen(
                             onCreateNewPledge = onCreateNewPledge,
                             onSelectPreset = { rule -> pendingPresetToStake = rule },
                             onToggleFreshState = onToggleFreshState,
+                            onResetToRealMode = onResetToRealMode,
+                            onLoadJudgeSimulation = onLoadJudgeSimulation,
+                            onOpenJudgeSheet = { isJudgeSheetOpen = true },
                             internetDetoxRule = internetDetoxRule,
                             early6amRule = early6amRule,
                             stepGoalRule = stepGoalRule,
@@ -358,6 +363,9 @@ fun DashboardScreen(
             onClaimSettlement = {
                 showSettlementDialog = true
             },
+            targetSteps = state.targetSteps,
+            onResetToRealMode = onResetToRealMode,
+            onLoadJudgeSimulation = onLoadJudgeSimulation,
             onToggleFreshState = onToggleFreshState,
             onDismiss = { isJudgeSheetOpen = false }
         )
@@ -902,6 +910,9 @@ fun ActiveTabContent(
     onCreateNewPledge: () -> Unit,
     onSelectPreset: (HabitRule) -> Unit,
     onToggleFreshState: () -> Unit = {},
+    onResetToRealMode: () -> Unit = {},
+    onLoadJudgeSimulation: () -> Unit = {},
+    onOpenJudgeSheet: () -> Unit = {},
     internetDetoxRule: HabitRule,
     early6amRule: HabitRule,
     stepGoalRule: HabitRule,
@@ -919,7 +930,7 @@ fun ActiveTabContent(
         Day0OnboardingContent(
             onCreateCustom = onCreateNewPledge,
             onSelectPreset = onSelectPreset,
-            onToggleDemo = onToggleFreshState,
+            onToggleDemo = onLoadJudgeSimulation,
             internetDetoxRule = internetDetoxRule,
             early6amRule = early6amRule,
             stepGoalRule = stepGoalRule
@@ -967,42 +978,140 @@ fun ActiveTabContent(
             .verticalScroll(scrollState)
             .padding(horizontal = 16.dp, vertical = 10.dp)
     ) {
-        // Top Evaluation Sandbox Context Pill for Judges
+        // Top Dual Segregated Mode Bar: Real Hardware Mode vs. Judge Simulation Mode
         Surface(
             color = SurfaceCard,
-            shape = RoundedCornerShape(12.dp),
-            border = androidx.compose.foundation.BorderStroke(0.5.dp, if (isDemoMode) SolanaTeal.copy(alpha = 0.35f) else AppleGreen.copy(alpha = 0.25f)),
+            shape = RoundedCornerShape(16.dp),
+            border = androidx.compose.foundation.BorderStroke(
+                1.dp,
+                if (isDemoMode) SolanaTeal.copy(alpha = 0.45f) else AppleGreen.copy(alpha = 0.35f)
+            ),
             modifier = Modifier.fillMaxWidth()
         ) {
-            Row(
-                modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+            Column(
+                modifier = Modifier.padding(12.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(9.dp)
+                                .clip(CircleShape)
+                                .background(if (isDemoMode) SolanaTeal else AppleGreen)
+                        )
+                        Column {
+                            Text(
+                                text = if (isDemoMode) "🧪 JUDGE SIMULATION SANDBOX" else "📱 REAL HARDWARE MODE ACTIVE",
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Black,
+                                color = if (isDemoMode) SolanaTeal else AppleGreen,
+                                letterSpacing = 0.6.sp
+                            )
+                            Text(
+                                text = if (isDemoMode)
+                                    "Day $currentDay of $totalDays • Test scenarios & time travel"
+                                else
+                                    "Day $currentDay of $totalDays • Live pedometer & Devnet escrow",
+                                fontSize = 11.sp,
+                                color = TextSecondary
+                            )
+                        }
+                    }
+
+                    // Direct 1-Tap Judge Lab Trigger
+                    Surface(
+                        color = SolanaPurple.copy(alpha = 0.18f),
+                        shape = RoundedCornerShape(8.dp),
+                        border = androidx.compose.foundation.BorderStroke(0.5.dp, SolanaPurple.copy(alpha = 0.45f)),
+                        modifier = Modifier.clickable {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            onOpenJudgeSheet()
+                        }
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 9.dp, vertical = 5.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Icon(imageVector = Icons.Default.Tune, contentDescription = null, tint = SolanaPurple, modifier = Modifier.size(14.dp))
+                            Text(text = "Judge Lab ⚡", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = SolanaPurple)
+                        }
+                    }
+                }
+
+                // Explicit 2-Way Segregation Switcher
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(SurfaceDeep, RoundedCornerShape(10.dp))
+                        .padding(3.dp),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    // Left Tab: Real Hardware Mode (Day 0 Catalog / Real Sensors)
                     Box(
                         modifier = Modifier
-                            .size(7.dp)
-                            .clip(CircleShape)
-                            .background(if (isDemoMode) SolanaTeal else AppleGreen)
-                    )
-                    Column {
-                        Text(
-                            text = if (isDemoMode) "HACKATHON EVALUATION SANDBOX" else "HARDWARE ORACLE ESCROW ACTIVE",
-                            fontSize = 9.5.sp,
-                            fontWeight = FontWeight.ExtraBold,
-                            color = if (isDemoMode) SolanaTeal else AppleGreen,
-                            letterSpacing = 0.6.sp
-                        )
-                        Text(
-                            text = if (isDemoMode) "Day $currentDay of $totalDays escrow • Judge simulation enabled" else "Day $currentDay of $totalDays • Real hardware sensor attestation active",
-                            fontSize = 11.sp,
-                            color = TextSecondary
-                        )
+                            .weight(1f)
+                            .height(34.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(if (!isDemoMode) AppleGreen.copy(alpha = 0.22f) else Color.Transparent)
+                            .border(
+                                if (!isDemoMode) 1.dp else 0.dp,
+                                if (!isDemoMode) AppleGreen else Color.Transparent,
+                                RoundedCornerShape(8.dp)
+                            )
+                            .clickable {
+                                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                                onResetToRealMode()
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                            Icon(imageVector = Icons.Default.PhoneAndroid, contentDescription = null, tint = if (!isDemoMode) AppleGreen else TextSecondary, modifier = Modifier.size(13.dp))
+                            Text(
+                                text = "Real Mode (Day 0)",
+                                fontSize = 11.sp,
+                                fontWeight = if (!isDemoMode) FontWeight.ExtraBold else FontWeight.Medium,
+                                color = if (!isDemoMode) AppleGreen else TextSecondary
+                            )
+                        }
+                    }
+
+                    // Right Tab: Judge Simulation Mode (Interactive Sandbox)
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(34.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(if (isDemoMode) SolanaTeal.copy(alpha = 0.22f) else Color.Transparent)
+                            .border(
+                                if (isDemoMode) 1.dp else 0.dp,
+                                if (isDemoMode) SolanaTeal else Color.Transparent,
+                                RoundedCornerShape(8.dp)
+                            )
+                            .clickable {
+                                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                                onLoadJudgeSimulation()
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                            Icon(imageVector = Icons.Default.Tune, contentDescription = null, tint = if (isDemoMode) SolanaTeal else TextSecondary, modifier = Modifier.size(13.dp))
+                            Text(
+                                text = "Judge Sim (Day 2)",
+                                fontSize = 11.sp,
+                                fontWeight = if (isDemoMode) FontWeight.ExtraBold else FontWeight.Medium,
+                                color = if (isDemoMode) SolanaTeal else TextSecondary
+                            )
+                        }
                     }
                 }
             }
@@ -3341,6 +3450,7 @@ private fun formatSkr(amount: Double): String = String.format(java.util.Locale.U
 fun JudgeModalBottomSheet(
     currentInternetMins: Int,
     currentSteps: Int,
+    targetSteps: Int = 10000,
     isDemoMode: Boolean,
     stakedAmount: Double,
     slashedAmount: Double,
@@ -3352,7 +3462,9 @@ fun JudgeModalBottomSheet(
     onTriggerSlashing: () -> Unit,
     onFastForwardDay: () -> Unit,
     onClaimSettlement: () -> Unit,
-    onToggleFreshState: () -> Unit,
+    onResetToRealMode: () -> Unit = {},
+    onLoadJudgeSimulation: () -> Unit = {},
+    onToggleFreshState: () -> Unit = {},
     onDismiss: () -> Unit
 ) {
     val haptic = LocalHapticFeedback.current
@@ -3554,14 +3666,14 @@ fun JudgeModalBottomSheet(
                     }
                 }
 
-                // Scenario 5: Reset to Fresh Day 0
+                // Scenario 5: Reset to Real Hardware Mode (Day 0 Catalog)
                 Surface(
                     color = SurfaceElevated,
                     shape = RoundedCornerShape(12.dp),
                     border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
                     modifier = Modifier.fillMaxWidth().clickable {
                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                        onToggleFreshState()
+                        onResetToRealMode()
                         onDismiss()
                     }
                 ) {
@@ -3571,16 +3683,46 @@ fun JudgeModalBottomSheet(
                         horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         Box(
-                            modifier = Modifier.size(32.dp).clip(CircleShape).background(Color.White.copy(alpha = 0.1f)),
+                            modifier = Modifier.size(32.dp).clip(CircleShape).background(AppleGreen.copy(alpha = 0.16f)),
                             contentAlignment = Alignment.Center
                         ) {
-                            Icon(imageVector = Icons.Default.Refresh, contentDescription = null, tint = Color.White, modifier = Modifier.size(16.dp))
+                            Icon(imageVector = Icons.Default.PhoneAndroid, contentDescription = null, tint = AppleGreen, modifier = Modifier.size(16.dp))
                         }
                         Column(modifier = Modifier.weight(1f)) {
-                            Text(text = "5. Reset to Fresh Day 0 Onboarding", fontSize = 12.5.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
-                            Text(text = "Evaluate first-time user pledge creation & catalog", fontSize = 10.5.sp, color = TextSecondary)
+                            Text(text = "5. Reset to Real Hardware Mode (Day 0)", fontSize = 12.5.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
+                            Text(text = "Wipe demo, restore real sensors & open fresh catalog", fontSize = 10.5.sp, color = TextSecondary)
                         }
-                        Text(text = "Reset →", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                        Text(text = "Real →", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = AppleGreen)
+                    }
+                }
+
+                // Scenario 6: Reload 7-Day Hackathon Demo
+                Surface(
+                    color = SurfaceElevated,
+                    shape = RoundedCornerShape(12.dp),
+                    border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
+                    modifier = Modifier.fillMaxWidth().clickable {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        onLoadJudgeSimulation()
+                        onDismiss()
+                    }
+                ) {
+                    Row(
+                        modifier = Modifier.padding(12.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        Box(
+                            modifier = Modifier.size(32.dp).clip(CircleShape).background(SolanaTeal.copy(alpha = 0.16f)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(imageVector = Icons.Default.Tune, contentDescription = null, tint = SolanaTeal, modifier = Modifier.size(16.dp))
+                        }
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(text = "6. Reload Hackathon Judge Demo (Day 2 Active)", fontSize = 12.5.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
+                            Text(text = "Instant 2,500 \$SKR Day 2 escrow for judges", fontSize = 10.5.sp, color = TextSecondary)
+                        }
+                        Text(text = "Load →", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = SolanaTeal)
                     }
                 }
             }
@@ -3594,6 +3736,54 @@ fun JudgeModalBottomSheet(
                 letterSpacing = 0.6.sp
             )
 
+            // Override 1: Step Counter Sensor
+            Surface(
+                color = SurfaceElevated,
+                shape = RoundedCornerShape(12.dp),
+                border = androidx.compose.foundation.BorderStroke(0.5.dp, BorderSubtle),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(modifier = Modifier.padding(14.dp)) {
+                    val isStepsPassing = currentSteps >= targetSteps
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Daily Steps: $currentSteps / $targetSteps",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = SolanaTeal
+                        )
+                        Surface(
+                            color = if (isStepsPassing) AppleGreen.copy(alpha = 0.15f) else AppleOrange.copy(alpha = 0.15f),
+                            shape = RoundedCornerShape(6.dp)
+                        ) {
+                            Text(
+                                text = if (isStepsPassing) "PASS (Goal Met)" else "IN PROGRESS",
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = if (isStepsPassing) AppleGreen else AppleOrange,
+                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                            )
+                        }
+                    }
+
+                    Slider(
+                        value = currentSteps.toFloat(),
+                        onValueChange = { onManualStepsChange(it.toInt()) },
+                        valueRange = 0f..15000f,
+                        colors = SliderDefaults.colors(
+                            thumbColor = SolanaTeal,
+                            activeTrackColor = SolanaTeal,
+                            inactiveTrackColor = SurfaceDeep
+                        )
+                    )
+                }
+            }
+
+            // Override 2: Network Traffic Sensor
             Surface(
                 color = SurfaceElevated,
                 shape = RoundedCornerShape(12.dp),
