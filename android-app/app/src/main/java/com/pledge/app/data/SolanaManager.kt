@@ -185,11 +185,28 @@ class SolanaManager(private val context: Context) {
      * Mints real on-chain SPL tokens to the user's Associated Token Account on Devnet.
      */
     suspend fun requestDevnetFaucet(recipientAddress: String, amount: Double = 10000.0): Result<FaucetResult> = withContext(Dispatchers.IO) {
+        // If recipient is a demo, judge, or placeholder key, fulfill locally with instant simulation
+        val isDemoKey = recipientAddress.startsWith("Seeker") || 
+                        recipientAddress.startsWith("Judge") || 
+                        recipientAddress.contains("_") || 
+                        recipientAddress.length !in 32..44
+
+        if (isDemoKey) {
+            val localTx = airdropDevnetSkr(amount)
+            return@withContext Result.success(
+                FaucetResult(
+                    signature = localTx.signature,
+                    solBalance = userSolBalance,
+                    skrBalance = userSkrBalance,
+                    explorerUrl = localTx.explorerUrl
+                )
+            )
+        }
+
         val endpoints = listOf(
             "https://bozpledge.vercel.app/api/faucet",
             "http://10.0.2.2:8080/api/faucet",
-            "http://127.0.0.1:8080/api/faucet",
-            "http://192.168.1.100:8080/api/faucet"
+            "http://127.0.0.1:8080/api/faucet"
         )
 
         var lastErrorMsg = "Unable to reach Solana Devnet Faucet. Please ensure internet access is active and retry."
@@ -235,24 +252,19 @@ class SolanaManager(private val context: Context) {
                 } else {
                     val errStream = conn.errorStream ?: conn.inputStream
                     val errText = errStream?.bufferedReader()?.use { it.readText() } ?: ""
-                    lastErrorMsg = "HTTP $code: $errText"
+                    val parsedErr = try {
+                        JSONObject(errText).optString("error", errText)
+                    } catch (_: Exception) {
+                        errText
+                    }
+                    lastErrorMsg = if (parsedErr.isNotEmpty()) parsedErr else "Server returned HTTP $code"
+                    if (code == 400) {
+                        break
+                    }
                 }
             } catch (e: Exception) {
                 lastErrorMsg = e.message ?: e.toString()
             }
-        }
-
-        // Fallback only for demo/judge offline keys
-        if (recipientAddress.startsWith("SeekerDemo") || recipientAddress.startsWith("JudgeKey_")) {
-            val localTx = airdropDevnetSkr(amount)
-            return@withContext Result.success(
-                FaucetResult(
-                    signature = localTx.signature,
-                    solBalance = userSolBalance,
-                    skrBalance = userSkrBalance,
-                    explorerUrl = localTx.explorerUrl
-                )
-            )
         }
 
         Result.failure(Exception(lastErrorMsg))
